@@ -123,9 +123,8 @@ class ShopController extends Controller
 
 			  ->get();
 
-
-                $countries = Country::all();
-                $address = Address::where('user_id', Auth::user()->id)->get();
+		$countries = Country::all();
+		$address = Address::where('user_id', Auth::user()->id)->get();
 
 		$data = array('time' => $time, 'days' =>  $days, 'daytxt' => $daytxt, 'shopcount' => $shopcount, 'shop' => $shop, 'stime' => $stime,
 		'etime' => $etime, 'lev' => $lev, 'sel' => $sel, 'viewservice' => $viewservice, 'setting' => $setting, 'rating_count' => $rating_count, 'rating' => $rating);

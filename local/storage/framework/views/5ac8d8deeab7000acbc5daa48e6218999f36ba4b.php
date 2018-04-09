@@ -6,30 +6,27 @@ $setid=1;
 		$setts = DB::table('settings')
 		->where('id', '=', $setid)
 		->get();
-$new_email = '';                
-if(isset(Auth::user()->verification)){
-    $new_email = Auth::user()->verification->new_email;
-}
+
 
 ?>
-@if($isVerified = (Auth::check() && ! Auth::user()->verified && ! session('need_email_confirmation')))
+<?php if($isVerified = (\Auth::check() && ! \Auth::user()->verified && ! session('need_email_confirmation'))): ?>
 <div class="alert alert-warning" role="alert" style="position: fixed;top: 0px;left: 0px;width: 100%;z-index:9999;border-radius:0px;padding:5px;">
 	<div class="container">
 		<div class="pull-left" style="margin-top: 8px">
-			A confirmation email was sent to <strong>{{ $changedEmail = $new_email ?: Auth::user()->email }}</strong>.
+			A confirmation email was sent to <strong><?php echo e($changedEmail = \Auth::user()->verification->new_email ?: \Auth::user()->email); ?></strong>.
 
-			@if($new_email)
+			<?php if(\Auth::user()->verification->new_email): ?>
 				Your email will not be changed until you confirm!
-			@else
+			<?php else: ?>
 				Please check your inbox and verify your email address.
-			@endif
+			<?php endif; ?>
 		</div>
-		<div class="pull-right"><a href="{!! route('user.resend_verification') !!}" class="btn btn-default">Resend confirmation</a></div>
+		<div class="pull-right"><a href="<?php echo route('user.resend_verification'); ?>" class="btn btn-default">Resend confirmation</a></div>
 	</div>
 </div>
-@endif
+<?php endif; ?>
 
-<div class="navbar navbar-fixed-top <?php if($currentPaths=="index" or $currentPaths=="/"){?>homenav<?php } else {?>migrateshop_othernav<?php } ?> navbar-inverse" role="navigation" {!! $isVerified ? 'style="margin-top:45px;"' : '' !!}>
+<div class="navbar navbar-fixed-top <?php if($currentPaths=="index" or $currentPaths=="/"){?>homenav<?php } else {?>migrateshop_othernav<?php } ?> navbar-inverse" role="navigation" <?php echo $isVerified ? 'style="margin-top:45px;"' : ''; ?>>
       <div class="container topbottom">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#b-menu-1">
@@ -78,12 +75,12 @@ if(isset(Auth::user()->verification)){
 						<li><a href="<?php echo $url;?>/#"><i class="fa fa-bell-o"></i></a></li>
 			<!-- Added by Ninja 20180331 end here-->
 			 <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">  Hi, {{ Auth::user()->name }}<b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">  Hi, <?php echo e(Auth::user()->name); ?><b class="caret"></b></a>
               <ul class="dropdown-menu">
                <?php if(Auth::check()) { ?>
                 <?php if(Auth::user()->admin==1) {?>
 
-								<li><a href="{{ url('admin/') }}" target="_blank">Admin Dashboard</a></li>
+								<li><a href="<?php echo e(url('admin/')); ?>" target="_blank">Admin Dashboard</a></li>
 						<?php } ?>
 
 						<?php if(Auth::user()->admin==0) {?>
@@ -119,9 +116,10 @@ if(isset(Auth::user()->verification)){
 				<?php } ?>
 				<li><a href="<?php echo $url;?>/support/tickets">Support</a></li>
 					<?php } ?>
-                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> Logout</a></li>
-                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
+                <li><a href="<?php echo e(route('logout')); ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> Logout</a></li>
+                 <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
+                                            <?php echo e(csrf_field()); ?>
+
                                         </form>
               </ul>
             </li>
@@ -131,7 +129,7 @@ if(isset(Auth::user()->verification)){
       </div> <!-- /.container -->
     </div> <!-- /.navbar -->
 
-@if($isVerified)
+<?php if($isVerified): ?>
 	<style type="text/css">
 		body {
 			padding-top:46px;
@@ -140,4 +138,4 @@ if(isset(Auth::user()->verification)){
 			top:46px;
 		}
 	</style>
-@endif
+<?php endif; ?>

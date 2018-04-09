@@ -57,6 +57,7 @@ class VerificationController extends Controller
             return response()->json(['success' => true]);
         } catch (\Exception $exception) {
             if (! $user->phone_verified) {
+                console.log($exception->getMessage());
                 $user->phone = null;
                 $user->save();
             }
