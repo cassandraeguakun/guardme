@@ -82,7 +82,13 @@
 				</div>
 				
 				<div class="profile-userbuttons">
-					<a href="<?php echo $url;?>/my_bookings" class="btn btn-success btn-sm">My Bookings</a>
+					<a href="<?php echo $url;?>/my_bookings" class="btn btn-success btn-sm btn-block">My Bookings</a>
+					<?php /* ?><a href="{{ route('logout') }}" class="btn btn-danger btn-sm">Sign Out</a><?php */?>
+					
+				</div>
+				
+				<div class="profile-userbuttons">
+					<a href="<?php echo $url;?>/job" class="btn btn-primary btn-sm btn-block">Create Job</a>
 					<?php /* ?><a href="{{ route('logout') }}" class="btn btn-danger btn-sm">Sign Out</a><?php */?>
 					
 				</div>

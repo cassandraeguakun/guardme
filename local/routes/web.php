@@ -254,8 +254,9 @@ Route::group(['middleware' => 'admin'], function() {
 
 Route::group(['middleware' => 'web'], function (){
     
-    Route::get('/dashboard', 'DashboardController@index');
-   
+	Route::get('/dashboard', 'DashboardController@index');
+	
+	Route::resource('job', 'JobController');   
 
 });
 
