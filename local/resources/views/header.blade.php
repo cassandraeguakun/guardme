@@ -73,7 +73,7 @@ if(isset(Auth::user()->verification)){
 						<li><a href="<?php echo $url;?>/search">Security Personnel</a></li>
 						<li><a href="<?php echo $url;?>/#">Find Jobs</a></li>
 						<li><a href="<?php echo $url;?>/how-it-works">How It Works</a></li>
-			  <li><a href="{{ url('referral') }}">Loyalty</a></li>
+			  {{--<li><a href="{{ url('referral') }}">Loyalty</a></li>--}}
 						<li><a style="border-left: 1px solid #b3b0b0;" href="<?php echo $url;?>/#"><i class="fa fa-heart-o"></i></a></li>
 						<li><a href="<?php echo $url;?>/#"><i class="fa fa-envelope-o"></i></a></li>
 						<li><a href="<?php echo $url;?>/#"><i class="fa fa-bell-o"></i></a></li>

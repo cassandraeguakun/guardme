@@ -103,7 +103,7 @@ class RegisterController extends Controller
         ]);
 
         if ($refEmail = session('referral')) {
-            $refUser = User::where('email', $refEmail)->first();
+            $refUser = User::where('name', $refEmail)->first();
 
             if ($refUser && $refUser->id) {
                 Referral::create([

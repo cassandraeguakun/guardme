@@ -42,6 +42,7 @@ class ReferralController extends Controller
             'referral',
             [
                 'user' => Auth::user(),
+                'editprofile' => [0 => Auth::user()],
                 'referrals' => $user->getReferrals(),
                 'items' => $items
             ]
@@ -61,6 +62,7 @@ class ReferralController extends Controller
             'redeem',
             [
                 'user' => Auth::user(),
+                'editprofile' => [0 => Auth::user()],
                 'items' => Item::all()
             ]
         );

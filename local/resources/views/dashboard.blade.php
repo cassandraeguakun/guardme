@@ -152,6 +152,12 @@
 						<?php } ?>
 
 						<li>
+							<a href="<?php echo $url;?>/referral">
+								<i class="fa fa-sign-out" aria-hidden="true"></i>
+
+								Loyalty </a>
+						</li>
+						<li>
 							<a href="<?php echo $url;?>/logout">
 							<i class="fa fa-sign-out" aria-hidden="true"></i>
 

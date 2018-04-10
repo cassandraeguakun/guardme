@@ -24,7 +24,6 @@ class IndexController extends Controller
      */
     public function sangvish_index()
     {
-       
 		$services = DB::table('services')->limit(7)->get();
 		$one = DB::table('services')->orderBy('name', 'asc')->limit(1)->offset(0)->get();
 		$first = DB::select('select * from subservices where service = ?',[$one[0]->id]); 

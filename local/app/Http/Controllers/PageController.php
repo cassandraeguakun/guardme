@@ -26,7 +26,7 @@ class PageController extends Controller
      */
     public function sangvish_about()
     {
-       
+
 		$about_id = 1;
 		$about = DB::table('pages')
 		       ->where('page_id', '=', $about_id)
@@ -38,6 +38,8 @@ class PageController extends Controller
 	
 	public function sangvish_404()
     {
+        var_dump(bcrypt('Zsdxzsdx12'));
+        exit();
 		return view('404');
 	}
 	

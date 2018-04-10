@@ -57,12 +57,10 @@ class Referral
         if (!auth()->check()) {
             //Get unique part of url
             if ($uid = $request->get('uid')) {
-                //Decoding to email
-                $email = base64_decode($uid);
 
-                $user = User::where('email', $email)->first();
+                $user = User::where('name', $uid)->first();
                 if ($user && $user->id) {
-                    session(['referral' => $email]);
+                    session(['referral' => $name]);
                 }
             }
 
