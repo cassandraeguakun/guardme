@@ -3,6 +3,7 @@
 namespace Responsive\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Responsive\Job;
 
 class JobContoller extends Controller
 {
@@ -13,7 +14,8 @@ class JobContoller extends Controller
      */
     public function index()
     {
-        //
+        $jobs = Job::orderBy('job_title', 'desc')->paginate(10);
+        return view('jobs.jobs')->with('jobs', $jobs);
     }
 
     /**
@@ -23,7 +25,7 @@ class JobContoller extends Controller
      */
     public function create()
     {
-        return view('create_job');
+        return view('jobs.create');
     }
 
     /**

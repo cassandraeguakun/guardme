@@ -88,7 +88,7 @@
 				</div>
 				
 				<div class="profile-userbuttons">
-					<a href="<?php echo $url;?>/job" class="btn btn-primary btn-sm btn-block">Create Job</a>
+					<a href="<?php echo $url;?>/jobs/create" class="btn btn-primary btn-sm btn-block">Create Job</a>
 					<?php /* ?><a href="{{ route('logout') }}" class="btn btn-danger btn-sm">Sign Out</a><?php */?>
 					
 				</div>

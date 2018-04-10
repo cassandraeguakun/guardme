@@ -1,16 +1,9 @@
- 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-
-    
+<head>   
 
    @include('style')
 	
-
-
-
-
 </head>
 <body>
 
@@ -20,16 +13,7 @@
     @include('header')
 
     <!-- slider -->
-    
-
-	
-    
-	
-	
-	
-	
-	
-	
+    	
 	
 	<div class="clearfix"></div>
 	

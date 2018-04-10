@@ -61,7 +61,6 @@
   </thead>
   <tbody>
   <?php 
-  $ii=1;
   foreach($jobs as $job){?>
     <tr>
       <th><?php echo $job_title;?></th>
