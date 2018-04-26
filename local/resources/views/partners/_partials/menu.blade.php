@@ -12,8 +12,8 @@
 
       <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text">
-                    Thumbsup
+                <a href="<?php echo $url;?>/partners" class="simple-text">
+                    <img src="{{ asset('local/images/settings/1501838962.png') }}" title="Thumbsup">
                 </a>
             </div>
 

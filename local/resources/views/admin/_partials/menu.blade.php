@@ -12,13 +12,14 @@
 
       <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text">
-                    Thumbsup
+                <a href="<?php echo $url;?>/admin" class="simple-text">
+                    <img src="{{ asset('local/images/settings/1501838962.png') }}" title="Thumbsup">
                 </a>
             </div>
 
             <ul class="nav">
                 <li class="<?php echo Request::is('admin')?'active':''; ?>"><a href="<?php echo $url;?>/admin"><i class="fa fa-laptop"></i> Dashboard </a></li>
+                <li class="<?php echo Request::is('admin/users')?'active':''; ?>"><a href="<?php echo $url;?>/admin/users"><i class="fa fa-user"></i> Users </a></li>
           <li class="<?php echo Request::is('admin/services')?'active':''; ?>"><a href="<?php echo $url;?>/admin/services"><i class="fa fa-cog"></i> Services </a></li>
           <li class="<?php echo Request::is('admin/subservices')?'active':''; ?>"><a href="<?php echo $url;?>/admin/subservices"><i class="fa fa-cog"></i> Sub Services </a></li>
           

@@ -10,33 +10,14 @@
                             <div class="content">
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <div class="icon-big icon-warning text-center">
-                                            <i class="ti-user"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <div class="numbers">
-                                            <p>Total Users</p>
-                                            <?php echo $total_user;?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6">
-                        <div class="card">
-                            <div class="content">
-                                <div class="row">
-                                    <div class="col-xs-4">
                                         <div class="icon-big icon-success text-center">
                                             <i class="ti-user"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="numbers">
-                                            <p>Total Sellers</p>
-                                            <?php echo $total_seller;?>
+                                            <p>Total Employers</p>
+                                            <?php echo $total_employers;?>
                                         </div>
                                     </div>
                                 </div>
@@ -55,8 +36,27 @@
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="numbers">
-                                            <p>Total Customers</p>
-                                            <?php echo $total_customer;?>
+                                            <p>Total Freelancers</p>
+                                            <?php echo $total_freelancers;?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="icon-big icon-warning text-center">
+                                            <i class="ti-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <div class="numbers">
+                                            <p>Active Jobs</p>
+                                            <?php echo $total_active_jobs;?>
                                         </div>
                                     </div>
                                 </div>
@@ -74,8 +74,8 @@
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="numbers">
-                                            <p>Total Booking</p>
-                                            <?php echo $total_booking;?>
+                                            <p>Open Tickets</p>
+                                            <?php echo $total_open_tickets;?>
                                         </div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="numbers">
-                                            <p>Today Booking</p>
+                                            <p>Uncleared VAT</p>
                                             <?php echo $today_booking;?>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="numbers">
-                                            <p>Total Shop</p>
+                                            <p>Uncleared Fees</p>
                                             <?php echo $total_shop;?>
                                         </div>
                                     </div>
