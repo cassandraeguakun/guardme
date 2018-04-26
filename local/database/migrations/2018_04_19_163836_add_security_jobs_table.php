@@ -31,13 +31,15 @@ class AddSecurityJobsTable extends Migration
             $table->integer('monthly_working_days')->nullable();
             $table->float('per_hour_rate',  8, 2)->nullable();
             $table->string('wallet_debit_frequency')->nullable();
-            $table->boolean('visibale_to_all_security_personal')->nullable();
+            $table->boolean('visible_to_all_security_personal')->nullable();
+            $table->boolean('visible_to_favourite')->nullable();
             $table->string('specific_area_min')->nullable();
             $table->string('specific_area_max')->nullable();
             $table->string('specific_category_id')->nullable();
             $table->integer('security_category_id')->nullable();
             $table->integer('business_category_id')->nullable();
             $table->integer('created_by');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

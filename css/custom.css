@@ -1,0 +1,234 @@
+.sign-in li.li-last::before{
+	background-image: none !important;
+}
+
+/* .banner-job {
+	background-image: url('../images/bg/header-banner.jpg');
+} */
+
+p.after-heading{
+	font-size: 2.5em;
+}
+ a.btn {
+    padding: 5px 25px 7px;
+    background-color: #0072bc;
+    font-weight: 400;
+    font-size: 14px;
+    color: #fff;
+    margin-left: 20px;
+}
+a.btn:hover {
+
+    background-color: #00a651;
+    color: #fff;
+    text-decoration: none;
+
+}
+
+.job-category-items {
+   
+    padding: 15px 0px 0px;
+}
+
+.banner-class {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 30%;
+    position: absolute; 
+  
+    transition: opacity .8s;
+}
+
+	
+.innerbg {
+    text-align: left !important;
+    padding: 20px 20px 0px 20px;
+}	
+.user {
+    padding: 20px;
+}
+.user img {
+    float: left;
+    border-radius: 50px;
+}	
+#flexiselDemotesti img {
+    width: auto !important;
+    min-width: auto !important;
+}
+.user-txt {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.user h5 {
+    font-size: 14px;
+    margin-top: 0px;
+    position: relative;
+    left: 10px;
+}
+#flexiselDemotesti .user {
+    text-align: left;
+}
+.titlesection {
+    position: absolute !important;
+    bottom: 0px !important;
+    left: 1px !important;
+    right: 5px !important;
+    padding-left: 8px !important;
+    /* padding-right: 8px !important; */
+    width: 100%;
+    padding-bottom: 8px !important;
+    background: -webkit-linear-gradient(transparent 0%, rgba(0, 0, 0, 0.95) 100%) !important;
+    background: -moz-linear-gradient(transparent 0%, rgba(0, 0, 0, 0.95) 100%) !important;
+    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.65) 100%) !important;
+}
+
+.titlesection h3, .titlesection span, .titlesections h3, .titlesections span {
+    color: #fff;
+}
+.paddingoff {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.height10 {
+    height: 10px;
+    clear: both;
+}
+.social-widget .fa-pinterest-square{
+	color: #c1272d;
+}
+
+.social-widget .fa-instagram{
+	color: #c1272d;
+}
+
+#download {
+    background-image: url(../img/jar.jpg);
+    }
+.job-bg {
+    background-image:  url(../img/jar.jpg);
+}
+
+@media screen and (max-width: 1920px) and (min-width: 1200px) {
+	 
+    .banner-class {
+			position: absolute; 
+		 	width: 100%;
+			height: 100%; 
+		}
+	.top-mrgn-10{
+		margin-top: 10%;
+	}
+	.bottom-mrgn-10{
+		margin-bottom: 6%;
+	}
+
+	.banner-class {
+		height: 70%;
+	}
+
+
+	.nbs-flexisel-inner .weightbg
+	{
+		background:#ffffff !important;
+		margin-left: 32px;
+	    margin-right: 32px;
+		padding-bottom:10px;
+		padding-top:2px;
+		border:1px solid #EDEEEE;
+		border-radius:4px;
+	}
+	.nbs-flexisel-item img {
+	    min-width: 230px;
+	    cursor: pointer;
+	    position: relative;
+	    margin-top: 10px;
+	    margin-bottom: 10px;
+		max-height:150px;
+		
+	}
+
+	.job-category-items {
+    	margin-top: 55px;
+	}
+
+	.video .big {
+    	min-height: 600px;
+	}
+	.left10 {
+    left: 7px;
+	}
+	.justmove{
+		min-height: 295px;
+	}
+
+
+}
+@media screen and (max-width: 1920px) and (min-width: 1400px) {
+
+          
+        }
+
+@media (min-width: 1200px) {
+            .container1 {
+                width: 1280px;
+            }
+
+            .container1 {
+                padding-right: 15px;
+                padding-left: 15px;
+                margin-right: auto;
+                margin-left: auto;
+            }
+
+
+        }
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px)
+{
+	
+}
+@media(max-width: 480px){
+	h1.h-responsive{
+		font-size: 13px;
+	}
+	p.after-heading{
+	font-size: 1em;
+	}
+
+	.job-category-items {
+		margin-top: 30px;
+		}
+
+		.nbs-flexisel-nav-left, .nbs-flexisel-nav-right {
+   
+    top: 56%;
+}
+}
+/*************** ipad ************/
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
+.top-mrgn-10{
+		margin-top: 10%;
+	}
+	.bottom-mrgn-10{
+		margin-bottom: 6%;
+	}
+	}
+@media(max-width: 767px){
+	h1.h-responsive{
+		font-size: 13px;
+
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+h4.h-responsive{
+		font-size: 10px;
+}
+	
+	p.after-heading{
+	font-size: 0.8em;
+}
+}
+
+.clear-both{
+	clear: both;
+}

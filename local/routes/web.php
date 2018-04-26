@@ -309,6 +309,13 @@ Route::group(['prefix' => '/support/tickets', 'middleware' => 'auth'], function 
 Route::group(['prefix' => '/jobs', 'middleware' => 'auth'], function () {
 	Route::get('/create', 'JobsController@create')->name('job.create');
 	Route::get('/schedule/{id}', 'JobsController@schedule')->name('job.schedule');
+	Route::get('/broadcast/{id}', 'JobsController@broadcast')->name('job.broadcast');
+	Route::get('/payment-details/{id}', 'JobsController@paymentDetails')->name('job.payment.details');
+
+	Route::post('/create-paypal-payment/{id}', 'PaypalPaymentController@postPayment')->name('create.paypal.payment');
+	Route::get('/payment-status', 'PaypalPaymentController@getPaymentStatus')->name('payment.status');
+
+	Route::get('/job-confirmation', 'JobsController@confirmation')->name('job.confirmation');
 });
 
 

@@ -7,114 +7,86 @@ $setid=1;
 		->where('id', '=', $setid)
 		->get();
 ?>
-<footer>
-	  <div class="footerbar">
-	   <div class="clearfix"></div>
-	   <div class="col-md-12">
-	    <div class="col-md-1"></div>
-		<div class="col-md-10">
-		
-		<div class="col-md-4">
-		<div>
-		
-		
-		 <a class="" href="<?php echo $url;?>">
-		   <?php if(!empty($setts[0]->site_logo)){?>
-		  
-		  <img src="<?php echo $url.'/local/images/settings/'.$setts[0]->site_logo;?>" border="0" alt="<?php echo $setts[0]->site_name;?>" class="img-responsive footres"/>
-		   <?php } else {?>
-		   <?php echo $setts[0]->site_name;?>
-		   <?php } ?>
-		  </a>
-		</div>
-		
-		<div class="social">
-		<ul>
-		<li><a href="<?php echo $setts[0]->site_facebook;?>" target="_blank"><img src="<?php echo $url."/local/images/facebook.png";?>" border="0" alt="facebook" title="facebook"></a></li>
-		<li><a href="<?php echo $setts[0]->site_twitter;?>" target="_blank"><img src="<?php echo $url."/local/images/twitter.png";?>" alt="twitter" border="0" title="twitter"></a></li>
-		<li><a href="<?php echo $setts[0]->site_gplus;?>" target="_blank"><img src="<?php echo $url."/local/images/gplus.png";?>" alt="gplus" border="0" title="gplus"></a></li>
-		<li><a href="<?php echo $setts[0]->site_pinterest;?>" target="_blank"><img src="<?php echo $url."/local/images/instagram.png";?>" alt="instagram" border="0" title="instagram"></a></li>
-		<li><a href="<?php echo $setts[0]->site_instagram;?>" target="_blank"><img src="<?php echo $url."/local/images/pinterest.png";?>" alt="pinterest" border="0" title="pinterest"></a></li>
-		</ul>
-		
-		</div>
-		
-		</div>
-		
-		<div class="col-md-2">
-		<h4>Pages</h4>
-		<ul>
-		<li><a href="<?php echo $url;?>">Home</a></li>
-		<li><a href="<?php echo $url;?>/about">About </a></li>
-		<li><a href="<?php echo $url;?>/terms-conditions">Terms and Conditions </a></li>
-		<li><a href="<?php echo $url;?>/privacy-policy">Privacy Policy </a></li>
-		<li><a href="<?php echo $url;?>/contact">Contact </a></li>
-		</ul>
-		
-		</div>
-		
-		<div class="col-md-2">
-		<h4>Customers </h4>
-		<ul>
-		<li><a href="<?php echo $url;?>/how-it-works">How it works </a></li>
-		<li><a href="<?php echo $url;?>/safety">Safety </a></li>
-		<li><a href="<?php echo $url;?>/service-guide">Service Guide </a></li>
-		<li><a href="<?php echo $url;?>/how-to-pages">How To Pages </a></li>
-		</ul>
-		</div>
-		
-		<div class="col-md-2">
-		<h4>Pros </h4>
-		<ul>
-		
-		<li><a href="<?php echo $url;?>/register">Signup </a></li>
-		<li><a href="<?php echo $url;?>/login">Login </a></li>
-		<li><a href="<?php echo $url;?>/success-stories">Success stories </a></li>
-		</ul>
-		</div>
-		
-		<div class="col-md-2">
-		<h4>Questions? </h4>
-		<ul>
-		<li><a href="<?php echo $url;?>/contact">Contact </a></li>
-		<li><a href="#">Android </a></li>
-		<li><a href="#">Iphone </a></li>
+<footer id="footer" class="clearfix">
 
-		</ul>
-		</div>
+	<!-- footer-top -->
+	<section class="footer-top clearfix">
+		<div class="container">
+			<div class="row">
+				<!-- footer-widget -->
+				<div class="col-sm-3">
+					<div class="footer-widget">
+						<h3>Quik Links</h3>
+						<ul>
+							<li><a href="<?php echo $url;?>">Home</a></li>
+							<li><a href="<?php echo $url;?>/about">About Us</a></li>
+							<li><a href="<?php echo $url;?>/terms-conditions">Term & Conditions</a></li>
+							<li><a href="<?php echo $url;?>/privacy-policy">Privacy Policy</a></li>
+							<li><a href="<?php echo $url;?>/contact">Contact Us</a></li>
+
+
 		
+							
+						</ul>
+					</div>
+				</div><!-- footer-widget -->
+
+				<!-- footer-widget -->
+					<div class="col-sm-3">
+						<div class="footer-widget">
+							<h3>Customers</h3>
+							<ul>
+								<li><a href="<?php echo $url;?>/register">Signup </a></li>
+								<li><a href="<?php echo $url;?>/login">Login </a></li>
+								<li><a href="<?php echo $url;?>/how-it-works">How it works </a></li>
+								<li><a href="<?php echo $url;?>/safety">Safety </a></li>
+								<li><a href="<?php echo $url;?>/service-guide">Service Guide </a></li>
+								<li><a href="<?php echo $url;?>/how-to-pages">How To Pages </a></li>
+								<li><a href="<?php echo $url;?>/success-stories">Success stories </a></li>
+							</ul>
+						</div>
+					</div><!-- footer-widget -->
+				
+				<!-- footer-widget -->
+					<div class="col-sm-3">
+						<div class="footer-widget social-widget">
+							<h3>Follow us on</h3>
+							<ul>
+								<li><a href="<?php echo $setts[0]->site_facebook;?>" target="_blank"><i class="fa fa-facebook-official"></i>Facebook</a></li>
+								<li><a href="<?php echo $setts[0]->site_twitter;?>" target="_blank"><i class="fa fa-twitter-square"></i>Twitter</a></li>
+								<li><a href="<?php echo $setts[0]->site_gplus;?>" target="_blank"><i class="fa fa-google-plus-square"></i>Google+</a></li>
+								<li><a  href="<?php echo $setts[0]->site_pinterest;?>" target="_blank"><i class="fa fa-pinterest-square"></i>Pinterest</a></li>
+								<li><a  href="<?php echo $setts[0]->site_pinterest;?>" target="_blank"><i class="fa fa-instagram"></i>Instagram</a></li>
+
+								
+							</ul>
+						</div>
+					</div>
+					<!-- footer-widget -->
+					<div class="col-sm-3">
+						<div class="footer-widget news-letter">
+							<h3>Newsletter</h3>
+							<p>Jobs is Worldest leading Portal platform that brings!</p>
+							<!-- form -->
+							<form action="#">
+								<input type="email" class="form-control" placeholder="Your email id">
+								<button type="submit" class="btn btn-primary">Sign Up</button>
+							</form><!-- form -->			
+						</div>
+					</div><!-- footer-widget -->
 		</div>
-		<div class="col-md-1"></div>
-	  </div>
+	</section>
+
+
+	<div class="footer-bottom clearfix text-center">
+			<div class="container">
+
+				<p><?php if($setts[0]->site_copyright!=""){?><?php echo $setts[0]->site_copyright; } else {?>&copy; <?php echo date('Y');?>. All Rights Reserved.<?php } ?></p>
+			</div>
+		</div><!-- footer-bottom -->
+
+
 	  
-	  </div>
-	  
-	  
-	  <div class="clearfix"></div>
-	  
-	  <div class="footerbottom">
-	  <div class="col-md-12">
-	 
-	  <div class="col-md-12">
-	  <div class="col-md-12 paddingoff" align="center">
-	  <p><?php if($setts[0]->site_copyright!=""){?><?php echo $setts[0]->site_copyright; } else {?>&copy; <?php echo date('Y');?>. All Rights Reserved. Designed by Migrateshop<?php } ?></p>
-	  </div>
-	  
-	  <!--<div class="col-md-6 paddingoff">
-	  <ul>
-	  <li><a href="#">Privacy Policy</a></li>
-	  <li><a href="#">Terms of use</a></li>
-	  </ul>
-	  </div>-->
-	  
-	  
-	  </div>
-	  
-	  
-	  
-	  
-	  </div>
-	  </div>
         
       </footer>
 
@@ -211,7 +183,8 @@ $setid=1;
                 }
             });
             if (typeof $('.error-span:eq(0)').closest('.form-group') != 'undefined') {
-                var scrollPosition = $('.error-span:visible:eq(0)').closest('.form-group').offset().top - 70;
+				if (typeof $('.error-span:visible:eq(0)').closest('.form-group').offset() != 'undefined')
+				var scrollPosition = $('.error-span:visible:eq(0)').closest('.form-group').offset().top - 70;
 
                 $("html, body").animate({ scrollTop: scrollPosition }, 1000);
             }

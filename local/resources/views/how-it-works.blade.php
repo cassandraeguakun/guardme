@@ -16,53 +16,39 @@
     
 
     <!-- fixed navigation bar -->
-    @include('header')
+   
+    	@include('header')
 
     <!-- slider -->
     
 
-	
-    
-	
-	
-	
-	
-	
-	
-	
-	<div class="clearfix"></div>
-	
-	
-	
-	
-	
-	<div class="video">
-	<div class="clearfix"></div>
-	<div class="headerbg">
-	 <div class="col-md-12" align="center"><h1><?php echo $how[0]->page_title;?></h1></div>
-	 </div>
+<section class="clearfix job-bg  ad-profile-page">
 	<div class="container">
-	
-	 <div class="height30"></div>
-	 <div class="row">
-	<div class="col-md-12">
-	
-	<?php echo str_replace("'","",$how[0]->page_desc);?>
-	</div>
-	
-	
-	
-	
-	</div>
-	
-	</div>
-	</div>
-	
+		<div class="breadcrumb-section">
+			<ol class="breadcrumb">
+				<li><a href="{{URL::to('/')}}">Home</a></li>
+				<li><?php echo $how[0]->page_title;?></li>
+			</ol>						
+			<h2 class="title"><?php echo $how[0]->page_title;?></h2>
+		</div>
 	
 	
 
-      <div class="clearfix"></div>
-	   <div class="clearfix"></div>
+
+	<div class="career-objective section">
+		<div class="user-pro-section">
+			<!-- profile-details -->
+			<div class="profile-details section">
+				<h2><?php echo $how[0]->page_title;?></h2>
+			</div>
+		</div>
+
+		<?php echo str_replace("'","",$how[0]->page_desc);?>
+
+	</div>
+</div>
+</section>
+
 
       @include('footer')
 </body>

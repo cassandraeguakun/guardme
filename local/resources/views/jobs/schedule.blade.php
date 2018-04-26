@@ -23,7 +23,7 @@
 <div class="video">
     <div class="clearfix"></div>
     <div class="headerbg">
-        <div class="col-md-12" align="center"><h1>Create Job</h1></div>
+        <div class="col-md-12" align="center"><h1>Create Schedule</h1></div>
     </div>
     <div class="container" >
         <div style="margin-top: 20px;"></div>
@@ -96,6 +96,24 @@
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor
                                     </select>
+                                    <span class="text-danger error-span"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Wallet Debit Frequency</label>
+                                    <div class="wallet_debit_frequency">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="wallet_debit_frequency" value="hourly">
+                                                Pay Hourly
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="wallet_debit_frequency" value="daily">
+                                                Pay Daily
+                                            </label>
+                                        </div>
+                                    </div>
                                     <span class="text-danger error-span"></span>
                                 </div>
                                 <label for="">Details/Calculations</label>
@@ -171,7 +189,7 @@
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function(data) {
-                    var nextUrl = "{{ route('job.schedule', ['id' => $id]) }}";
+                    var nextUrl = "{{ route('job.broadcast', ['id' => $id]) }}";
                     window.location.href = nextUrl;
                 },
                 error: function(data) {

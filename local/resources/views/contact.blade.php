@@ -25,7 +25,29 @@
     
 	
 	
-	
+	<section class=" job-bg ad-details-page">
+		<div class="container">
+
+			<div class="breadcrumb-section">
+				<ol class="breadcrumb">
+					<li><a href="{{URL::to('/')}}">Home</a></li>
+					<li><?php echo $contact[0]->page_title;?></li>
+				</ol>						
+				<h2 class="title"><?php echo $contact[0]->page_title;?></h2>
+			</div>
+
+			<div class="job-postdetails post-resume">
+				<div class="row">	
+					<div class="col-md-8 clearfix">
+
+						
+					</div>
+				</div>
+			</div>
+
+		
+		</div>
+	</section>
 	
 	
 	
