@@ -57,23 +57,7 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <p>Reports</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <p>Messages</p>
-                            </a>
-                        </li>
-                        <li>
-                          <a href="<?php echo $url;?>/admin/settings">
-                           
-                            <span>Settings</span>
-                          </a>
-                        </li>
-                       
+                        
                         <li class="dropdown">
                         	
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -90,7 +74,13 @@
                               </a>
                               <ul class="dropdown-menu">
                                 <li><a href="<?php echo $url;?>/admin/edituser/{{Auth::user()->id}}"> Edit Profile</a></li>
-                    
+                    <li>
+                      <a href="<?php echo $url;?>/admin/settings">
+                       
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                   
                     <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 					<i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
 					
