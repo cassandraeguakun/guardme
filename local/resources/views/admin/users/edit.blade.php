@@ -56,7 +56,9 @@
               <div class="ln_solid"></div>
               <div class="form-group">
                   <div class="col-md-6 col-md-offset-3">
-                      <button id="send" type="submit" class="btn btn-info btn-fill btn-wd">Submit</button>
+                      <div class="text-center">
+                        <button id="send" type="submit" class="btn btn-info btn-fill btn-wd">Submit</button>
+                      </div>
                   </div>
               </div>
 
@@ -180,6 +182,7 @@
               
                        
                         <div class="ln_solid"></div>
+                        <div class="text-center">
                         <div class="form-group">
                           <div class="col-md-6 col-md-offset-3">
                             <a href="<?php echo $url;?>/admin/users" class="btn btn-primary">Cancel</a>
@@ -191,6 +194,7 @@
                 <?php } ?>
                           </div>
                         </div>
+                      </div>
                       </form>
                     </div>
                   </div>

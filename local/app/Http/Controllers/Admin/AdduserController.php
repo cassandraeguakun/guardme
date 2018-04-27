@@ -32,7 +32,7 @@ class AdduserController extends Controller
 
     {
 
-        return view('admin.adduser');
+        return view('admin.users.add');
 
     }
     /**

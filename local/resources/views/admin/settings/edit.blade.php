@@ -369,14 +369,16 @@
             
                      
                       <div class="ln_solid"></div>
-                      <div class="form-group">
-                        <div class="col-md-6 col-md-offset-3">
-                          <a href="<?php echo $url;?>/admin/settings" class="btn btn-primary">Cancel</a>
-              <?php if(config('global.demosite')=="yes"){?><button type="button" class="btn btn-success btndisable">Submit</button> 
-                <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span><?php } else { ?>
-              
-                          <button id="send" type="submit" class="btn btn-info btn-fill btn-wd">Submit</button>
-                <?php } ?>
+                      <div class="text-center">
+                        <div class="form-group">
+                          <div class="col-md-6 col-md-offset-3">
+                            <a href="<?php echo $url;?>/admin/settings" class="btn btn-primary">Cancel</a>
+                <?php if(config('global.demosite')=="yes"){?><button type="button" class="btn btn-success btndisable">Submit</button> 
+                  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span><?php } else { ?>
+                
+                            <button id="send" type="submit" class="btn btn-info btn-fill btn-wd">Submit</button>
+                  <?php } ?>
+                          </div>
                         </div>
                       </div>
                     </form>
