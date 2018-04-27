@@ -13,14 +13,23 @@
       <div class="sidebar-wrapper">
             <div class="logo">
                 <a href="<?php echo $url;?>/admin" class="simple-text">
-                    <img src="{{ asset('local/images/settings/1501838962.png') }}" title="Thumbsup">
+                    <?php if(!empty($setts[0]->site_logo)){?>
+                    <img src="<?php echo $url.'/local/images/settings/'.$setts[0]->site_logo;?>" title="Thumbsup">
+                    <?php }else{
+                      echo $setts[0]->site_name;
+                    }?>
                 </a>
             </div>
 
             <ul class="nav">
                 <li class="<?php echo Request::is('admin')?'active':''; ?>"><a href="<?php echo $url;?>/admin"><i class="fa fa-laptop"></i> Dashboard </a></li>
-                <li class="<?php echo Request::is('admin/users')?'active':''; ?>"><a href="<?php echo $url;?>/admin/users"><i class="fa fa-user"></i> Users </a></li>
-          <li class="<?php echo Request::is('admin/services')?'active':''; ?>"><a href="<?php echo $url;?>/admin/services"><i class="fa fa-cog"></i> Services </a></li>
+                <li><a href="#"><i class="fa fa-credit-card"></i> Wallet </a></li>
+                <li class="<?php echo Request::is('admin/users')?'active':''; ?>"><a href="<?php echo $url;?>/admin/users"><i class="fa fa-user"></i> Manage Users </a></li>
+                <li><a href="#"><i class="fa fa-cubes"></i> Manage Jobs </a></li>
+                <li><a href="#"><i class="fa fa-check-square-o"></i> Verification </a></li>
+                <li><a href="#"><i class="fa fa-area-chart"></i> Reports </a></li>
+                <li><a href="#"><i class="fa fa-life-ring"></i> Support </a></li>
+          <!--<li class="<?php echo Request::is('admin/services')?'active':''; ?>"><a href="<?php echo $url;?>/admin/services"><i class="fa fa-cog"></i> Services </a></li>
           <li class="<?php echo Request::is('admin/subservices')?'active':''; ?>"><a href="<?php echo $url;?>/admin/subservices"><i class="fa fa-cog"></i> Sub Services </a></li>
           
           
@@ -37,7 +46,7 @@
           
           <li class="<?php echo Request::is('admin/shop')?'active':''; ?>"><a href="<?php echo $url;?>/admin/shop"><i class="fa fa-shopping-cart"></i> Shop </a></li>
           
-          <li class="<?php echo Request::is('admin/settings')?'active':''; ?>"><a href="<?php echo $url;?>/admin/settings"><i class="fa fa-cog"></i> Settings </a></li>
+          <li class="<?php echo Request::is('admin/settings')?'active':''; ?>"><a href="<?php echo $url;?>/admin/settings"><i class="fa fa-cog"></i> Settings </a></li> -->
             </ul>
       </div>
     </div>

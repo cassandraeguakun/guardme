@@ -12,8 +12,12 @@
 
       <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="<?php echo $url;?>/partners" class="simple-text">
-                    <img src="{{ asset('local/images/settings/1501838962.png') }}" title="Thumbsup">
+                <a href="<?php echo $url;?>/admin" class="simple-text">
+                    <?php if(!empty($setts[0]->site_logo)){?>
+                    <img src="<?php echo $url.'/local/images/settings/'.$setts[0]->site_logo;?>" title="Thumbsup">
+                    <?php }else{
+                      echo $setts[0]->site_name;
+                    }?>
                 </a>
             </div>
 
