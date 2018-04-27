@@ -6,12 +6,12 @@
   <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('local/images/settings/1501838972.png') }}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <?php 
-  		$setid=1;
-		$setts = DB::table('settings')
-		->where('id', '=', $setid)
-		->get();
-	?>
-	<title><?php echo $setts[0]->site_name;?></title>
+      $setid=1;
+    $setts = DB::table('settings')
+    ->where('id', '=', $setid)
+    ->get();
+  ?>
+  <title><?php echo $setts[0]->site_name;?></title>
 
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -73,16 +73,16 @@
                             </a>
                         </li>
                         <li class="dropdown">
-                        	
+                          
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <?php 
-									 $url = URL::to("/");
-									  $logphoto=Auth::user()->photo;
-									 if($logphoto!=""){?>
-						                <img src="<?php echo  $url;?>/local/images/userphoto/<?php echo $logphoto;?>" alt="..." class="img-circle profile_img">
-									 <?php } else { ?>
-									   <img src="{{asset('local/resources/assets/img/user.png')}}" alt="..." class="img-circle profile_img">
-							<?php } ?>
+                   $url = URL::to("/");
+                    $logphoto=Auth::user()->photo;
+                   if($logphoto!=""){?>
+                            <img src="<?php echo  $url;?>/local/images/userphoto/<?php echo $logphoto;?>" alt="..." class="img-circle profile_img">
+                   <?php } else { ?>
+                     <img src="{{asset('local/resources/assets/img/user.png')}}" alt="..." class="img-circle profile_img">
+              <?php } ?>
                   <p>&nbsp;{{ Auth::user()->name }}</p>
                   <b class="caret"></b>
                               </a>
@@ -90,9 +90,9 @@
                                 <!--<li><a href="<?php echo $url;?>/admin/edituser/{{Auth::user()->id}}"> Edit Profile</a></li> -->
  
                     <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-					<i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-					
-					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+          <i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+          
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
                               </ul>
