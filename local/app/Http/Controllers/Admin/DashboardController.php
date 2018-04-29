@@ -1,5 +1,4 @@
 <?php namespace Responsive\Http\Controllers\Admin;
-
 use Responsive\Http\Controllers\Admin\AdminController;
 /*use App\Article;
 use App\ArticleCategory;
@@ -8,10 +7,8 @@ use App\Photo;
 use App\PhotoAlbum;*/
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-
 class DashboardController extends AdminController {
-
-    public function __construct()
+        public function __construct()
     {
         parent::__construct();
         view()->share('type', '');
@@ -138,9 +135,5 @@ $javas.="{ label: '$curr_date', y: $date1 },";
 		'testimonials' => $testimonials,'total_active_jobs' => $total_active_jobs,'total_open_tickets' => $total_open_tickets, 'total_vat' => $total_vat, 'total_fees' => $total_fees);
 		
 		return view('admin.dashboard.index')->with($data);
-		
-		
-		
-		
 	}
 }
