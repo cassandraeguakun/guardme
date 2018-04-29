@@ -100,16 +100,17 @@ $javas.="{ label: '$curr_date', y: $date1 },";
 		  
 					  
 					  
-			/*$booking	= DB::table('booking')
+			$booking	= DB::table('booking')
 			            ->leftJoin('users', 'users.email', '=', 'booking.user_email')
 			           ->orderBy('booking.curr_date','desc')
 					   ->limit(5)->offset(0)
-					   ->get();	  */
+					   ->get();	  
 
-			$booking	= DB::table('security_jobs')
+			/* $booking	= DB::table('security_jobs')
 			           ->orderBy('created_at','desc')
 					   ->limit(5)->offset(0)
-					   ->get();	  
+					   ->get(); */	 
+
 
 					  
 				$set_id=1;

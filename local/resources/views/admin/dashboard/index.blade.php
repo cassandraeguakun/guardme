@@ -241,25 +241,28 @@ chart.render();
                       </th>
                     </tr>
           
-          <?php foreach($booking as $book){?>
-          <tr height="20"></tr>
-                    <tr>
-                      <td>
-                       <?php echo $book->name;?>
-                      </td>
-                      <td>
-                       <?php echo $book->booking_date;?>
-                      </td>
-            
-            <td>
-                       <?php echo $book->total_amt.' '.$setting[0]->site_currency;?>
-                      </td>
-            
-            <td>
-                       <?php echo $book->status;?>
-                      </td>
-                    </tr>
-          <?php } ?>
+          <?php 
+          if(!empty($booking)){
+            foreach($booking as $book){?>
+            <tr height="20"></tr>
+                      <tr>
+                        <td>
+                         <?php echo $book->name;?>
+                        </td>
+                        <td>
+                         <?php echo $book->booking_date;?>
+                        </td>
+              
+              <td>
+                         
+                         <?php echo $book->total_amt.' '.$setting[0]->site_currency;?>
+                        </td>
+              
+              <td>
+                         <?php echo $book->status;?>
+                        </td>
+                      </tr>
+            <?php } } ?>
                   </table>
 
                             </div>
@@ -297,33 +300,34 @@ chart.render();
           
           <?php 
           $viewst = "";
-          foreach($users as $user){
-            $sta=$user->admin; if($sta==1){ $viewst="Admin"; } else if($sta==2) { $viewst="Seller"; } else if($sta==0) { $viewst="Customer"; }
-            ?>
-          <tr height="10"></tr>
-                    <tr>
-                      <?php 
-             $userphoto="/userphoto/";
-            $path ='/local/images'.$userphoto.$user->photo;
-            if($user->photo!=""){
-            ?>
-             <td><img src="<?php echo $url.$path;?>" class="thumb" width="40"></td>
-             <?php } else { ?>
-              <td><img src="<?php echo $url.'/local/images/nophoto.jpg';?>" class="thumb" width="40"></td>
-             <?php } ?>
-                      <td>
-                       <?php echo $user->name;?>
-                      </td>
-            
-            <td>
-                      <?php echo $user->phone;?>
-                      </td>
-            
-            <td>
-                       <?php echo $viewst;?>
-                      </td>
-                    </tr>
-          <?php } ?>
+          if(!empty($users)){
+            foreach($users as $user){
+              $sta=$user->admin; if($sta==1){ $viewst="Admin"; } else if($sta==2) { $viewst="Seller"; } else if($sta==0) { $viewst="Customer"; }
+              ?>
+            <tr height="10"></tr>
+                      <tr>
+                        <?php 
+               $userphoto="/userphoto/";
+              $path ='/local/images'.$userphoto.$user->photo;
+              if($user->photo!=""){
+              ?>
+               <td><img src="<?php echo $url.$path;?>" class="thumb" width="40"></td>
+               <?php } else { ?>
+                <td><img src="<?php echo $url.'/local/images/nophoto.jpg';?>" class="thumb" width="40"></td>
+               <?php } ?>
+                        <td>
+                         <?php echo $user->name;?>
+                        </td>
+              
+              <td>
+                        <?php echo $user->phone;?>
+                        </td>
+              
+              <td>
+                         <?php echo $viewst;?>
+                        </td>
+                      </tr>
+            <?php } } ?>
                   </table>
 
                             </div>
@@ -355,30 +359,32 @@ chart.render();
             
                     </tr>
           
-          <?php foreach($testimonials as $testimonial){
-            ?>
-          <tr height="20"></tr>
-                    <tr>
-                      <?php 
-             $testimonialphoto="/testimonialphoto/";
-            $path ='/local/images'.$testimonialphoto.$testimonial->image;
-            if($testimonial->image!=""){
-            ?>
-             <td><img src="<?php echo $url.$path;?>" class="thumb" width="40"></td>
-             <?php } else { ?>
-              <td><img src="<?php echo $url.'/local/images/noimage.jpg';?>" class="thumb" width="40"></td>
-             <?php } ?>
-                      <td>
-                       <?php echo $testimonial->name;?>
-                      </td>
-            
-            <td>
-                      <?php echo substr($testimonial->description,0,40);?>
-                      </td>
-            
-            
-                    </tr>
-          <?php } ?>
+          <?php 
+          if(!empty($testimonials)){
+            foreach($testimonials as $testimonial){
+              ?>
+            <tr height="20"></tr>
+                      <tr>
+                        <?php 
+               $testimonialphoto="/testimonialphoto/";
+              $path ='/local/images'.$testimonialphoto.$testimonial->image;
+              if($testimonial->image!=""){
+              ?>
+               <td><img src="<?php echo $url.$path;?>" class="thumb" width="40"></td>
+               <?php } else { ?>
+                <td><img src="<?php echo $url.'/local/images/noimage.jpg';?>" class="thumb" width="40"></td>
+               <?php } ?>
+                        <td>
+                         <?php echo $testimonial->name;?>
+                        </td>
+              
+              <td>
+                        <?php echo substr($testimonial->description,0,40);?>
+                        </td>
+              
+              
+                      </tr>
+            <?php } } ?>
                   </table>
 
                             </div>
