@@ -21,33 +21,39 @@ class DashboardController extends AdminController {
 	{
         $title = "Dashboard";
 		
-		$total_user = DB::table('users')
-			           ->count();
 
 		$seller_id=2;
-        $total_seller = DB::table('users')
+        $total_employers = DB::table('users')
 			           ->where('admin','=', $seller_id)
 					   ->count();
 		
 		$customer_id=0;
-        $total_customer = DB::table('users')
+        $total_freelancers = DB::table('users')
 			           ->where('admin','=', $customer_id)
 					   ->count();
-					   
+
+		$total_active_jobs = DB::table('security_jobs')
+					   ->count();
+		
+		$total_open_tickets = DB::table('tickets')
+					   ->count();	   
 					   
 		$total_booking = DB::table('booking')
 			             ->count();
 
+		$total_vat = DB::table('transactions')
+			             ->count();
+
+		$total_fees = DB::table('transactions')
+		              ->count();
 
 		$curdate = date("Y-m-d");			   
 		$today_booking = DB::table('booking')
 			           ->where('curr_date','=', $curdate)
 					   ->count();
 
-         $total_shop = DB::table('shop')
-		              ->count();
-					  
-					  
+        $total_shop = DB::table('shop')
+		              ->count();		  
 					  
 					  
 			$curr_date=date("Y-m-d");
@@ -94,11 +100,17 @@ $javas.="{ label: '$curr_date', y: $date1 },";
 		  
 					  
 					  
-			$booking	= DB::table('booking')
+			/*$booking	= DB::table('booking')
 			            ->leftJoin('users', 'users.email', '=', 'booking.user_email')
 			           ->orderBy('booking.curr_date','desc')
 					   ->limit(5)->offset(0)
+					   ->get();	  */
+
+			$booking	= DB::table('security_jobs')
+			           ->orderBy('created_at','desc')
+					   ->limit(5)->offset(0)
 					   ->get();	  
+
 					  
 				$set_id=1;
 		$setting = DB::table('settings')->where('id', $set_id)->get();	   
@@ -120,11 +132,11 @@ $javas.="{ label: '$curr_date', y: $date1 },";
 
 				 
 		
-		$data = array('total_seller' => $total_seller, 'total_user' => $total_user, 'total_customer' => $total_customer, 'total_booking' => $total_booking,
+		$data = array('total_employers' => $total_employers, 'total_freelancers' => $total_freelancers, 'total_booking' => $total_booking,
 		'today_booking' => $today_booking, 'total_shop' =>  $total_shop, 'javas' => $javas, 'booking' => $booking, 'setting' => $setting, 'users' => $users,
-		'testimonials' => $testimonials);
+		'testimonials' => $testimonials,'total_active_jobs' => $total_active_jobs,'total_open_tickets' => $total_open_tickets, 'total_vat' => $total_vat, 'total_fees' => $total_fees);
 		
-		return view('admin.index')->with($data);
+		return view('admin.dashboard.index')->with($data);
 		
 		
 		

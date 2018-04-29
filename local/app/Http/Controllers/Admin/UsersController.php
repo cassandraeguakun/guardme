@@ -28,7 +28,7 @@ class UsersController extends Controller
 		         ->orderBy('id','desc')
 				 ->get();
 
-        return view('admin.users', ['users' => $users]);
+        return view('admin.users.index', ['users' => $users]);
     }
 	
 	
