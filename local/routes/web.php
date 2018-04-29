@@ -85,7 +85,7 @@ Route::get('/my_bookings', 'MybookingsController@sangvish_showpage');
 Route::post('/my_bookings', ['as'=>'my_bookings','uses'=>'MybookingsController@sangvish_savedata']);
 
 
-Route::get('/wallet', 'WalletController@sangvish_showpage');
+Route::get('/wallet', 'WalletController@show');
 
 Route::post('/wallet', ['as'=>'wallet','uses'=>'WalletController@sangvish_savedata']);
 
@@ -199,7 +199,7 @@ Route::group(['middleware' => 'admin'], function() {
 
 	/* sub services */
 
-	Route::get('/admin/subservices','Admin\SubservicesController@index'); 
+	Route::get('/admin/subservices','Admin\SubservicesController@index');
 	Route::get('/admin/addsubservice','Admin\AddsubserviceController@formview');
 	Route::get('/admin/addsubservice','Admin\AddsubserviceController@getservice');
 	Route::post('/admin/addsubservice', ['as'=>'admin.addsubservice','uses'=>'Admin\AddsubserviceController@addsubservicedata']);
@@ -316,14 +316,13 @@ Route::group(['prefix' => '/jobs', 'middleware' => 'auth'], function () {
 	Route::get('/payment-status', 'PaypalPaymentController@getPaymentStatus')->name('payment.status');
 
 	Route::get('/job-confirmation', 'JobsController@confirmation')->name('job.confirmation');
+	Route::get('/my', 'JobsController@myJobs')->name('my.jobs');
 });
 
+// Guest route for find job
+
+Route::get('/jobs/find', 'JobsController@findJobs')->name('find.jobs');
 
 Route::get('/phone', 'VerificationController@phone')->middleware('auth');
-
-Route::group(['middleware' => 'partners'], function() {
-	Route::get('/partners','Partners\DashboardController@index');
-});
-
 
 
