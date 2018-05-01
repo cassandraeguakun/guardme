@@ -221,7 +221,7 @@ $('#postcode_lookup').getAddress({
     input_class :'form-control validate[required]',
     button_class : 'btn btn-primary',
     dropdown_class:'form-control',
-    <!--  Or use your own endpoint - api_endpoint:https://your-web-site.com/getAddress, -->
+    //  Or use your own endpoint - api_endpoint:https://your-web-site.com/getAddress, -->
     output_fields:{
         line_1: '#line1',
         line_2: '#line2',
@@ -230,7 +230,7 @@ $('#postcode_lookup').getAddress({
         county: '#county',
         postcode: '#postcode'
     },
-<!--  Optionally register callbacks at specific stages -->                                                                                                               
+//  Optionally register callbacks at specific stages -->                                                                                                               
     onLookupSuccess: function(data){/* Your custom code */
         console.log(data);
         $('#addresslat').val(data.latitude);
