@@ -1,12 +1,12 @@
 <?php
 namespace Responsive;
 use Illuminate\Database\Eloquent\Model;
-class SecurityCategory extends Model
+class SavedJob extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'security_categories';
+    protected $table = 'saved_jobs';
 }

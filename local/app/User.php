@@ -2,12 +2,15 @@
 
 namespace Responsive;
 
+use DB;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Carbon\Carbon;
 use Responsive\Exceptions\NoReferralFound;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 /**
  * Class User
@@ -24,6 +27,13 @@ class User extends Authenticatable
     const WORK_CATEGORY_SECURITY_GUARD = 2;
     const WORK_CATEGORY_CLOSE_PROTECTION = 3;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -214,14 +224,403 @@ class User extends Authenticatable
 
     public function address()
     {
-        return $this->hasOne(Address::class, 'id', 'address_id');
+        return $this->hasOne(Address::class, 'user_id', 'id');
     }
 
+    public function person_address()
+    {
+        return $this->hasOne(Address::class);
+    }
+
+     public function jobs()
+    {
+        return $this->hasMany(Job::class,'created_by');
+    }
+
+
+    public function company()
+    {
+        return $this->hasOne(Shop::class);
+    }
+
+    public function sec_work_category()
+    {
+        return $this->belongsTo(SecurityCategory::class,'work_category');
+    }
     public function nationality()
     {
         return $this->belongsTo(Country::class, 'nation_id');
     }
+    
+    /*
+     *  find the n closest locations
+     *  @param Model $query eloquent model
+     *  @param float $max_distance distance in miles or km
+     *  @param string $units miles or kilometers
+     *  @param Array $fiels to return
+     *  @return array
+     */
+    public static function getUsersNearByJob($latitude=0, $longitude=0, $min_distance = 60, $max_distance = 20, $units = 'kilometers')
+    {        
+        /*
+        *  Allow for changing of units of measurement
+        */
+        switch ( $units ) {
+            case 'miles':
+                //radius of the great circle in miles
+                $gr_circle_radius = 5;
+            break;
+            case 'kilometers':
+                //radius of the great circle in kilometers
+                $gr_circle_radius = 6371;
+            break;
+        }  
+        
+        /*
+        *  Generate the select field for disctance
+        */
+        $distance_select_sub = sprintf(
+                                   "           
+                                   ROUND(( %d * acos( cos( radians(%s) ) " .
+                                           " * cos( radians( UD.latitude ) ) " .
+                                           " * cos( radians( UD.longitude ) - radians(%s) ) " .
+                                           " + sin( radians(%s) ) * sin( radians( UD.latitude ) ) " .
+                                       " ) " . 
+                                   "), 2 ) " .  
+                                   "",
+                                   $gr_circle_radius,               
+                                   $latitude,
+                                   $longitude,
+                                   $latitude
+                                      );
+        
+        $distance_select = sprintf(
+                                   "           
+                                   ROUND(( %d * acos( cos( radians(%s) ) " .
+                                           " * cos( radians( UD.latitude ) ) " .
+                                           " * cos( radians( UD.longitude ) - radians(%s) ) " .
+                                           " + sin( radians(%s) ) * sin( radians( UD.latitude ) ) " .
+                                       " ) " . 
+                                   "), 2 ) " . 
+                                   "AS distance
+                                   ",
+                                   $gr_circle_radius,               
+                                   $latitude,
+                                   $longitude,
+                                   $latitude
+                                      );
+        
+        $users_result = DB::table((new User)->getTable().' as U')
+                     ->select('U.*', DB::raw( $distance_select ))
+                     ->leftJoin((new Address)->getTable().' as UD', 'U.id', '=', 'UD.user_id')
+                     ->where('U.verified', '=', 1) 
+                     ->where('U.admin', '=', 2) 
+                     ->whereRaw("$distance_select_sub >= $min_distance")
+                     ->whereRaw("$distance_select_sub <= $max_distance")
+                     ->get();
+        
+        $users_list = $users_result;
+        return $users_list;
+    }
+    
+    /*
+     *  find the n closest locations
+     *  @param Model $query eloquent model
+     *  @param float $max_distance distance in miles or km
+     *  @param string $units miles or kilometers
+     *  @param Array $fiels to return
+     *  @return array
+     */
+    public static function getPersonnelSearchNearBy($data_arr, $latitude=0, $longitude=0, $max_distance = 600, $units = 'kilometers', $page=1)
+    {        
+        $numPerPage = 10;
+        
+        /*
+        *  Allow for changing of units of measurement
+        */
+        switch ( $units ) {
+            case 'miles':
+                //radius of the great circle in miles
+                $gr_circle_radius = 5;
+            break;
+            case 'kilometers':
+                //radius of the great circle in kilometers
+                $gr_circle_radius = 6371;
+            break;
+        }  
+        
+        // todo: filter by category
+        $search_category = isset($data_arr['cat_val']) ? trim($data_arr['cat_val']) : null;
+        // todo: filter by gender
+        $search_gender = isset($data_arr['gender']) ? trim($data_arr['gender']) : null;
+        // todo: search filter, location
+        $location_search_filter = isset($data_arr['location_filter']) ? trim($data_arr['location_filter']) : null;
+        // todo: filter user
+        $personnel_query = isset($data_arr['sec_personnel']) ? $data_arr['sec_personnel'] : null;
+        // todo: filter distance
+        $distance = $data_arr['distance'];
+        if( $distance == 1 ){
+            $min_distance = 0;
+            $max_distance = 10;
+        } else if( $distance == 2 ){
+            $min_distance = 10;
+            $max_distance = 20;
+        } else if( $distance == 3 ){
+            $min_distance = 20;
+            $max_distance = 50;
+        } else if( $distance == 4 ){
+            $min_distance = 50;
+            $max_distance = 600;
+        } else {
+            $min_distance = 0;
+            $max_distance = 600;
+        }
+        
+        /*
+        *  Generate the select field for disctance
+        */
+        $distance_select_sub = sprintf(
+                                   "           
+                                   ROUND(( %d * acos( cos( radians(%s) ) " .
+                                           " * cos( radians( UA.latitude ) ) " .
+                                           " * cos( radians( UA.longitude ) - radians(%s) ) " .
+                                           " + sin( radians(%s) ) * sin( radians( UA.latitude ) ) " .
+                                       " ) " . 
+                                   "), 2 ) " . 
+                                   "",
+                                   $gr_circle_radius,               
+                                   $latitude,
+                                   $longitude,
+                                   $latitude
+                                      );
+        
+        $distance_select = sprintf(
+                                   "           
+                                   ROUND(( %d * acos( cos( radians(%s) ) " .
+                                           " * cos( radians( UA.latitude ) ) " .
+                                           " * cos( radians( UA.longitude ) - radians(%s) ) " .
+                                           " + sin( radians(%s) ) * sin( radians( UA.latitude ) ) " .
+                                       " ) " . 
+                                   "), 2 ) " . 
+                                   "AS distance
+                                   ",
+                                   $gr_circle_radius,               
+                                   $latitude,
+                                   $longitude,
+                                   $latitude
+                                      );
+        $users_total = DB::table((new User)->getTable().' as U')
+                     ->select('U.*', 'UA.citytown', DB::raw( $distance_select ))
+                     ->leftJoin((new Address)->getTable().' as UA', 'U.id', '=', 'UA.user_id')
+                     ->leftJoin((new SecurityCategory)->getTable().' as US', 'U.work_category', '=', 'US.id')
+                     ->where('U.admin', '=', 2)
+                     //->where('U.verified', '=', 1)
+                     ->where(function ($query) use ($search_category) {
+                        if ($search_category && $search_category != 'all') {
+                            $query->where('US.name', $search_category);
+                        }
+                      })
+                     ->where(function ($query) use($search_gender){
+                        if ($search_gender && $search_gender != 'all')
+                            $query = $query->where('U.gender', $search_gender);
+                      }) 
+                     ->where(function ($query) use($location_search_filter){
+                        if ($location_search_filter) {
+                            $location_search_query_array = explode(' ', trim($location_search_filter));
 
+                            if (count($location_search_query_array)) {
+                                foreach ($location_search_query_array as $search_location) {
+                                    $query->where('UA.citytown', $search_location);
+                                }
+                            }
+                        }
+                      }) 
+                     ->where(function ($query) use($personnel_query){
+                        if ($personnel_query) {
+                            $search_query_array = explode(' ', trim($personnel_query));
+
+                            if (count($search_query_array)) {
+                                foreach ($search_query_array as $search_key) {
+                                    $query->where('U.name', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.email', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.firstname', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.lastname', 'LIKE', "%$search_key%");
+                                }
+                            }
+                        }
+                      })
+                     ->whereRaw("$distance_select_sub >= $min_distance")
+                     ->whereRaw("$distance_select_sub <= $max_distance")
+                     ->get();
+                     //->toSql();
+        
+        $totalusers = count($users_total);
+        
+        $users_result = DB::table((new User)->getTable().' as U')
+                     ->select('U.*', 'UA.citytown', DB::raw( $distance_select ))
+                     ->leftJoin((new Address)->getTable().' as UA', 'U.id', '=', 'UA.user_id')
+                     ->leftJoin((new SecurityCategory)->getTable().' as US', 'U.work_category', '=', 'US.id')
+                     ->where('U.admin', '=', 2)
+                     //->where('U.verified', '=', 1)
+                     ->where(function ($query) use ($search_category) {
+                        if ($search_category && $search_category != 'all') {
+                            $query->where('US.name', $search_category);
+                        }
+                      })
+                     ->where(function ($query) use($search_gender){
+                        if ($search_gender && $search_gender != 'all')
+                            $query = $query->where('U.gender', $search_gender);
+                      }) 
+                     ->where(function ($query) use($location_search_filter){
+                        if ($location_search_filter) {
+                            $location_search_query_array = explode(' ', trim($location_search_filter));
+
+                            if (count($location_search_query_array)) {
+                                foreach ($location_search_query_array as $search_location) {
+                                    $query->where('UA.citytown', $search_location);
+                                }
+                            }
+                        }
+                      }) 
+                     ->where(function ($query) use($personnel_query){
+                        if ($personnel_query) {
+                            $search_query_array = explode(' ', trim($personnel_query));
+
+                            if (count($search_query_array)) {
+                                foreach ($search_query_array as $search_key) {
+                                    $query->where('U.name', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.email', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.firstname', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.lastname', 'LIKE', "%$search_key%");
+                                }
+                            }
+                        }
+                      })
+                     ->whereRaw("$distance_select_sub >= $min_distance")
+                     ->whereRaw("$distance_select_sub <= $max_distance")
+                     ->orderBy('distance', 'ASC')
+                     ->take($numPerPage)
+                     ->offset(($page-1) * $numPerPage)
+                     ->get();
+        $users_list = new Paginator($users_result, $totalusers, $numPerPage, array($page), array("path" => '/search'));
+       
+        return $users_list;
+    }
+    
+    /*
+     *  find the n closest locations
+     *  @param Model $query eloquent model
+     *  @param float $max_distance distance in miles or km
+     *  @param string $units miles or kilometers
+     *  @param Array $fiels to return
+     *  @return array
+     */
+    public static function getPersonnelNearBy($data_arr, $page=1)
+    {        
+        $numPerPage = 10;
+        
+        // todo: filter by category
+        $search_category = isset($data_arr['cat_val']) ? trim($data_arr['cat_val']) : null;
+        // todo: filter by gender
+        $search_gender = isset($data_arr['gender']) ? trim($data_arr['gender']) : null;
+        // todo: search filter, location
+        $location_search_filter = isset($data_arr['location_filter']) ? trim($data_arr['location_filter']) : null;
+        // todo: filter user
+        $personnel_query = isset($data_arr['sec_personnel']) ? $data_arr['sec_personnel'] : null;
+        
+        $users_total = DB::table((new User)->getTable().' as U')
+                     ->select('U.*', 'UA.citytown')
+                     ->leftJoin((new Address)->getTable().' as UA', 'U.id', '=', 'UA.user_id')
+                     ->leftJoin((new SecurityCategory)->getTable().' as US', 'U.work_category', '=', 'US.id')
+                     ->where('U.admin', '=', 2)
+                     //->where('U.verified', '=', 1)
+                     ->where(function ($query) use ($search_category) {
+                        if ($search_category && $search_category != 'all') {
+                            $query->where('US.name', $search_category);
+                        }
+                      })
+                     ->where(function ($query) use($search_gender){
+                        if ($search_gender && $search_gender != 'all')
+                            $query = $query->where('U.gender', $search_gender);
+                      }) 
+                     ->where(function ($query) use($location_search_filter){
+                        if ($location_search_filter) {
+                            $location_search_query_array = explode(' ', trim($location_search_filter));
+
+                            if (count($location_search_query_array)) {
+                                foreach ($location_search_query_array as $search_location) {
+                                    $query->where('UA.citytown', $search_location);
+                                }
+                            }
+                        }
+                      }) 
+                     ->where(function ($query) use($personnel_query){
+                        if ($personnel_query) {
+                            $search_query_array = explode(' ', trim($personnel_query));
+
+                            if (count($search_query_array)) {
+                                foreach ($search_query_array as $search_key) {
+                                    $query->where('U.name', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.email', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.firstname', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.lastname', 'LIKE', "%$search_key%");
+                                }
+                            }
+                        }
+                      })
+                     ->get();
+                     //->toSql();
+        
+        $totalusers = count($users_total);
+        
+        $users_result = DB::table((new User)->getTable().' as U')
+                     ->select('U.*', 'UA.citytown')
+                     ->leftJoin((new Address)->getTable().' as UA', 'U.id', '=', 'UA.user_id')
+                     ->leftJoin((new SecurityCategory)->getTable().' as US', 'U.work_category', '=', 'US.id')
+                     ->where('U.admin', '=', 2)
+                     //->where('U.verified', '=', 1)
+                     ->where(function ($query) use ($search_category) {
+                        if ($search_category && $search_category != 'all') {
+                            $query->where('US.name', $search_category);
+                        }
+                      })
+                     ->where(function ($query) use($search_gender){
+                        if ($search_gender && $search_gender != 'all')
+                            $query = $query->where('U.gender', $search_gender);
+                      }) 
+                     ->where(function ($query) use($location_search_filter){
+                        if ($location_search_filter) {
+                            $location_search_query_array = explode(' ', trim($location_search_filter));
+
+                            if (count($location_search_query_array)) {
+                                foreach ($location_search_query_array as $search_location) {
+                                    $query->where('UA.citytown', $search_location);
+                                }
+                            }
+                        }
+                      }) 
+                     ->where(function ($query) use($personnel_query){
+                        if ($personnel_query) {
+                            $search_query_array = explode(' ', trim($personnel_query));
+
+                            if (count($search_query_array)) {
+                                foreach ($search_query_array as $search_key) {
+                                    $query->where('U.name', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.email', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.firstname', 'LIKE', "%$search_key%")
+                                          ->orWhere('U.lastname', 'LIKE', "%$search_key%");
+                                }
+                            }
+                        }
+                      })
+                     ->take($numPerPage)
+                     ->offset(($page-1) * $numPerPage)
+                     ->get();
+        $users_list = new Paginator($users_result, $totalusers, $numPerPage, array($page), array("path" => '/search'));
+       
+        return $users_list;
+    }
+    
     public static function getWorkCategories() {
         return [
             User::WORK_CATEGORY_NONE => null,
@@ -229,5 +628,10 @@ class User extends Authenticatable
             User::WORK_CATEGORY_SECURITY_GUARD => 'Securoty Guard',
             User::WORK_CATEGORY_CLOSE_PROTECTION => 'Close Protection'
         ];
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class,'applied_by');
     }
 }

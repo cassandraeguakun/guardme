@@ -1,7 +1,6 @@
 <?php
-
 namespace Responsive\Http\Controllers;
-
+use Responsive\Http\Traits\JobsTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use PayPal\Rest\ApiContext;
@@ -16,12 +15,14 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
 use Responsive\Transaction as WalletTransaction;
-
 use Responsive\Job;
+use Responsive\User;
+use Mail;
 
 class PaypalPaymentController extends Controller
 {
-    //
+    use JobsTrait;
+    
     private $_api_context;
     protected $currency = 'GBP';
     public function __construct()
@@ -36,48 +37,39 @@ class PaypalPaymentController extends Controller
         $jobDetails = Job::calculateJobAmount($id);
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
-
         $item_1 = new Item();
         $item_1->setName('Fee for Job')
             ->setCurrency($this->currency)
             ->setQuantity(1)
             ->setPrice($jobDetails['basic_total']);
-
         $item_2 = new Item();
         $item_2->setName('VAT Fee')
             ->setCurrency($this->currency)
             ->setQuantity(1)
             ->setPrice($jobDetails['vat_fee']);
-
         $item_3 = new Item();
         $item_3->setName('Admin Fee')
             ->setCurrency($this->currency)
             ->setQuantity(1)
             ->setPrice($jobDetails['admin_fee']);
-
         // add item to list
         $item_list = new ItemList();
         $item_list->setItems(array($item_1, $item_2, $item_3));
-
         $amount = new Amount();
         $amount->setCurrency($this->currency)
             ->setTotal($jobDetails['grand_total']);
-
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
             ->setDescription('Fees to create job');
-
         $redirect_urls = new RedirectUrls();
         $redirect_urls->setReturnUrl(route('payment.status'))
             ->setCancelUrl(route('payment.status'));
-
         $payment = new Payment();
         $payment->setIntent('Sale')
             ->setPayer($payer)
             ->setRedirectUrls($redirect_urls)
             ->setTransactions(array($transaction));
-
         try {
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PPConnectionException $ex) {
@@ -89,22 +81,16 @@ class PaypalPaymentController extends Controller
                 die('Some error occur, sorry for inconvenient');
             }
         }
-
         foreach($payment->getLinks() as $link) {
             if($link->getRel() == 'approval_url') {
                 $redirect_url = $link->getHref();
                 break;
             }
         }
-
         // add payment ID to session
         session()->put('paypal_payment_id', $payment->getId());
         session()->put('job_id', $id);
         session()->put('user_id', auth()->user()->id);
-
-
-
-
         /*$trans = new WalletTransaction();
         $params = [
             'debit_credit_type' => 'debit',
@@ -119,7 +105,6 @@ class PaypalPaymentController extends Controller
             'job_id' => $id
         ];
         $trans->fundJobFee($job_fee);
-
         $admin_fee = [
             'job_id' => $id,
             'debit_credit_type' => 'credit',
@@ -141,7 +126,6 @@ class PaypalPaymentController extends Controller
         return redirect(route('job.payment.details', ['id' => $id]))
             ->with('error', 'Unknown error occurred');
     }
-
     public function getPaymentStatus()
     {
         // Get the payment ID and job id before session clear
@@ -150,24 +134,19 @@ class PaypalPaymentController extends Controller
         $user_id = session()->get('user_id');
         // clear the session payment ID
         session()->forget('paypal_payment_id');
-
         if (empty(request()->get('PayerID')) || empty(request()->get('token'))) {
             return redirect()->route('original.route')
                 ->with('error', 'Payment failed');
         }
-
         $payment = Payment::get($payment_id, $this->_api_context);
-
         // PaymentExecution object includes information necessary
         // to execute a PayPal account payment.
         // The payer_id is added to the request query parameters
         // when the user is redirected from paypal back to your site
         $execution = new PaymentExecution();
         $execution->setPayerId(request()->get('PayerID'));
-
         //Execute the payment
         $result = $payment->execute($execution, $this->_api_context);
-
         if ($result->getState() == 'approved') { // payment made
             $paypalTransactions = $result->getTransactions();
             $total_amount_paid = $paypalTransactions[0]->getAmount()->getTotal();
@@ -182,11 +161,30 @@ class PaypalPaymentController extends Controller
             // add money
             $walletTransaction = new WalletTransaction();
             $walletTransaction->addMoney($add_money_params);
+            
+            /* Email to users for selected radius */
+            $job = Job::find($job_id);
+            if($job){
+                if( !empty($job->latitude) && !empty($job->longitude) && !empty($job->specific_area_min) && !empty($job->specific_area_max) ){
+                    $latitude = $job->latitude;
+                    $longitude = $job->longitude;
+                    $specific_area_min = $job->specific_area_min;
+                    $specific_area_max = $job->specific_area_max;
+                    $usersRes = User::getUsersNearByJob($latitude, $longitude, $specific_area_min, $specific_area_max, 'kilometers');
+                    if( count($usersRes) > 0 ){
+                        foreach($usersRes as $usersResVal){
+                            $data = array('name' => $usersResVal->name, 'specific_area_min' => $specific_area_min, 'specific_area_max' => $specific_area_max);
+                            // Send mail
+                            $this->jobStore($data, $usersResVal->id);                           
+                        }
+                    }
+                }
+            }
+            
             return redirect(route('job.payment.details', ['id' => $job_id]))
                 ->with('success', 'Congratulations, Money has been added to your wallet. Please confirm activiate your job now.');
         }
         return redirect(route('job.payment.details', ['id' => $job_id]))
             ->with('error', 'Payment failed');
     }
-
 }

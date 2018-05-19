@@ -26,7 +26,12 @@ class MyorderController extends Controller
     {
         $this->middleware('auth');
     }
-	
+
+    public function getToken(Request $req){
+       $data =  $req['token'];
+       dd($data);
+     //return json_encode($data)
+    }
 	
 	public function sangvish_showpage() {
 		
