@@ -103,11 +103,11 @@
                                 <div class="form-group">
                                     <label>Category</label>
                                     <select id="shop_category" name="shop_category" class="form-control">
-                                        {{--@foreach($b_cats as $cat)--}}
-                                        {{--<option value="{{$cat->id}}"--}}
-                                        {{--@if($editprofile[0]->company->business_categoryid==$cat->id) {{"selected=selected"}} @endif>{{$cat->name}}--}}
-                                        {{--</option>--}}
-                                        {{--@endforeach--}}
+                                        @foreach($b_cats as $cat)
+                                        <option value="{{$cat->id}}"
+                                        @if($editshop->business_categoryid==$cat->id) {{"selected=selected"}} @endif>{{$cat->name}}
+                                        </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
