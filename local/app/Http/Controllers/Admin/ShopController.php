@@ -13,6 +13,7 @@ use Mail;
 
 use Responsive\Http\Requests;
 use Illuminate\Http\Request;
+use Responsive\Shop;
 use Responsive\User;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
@@ -37,51 +38,60 @@ class ShopController extends Controller
 	
 	
 	public function showform($id) {
-      $editshop = DB::select('select * from shop where id = ?',[$id]);
-	  
-	 $usermail=$editshop[0]->seller_email;
-	 
-	 $userdata=DB::select('select * from users where email = ?',[$usermail]);
-	  
-	  if($editshop[0]->start_time > 12)
-					{
-						$start=$editshop[0]->start_time - 12;
-						$stime=$start."PM";
-					}
-					else
-					{
-						$stime=$editshop[0]->start_time."AM";
-					}
-					if($editshop[0]->end_time>12)
-					{
-						$end=$editshop[0]->end_time-12;
-						$etime=$end."PM";
-					}
-					else
-					{
-						$etime=$editshop[0]->end_time."AM";
-					}
-	  
-	  
-	   $shop = DB::table('shop')->get();
-	   
-	   $sid=$editshop[0]->shop_date;
-						$sel=explode(",",$sid);
-						$lev=count($sel);
-						
-						
-		$viewgallery = DB::table('shop_gallery')
-		->where('shop_id', $id)
-		->orderBy('id','desc')
-		->get();
 
-        $siteid=1;
-		$site_setting=DB::select('select * from settings where id = ?',[$siteid]);
-	   
-	  $data=array('shop' => $shop, 'editshop' => $editshop, 'stime' => $stime, 'etime' => $etime, 'sel' => $sel, 'lev' => $lev, 'viewgallery' => $viewgallery, 
-	  'userdata' => $userdata, 'site_setting' => $site_setting);
-	  return view('admin.edit-shop')->with($data);
-      
+
+		$editshop = Shop::where('id',$id)->get()->first();
+
+//		dd($editshop->id);
+//      $editshop = DB::select('select * from shop where id = ?',[$id]);
+//
+//	 $usermail=$editshop[0]->seller_email;
+//
+//	 $userdata=DB::select('select * from users where email = ?',[$usermail]);
+//
+//	  if($editshop[0]->start_time > 12)
+//					{
+//						$start=$editshop[0]->start_time - 12;
+//						$stime=$start."PM";
+//					}
+//					else
+//					{
+//						$stime=$editshop[0]->start_time."AM";
+//					}
+//					if($editshop[0]->end_time>12)
+//					{
+//						$end=$editshop[0]->end_time-12;
+//						$etime=$end."PM";
+//					}
+//					else
+//					{
+//						$etime=$editshop[0]->end_time."AM";
+//					}
+//
+//
+//	   $shop = DB::table('shop')->get();
+//
+//	   $sid=$editshop[0]->shop_date;
+//						$sel=explode(",",$sid);
+//						$lev=count($sel);
+//
+//
+//		$viewgallery = DB::table('shop_gallery')
+//		->where('shop_id', $id)
+//		->orderBy('id','desc')
+//		->get();
+//
+//        $siteid=1;
+//		$site_setting=DB::select('select * from settings where id = ?',[$siteid]);
+//
+//	  $data=array('shop' => $shop, 'editshop' => $editshop, 'stime' => $stime, 'etime' => $etime, 'sel' => $sel, 'lev' => $lev, 'viewgallery' => $viewgallery,
+//	  'userdata' => $userdata, 'site_setting' => $site_setting);
+
+//	  return view('admin.edit-shop')->with($data);
+
+	  return view('admin.edit-shop')
+		  ->with('editshop',$editshop);
+
    }
 	
 	

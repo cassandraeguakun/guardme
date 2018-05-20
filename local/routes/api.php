@@ -43,7 +43,7 @@ Route::group(['prefix' => 'jobs', 'namespace' => 'Api', 'middleware' => 'auth:ap
 
     Route::get('awarded','JobsController@totalUserAwardedJobs');
     Route::get('applied','JobsController@totalAppliedJobsForUser');
-	Route::get('published','JobsController@totalCreatedJobsForEmployer');//done
+	    Route::get('published','JobsController@totalCreatedJobsForEmployer');
 
 
     Route::post('create','JobsController@create')->name('api.create.job');
@@ -76,18 +76,12 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function(){
     Route::post('/find-jobs','JobsController@findJobs')->name('api.find.jobs');
     Route::post('/job-details','JobsController@jobDetailsLocation')->name('api.job.details');
     Route::post('/search','SearchController@getpersonnelsearch');
-	
-	Route::post('/get_notifications_settings','JobsController@get_notifications_settings');
-	Route::post('/update_notifications_settings','JobsController@update_notifications_settings');
-	Route::post('/get_notifications','JobsController@get_notifications');
-	
-	
 });
 
 
 Route::group(['prefix' => 'wallet','namespace' => 'Api'], function(){
 
-    Route::get('/jobTrans', 'WalletController@JobsList')->middleware('auth:api');;
+    Route::get('/jobTrans', 'WalletController@getTransactionsOfJobs')->middleware('auth:api');;
     Route::get('/details/{id}', 'WalletController@getJobTransactionDetails')->middleware('auth:api');;
 
 });
