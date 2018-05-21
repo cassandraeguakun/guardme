@@ -238,6 +238,7 @@ class JobsController extends Controller
     public function markHired($application_id) {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	
 	  // Deepak Gemini -- Code to add notifications to 'notification' table
@@ -250,6 +251,8 @@ class JobsController extends Controller
 		
 		$this->create_notification('job_awarded', $applied_by , $job_details);
 >>>>>>> parent of 892f03d... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
+=======
+>>>>>>> parent of 2d5ef5e... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
         // check if user is authorized to mark this application as hired.
         $job_application = new JobApplication();
         $is_eligible_to_hire = $job_application->isEligibleToMarkHired($application_id);
