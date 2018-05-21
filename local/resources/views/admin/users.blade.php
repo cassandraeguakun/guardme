@@ -81,6 +81,7 @@ div.dataTables_wrapper div.dataTables_filter input{
 				  <?php } else { ?>
 				  <a href="<?php echo $url;?>/admin/adduser" class="btn btn-primary">Add User</a>
 				  <?php } ?>
+<<<<<<< HEAD
 <div class="content">
 						  <h5>Filter:</h5>
 						  <form class="form-inline" method="get">
@@ -152,6 +153,50 @@ div.dataTables_wrapper div.dataTables_filter input{
                                       <?php if(config('global.demosite')=="yes"){?>
 									  <a href="#" class="btn btn-success btndisable">Edit</a>  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span>
                                       <?php } else { ?>
+=======
+
+                  <div class="content table-responsive table-full-width">
+
+
+                    <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                      <thead>
+                        <tr>
+                          <th>Sno</th>
+						  <th>Photo</th>
+                          <th>Username</th>
+                          <th>Email</th>
+						  <th>Phone</th>
+                          <th>User Type</th>
+                          <th>Action</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+					  <?php
+					  $i=1;
+					  foreach ($users as $user) { $sta=$user->admin; if($sta==1){ $viewst="Admin"; } else if($sta==2) { $viewst="Seller"; } else if($sta==3) { $viewst="Licensed Partner"; } else if($sta==0) { $viewst="Customer"; }?>
+
+
+                        <tr>
+						 <td><?php echo $i;?></td>
+						 <?php
+					   $userphoto="/userphoto/";
+						$path ='/local/images'.$userphoto.$user->photo;
+						if($user->photo!=""){
+						?>
+						 <td><img src="<?php echo $url.$path;?>" class="thumb" width="70"></td>
+						 <?php } else { ?>
+						  <td><img src="<?php echo $url.'/local/images/nophoto.jpg';?>" class="thumb" width="70"></td>
+						 <?php } ?>
+                          <td><?php echo $user->name;?></td>
+                          <td><?php echo $user->email;?></td>
+						  <td><?php echo $user->phone;?></td>
+						  <td><?php echo $viewst;?></td>
+						  <td>
+						  <?php if(config('global.demosite')=="yes"){?>
+						  <a href="#" class="btn btn-success btndisable">Edit</a>  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span>
+				  <?php } else { ?>
+>>>>>>> parent of 512e1b5... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
 
 									  <a href="<?php echo $url;?>/admin/edituser/{{ $user->id }}" class="btn btn-success">Edit</a>
                                       <?php } ?>
