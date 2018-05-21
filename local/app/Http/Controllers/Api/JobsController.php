@@ -233,8 +233,14 @@ class JobsController extends Controller
     }
 
     public function markHired($application_id) {
-
-        // check if user is authorized to mark this application as hired.
+	
+	  $details = array();
+		$job_id = @\Responsive\JobApplication::where('id',$application_id)->first(['job_id'])->job_id;
+		$applied_by = @\Responsive\JobApplication::where('id',$application_id)->first(['applied_by'])->applied_by;
+		$job_details = @\Responsive\Job::where('id',$job_id)->get();
+		$this->create_notification('job_awarded', $applied_by , $job_details);
+        
+      // check if user is authorized to mark this application as hired.
         $job_application = new JobApplication();
         $is_eligible_to_hire = $job_application->isEligibleToMarkHired($application_id);
         if ($is_eligible_to_hire) {
