@@ -716,8 +716,17 @@ class JobsController extends Controller
                    
  }
 	
+<<<<<<< HEAD
 =======
 >>>>>>> parent of a3ee4ae... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
+=======
+	
+	
+	
+	
+	
+	
+>>>>>>> parent of b633f0c... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
     
     
 }
