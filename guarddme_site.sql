@@ -728,6 +728,57 @@ INSERT INTO `verify_users` (`id`, `user_id`, `token`, `new_email`, `created_at`,
 (31, 29, '4b5b01375fdfcc2fa9030a3d2e77776e5d7e4433302bc72c9a99f962fbbfab9a', '', '2018-04-07 08:31:44', '2018-04-07 08:31:44'),
 (19, 27, 'b23bede9573e35235673c1dcb33f8e57b69ae4f3d502b0f38b0cc06f86874e67', '', '2018-04-07 06:50:39', '2018-04-07 06:50:39');
 
+<<<<<<< HEAD
+=======
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `news_letters`
+--
+
+CREATE TABLE `news_letters` (
+  `id` int(50) NOT NULL,
+  `user_id` varchar(50) NOT NULL DEFAULT '',
+  `email` varchar(300) NOT NULL DEFAULT '',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `news_letters`
+--
+
+INSERT INTO `news_letters` (`id`, `user_id`, `email`, `created_at`, `updated_at`) VALUES
+(3, '', 'djhf@jhj.dfdf', '2018-05-19 15:19:43', '2018-05-19 15:19:43'),
+(4, '22', 'indah@gmail.com', '2018-05-19 15:19:58', '2018-05-19 15:19:58'),
+(5, '', 'jas@j.fd', '2018-05-19 17:12:16', '2018-05-19 17:12:16'),
+(6, '', 'h@h.com', '2018-05-19 17:12:37', '2018-05-19 17:12:37');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `news_letters`
+--
+ALTER TABLE `news_letters`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `news_letters`
+--
+ALTER TABLE `news_letters`
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;COMMIT;
+
+ 
+
+
+>>>>>>> parent of 58c0ade... 'news_letters' table added
 -- --------------------------------------------------------
 
 --
