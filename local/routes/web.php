@@ -377,6 +377,7 @@ Route::get('/test2/{id}', 'test@getJobTransactionDetails');
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
  
 
@@ -389,3 +390,5 @@ Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsle
 
 Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
 >>>>>>> parent of 0d596af... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
+=======
+>>>>>>> parent of 61b17ca... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
