@@ -100,8 +100,7 @@ $setid=1;
 								<button type="submit" class="btn btn-primary">Sign Up</button>
 							</form><!-- form -->			
 						</div>
-					</div><!-- footer-widget ends-->
-					
+					</div><!-- footer-widget -->
 		</div>
 	</section>
 
