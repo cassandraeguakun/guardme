@@ -9,4 +9,8 @@ class SavedJob extends Model
      * @var string
      */
     protected $table = 'saved_jobs';
+
+    public function getFreelancerSavedJob(){
+        return $this->hasMany( Job::class ,'id' , 'job_id');
+    }
 }

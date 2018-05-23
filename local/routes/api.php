@@ -59,7 +59,13 @@ Route::group(['prefix' => 'jobs', 'namespace' => 'Api', 'middleware' => 'auth:ap
     Route::post('mark/hired/{id}','JobsController@markHired')->name('api.mark.hired');
     
     
-    Route::get('my','JobsController@myJobs')->name('api.my.jobs');
+    Route::get('/my-jobs', 'JobsController@getEmployerJobs');
+    Route::get('/freelancer-jobs', 'JobsController@getFreelancerAppliedJobs');
+    Route::get('/saved-jobs', 'JobsController@getSavedJobs');
+
+    Route::post('/save-job', 'JobsController@saveJob');
+    Route::get('/applicants', 'JobsController@getApplicants');
+
     Route::get('proposals','JobsController@myProposals')->name('api.my.proposals');
 
 });
@@ -75,20 +81,23 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function(){
     Route::post('/find-jobs','JobsController@findJobs')->name('api.find.jobs');
     Route::post('/job-details','JobsController@jobDetailsLocation')->name('api.job.details');
     Route::post('/search','SearchController@getpersonnelsearch');
+
+    Route::get('/employer-jobs', 'JobsController@getEmployerJobs');
+
 });
 
 
 Route::group(['prefix' => 'wallet','namespace' => 'Api'], function(){
 
-    Route::get('/jobTrans', 'WalletController@JobsList')->middleware('auth:api');
-    Route::get('/details/{id}', 'WalletController@getJobTransactionDetails')->middleware('auth:api');
+    Route::get('/jobTrans', 'WalletController@JobsList')->middleware('auth:api');;
+    Route::get('/details/{id}', 'WalletController@getJobTransactionDetails')->middleware('auth:api');;
 
 });
 
 Route::group(['prefix' => 'loyalty','namespace' => 'Api'], function(){
 
-    Route::get('/users', 'LoyaltyController@getUsers')->middleware('auth:api');
-    Route::get('/items', 'LoyaltyController@getItemsBought')->middleware('auth:api');
+    Route::get('/users', 'LoyaltyController@getUsers')->middleware('auth:api');;
+    Route::get('/items', 'LoyaltyController@getItemsBought')->middleware('auth:api');;
 
 });
 
