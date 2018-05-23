@@ -371,6 +371,7 @@ Route::post('/jobs/{id}', 'JobsController@postJobs')->name('post.jobs');
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Route::get('/test', 'test@getTransactionsOfJobs');
 Route::get('/test2/{id}', 'test@getJobTransactionDetails');
 
@@ -380,3 +381,6 @@ Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsle
 
 =======
 >>>>>>> parent of 8f4b19b... Added NewsLetterController.php
+=======
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+>>>>>>> parent of d4f0461... 3 Functions Related to notifications added
