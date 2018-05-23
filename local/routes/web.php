@@ -376,6 +376,7 @@ Route::get('/test', 'test@getTransactionsOfJobs');
 Route::get('/test2/{id}', 'test@getJobTransactionDetails');
 
 
+<<<<<<< HEAD
 Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
  
 
@@ -384,3 +385,7 @@ Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsle
 =======
 Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
 >>>>>>> parent of d4f0461... 3 Functions Related to notifications added
+=======
+
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+>>>>>>> parent of 0d596af... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
