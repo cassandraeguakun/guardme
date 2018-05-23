@@ -634,22 +634,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(JobApplication::class,'applied_by');
     }
-
-
-//    public function getFeedBack(){
-//        return $this
-//    }
-
-
-    public function getUsers(){
-        return $this->hasMany(Referral::class , 'who' , 'id' ) ;
-    }
-
-    public function getUserItems(){
-
-
-        return $this->belongsToMany(Item::class , 'user_items' , 'user_id' ,'item_id' );
-
-
-    }
 }

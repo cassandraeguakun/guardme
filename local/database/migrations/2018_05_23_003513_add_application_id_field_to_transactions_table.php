@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsLettersTable extends Migration
+class AddApplicationIdFieldToTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateNewsLettersTable extends Migration
      */
     public function up()
     {
-        Schema::create('news_letters', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('email',300);
-			$table->string('user_id',300);
-            $table->timestamps();
+        //
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->integer('application_id')->nullable()->default(null);
         });
     }
 
@@ -28,6 +26,9 @@ class CreateNewsLettersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news_letters');
+        //
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->dropColumn('application_id');
+        });
     }
 }

@@ -370,10 +370,25 @@ Route::get('/jobs/{id}', 'JobsController@getJobs')->name('get.jobs');
 Route::post('/jobs/{id}', 'JobsController@postJobs')->name('post.jobs');
 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 Route::get('/test', 'test@getTransactionsOfJobs');
 Route::get('/test2/{id}', 'test@getJobTransactionDetails');
 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
  
 
+=======
+>>>>>>> parent of 8f4b19b... Added NewsLetterController.php
+=======
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+>>>>>>> parent of d4f0461... 3 Functions Related to notifications added
+=======
+
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+>>>>>>> parent of 0d596af... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
+=======
+>>>>>>> parent of 61b17ca... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>

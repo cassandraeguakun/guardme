@@ -12,6 +12,8 @@ $setid=1;
 	<!-- footer-top -->
 	<section class="footer-top clearfix">
 		<div class="container">
+<<<<<<< HEAD
+<<<<<<< HEAD
 		
 						<div class="row text-center">
 		 
@@ -30,11 +32,13 @@ $setid=1;
 </div>
 @endif
  
- 
- 
 		</div>
 		
 		
+=======
+>>>>>>> parent of a193c80... Added News Letters Functionality from HomePage and Admin Panel List
+=======
+>>>>>>> parent of c08e264... News Letter View Updated
 			<div class="row">
 				<!-- footer-widget -->
 				<div class="col-sm-3">
@@ -85,19 +89,18 @@ $setid=1;
 							</ul>
 						</div>
 					</div>
-				<!-- footer-widget -->
+					<!-- footer-widget -->
 					<div class="col-sm-3">
 						<div class="footer-widget news-letter">
 							<h3>Newsletter</h3>
 							<p>Jobs is Worldest leading Portal platform that brings!</p>
 							<!-- form -->
-							{{ Form::open(array('url' => 'post_newsletters_subscription','method' => 'POST')) }}
- 		                        <input type="email" class="form-control" name="email" placeholder="Your email id">
+							<form action="#">
+								<input type="email" class="form-control" placeholder="Your email id">
 								<button type="submit" class="btn btn-primary">Sign Up</button>
-                           {{ Form::close() }}		
+							</form><!-- form -->			
 						</div>
-					</div><!-- footer-widget ends-->
-					
+					</div><!-- footer-widget -->
 		</div>
 	</section>
 

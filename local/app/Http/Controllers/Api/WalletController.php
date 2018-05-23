@@ -32,15 +32,20 @@ class WalletController extends Controller
             $data[] = [
                     'id'=>$list->id ,
                     'title'=>$list->title ,
-                    'no_of_freelancers'=>$list->number_of_freelancers ,
                     'payment_date' => $list->getJobTransactions['created_at'] ,
 //                     'vat' => $calc['vat_fee'] ,
                      'amount' => $calc['grand_total']
 
             ];
+
+
+
+            return response()
+                ->json($data, 200);
         }
-        return response()
-            ->json($data, 200);
+
+
+
 
     }
 
@@ -50,7 +55,7 @@ class WalletController extends Controller
             ->where('job_id' , $id)
             ->get();
 
-        //$job= Transaction::where('job_id' , $id )->get();
+//        $job= Transaction::where('job_id' , $id )->get();
         $data = array();
         foreach($job as $list){
             $data[] = [
@@ -58,10 +63,7 @@ class WalletController extends Controller
                 'title'=> $list->title ,
                 'date_of_payment' =>$list->created_at ,
                 'paypal_ref'=> $list->paypal_id ,
-                'amount_paid'=> $list->amount ,
-                'type'=> $list->type ,
                 'vat'=>  $amount['vat_fee'] ,
-              //  'trans'=>$list->getTransactionJob ,
                 'commission'=>  $amount['admin_fee']   ,
                 'job_fee'=> $amount['basic_total'] ,
                 'grand_total'=> $amount['grand_total']

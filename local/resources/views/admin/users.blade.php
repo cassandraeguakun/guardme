@@ -81,6 +81,92 @@ div.dataTables_wrapper div.dataTables_filter input{
 				  <?php } else { ?>
 				  <a href="<?php echo $url;?>/admin/adduser" class="btn btn-primary">Add User</a>
 				  <?php } ?>
+<<<<<<< HEAD
+=======
+<div class="content">
+						  <h5>Filter:</h5>
+						  <form class="form-inline" method="get">
+							  <div class="form-group">
+								  <label for="location_filter" class="control-label">Location:</label>
+								  <input type="text" class="form-control" name="location" id="location_filter">
+							  </div>
+							  <div class="form-group">
+								  <label for="gender" class="control-label">Gender:</label>
+								  <select name="gender" id="gender" class="form-control">
+									  <option value="">Pick an option...</option>
+									  <option value="male">Male</option>
+									  <option value="female">Female</option>
+								  </select>
+							  </div>
+							  <div class="form-group">
+								  <input type="text" class="form-control" id="date_filter" name="reg_date">
+							  </div>
+							  <div class="form-group">
+								  <button class="btn btn-sm btn-primary" type="submit">Filter</button>
+							  </div>
+						  </form>
+					  </div>
+					  <div class="content table-responsive table-full-width">
+
+						  <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+							  <thead>
+							  <tr>
+								  <th>Sno</th>
+								  <th>Photo</th>
+								  <th>Username</th>
+								  <th>Email</th>
+								  <th>Phone</th>
+								  <th>User Type</th>
+								  <th>Action</th>
+
+							  </tr>
+							  </thead>
+							  <tbody>
+                              <?php
+                              $i=1;
+                              foreach ($users as $user) { $sta=$user->admin; if($sta==1){ $viewst="Admin"; }
+                              else if($sta==2) { $viewst="Freelancer"; } else if($sta==3) { $viewst="Licensed
+                                      Partner"; } else if($sta==0) { $viewst="Employer"; }?>
+
+
+							  <tr>
+								  <td><?php echo $i;?></td>
+                                  <?php
+                                  $userphoto="/userphoto/";
+                                  $path ='/local/images'.$userphoto.$user->photo;
+                                  if($user->photo!=""){
+                                  ?>
+								  <td><img src="<?php echo $url.$path;?>" class="thumb" width="70"></td>
+                                  <?php } else { ?>
+								  <td><img src="<?php echo $url.'/local/images/nophoto.jpg';?>" class="thumb" width="70"></td>
+                                  <?php } ?>
+								  <td><?php echo $user->name;?></td>
+								  <td><?php echo $user->email;?></td>
+								  <td><?php echo $user->phone;?></td>
+								  <td><?php echo $viewst;?></td>
+								  <td>
+                                      <?php if(config('global.demosite')=="yes"){?>
+									  <a href="#" class="btn btn-success btndisable">Edit</a>  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span>
+                                      <?php } else { ?>
+
+									  <a href="<?php echo $url;?>/admin/edituser/{{ $user->id }}" class="btn btn-success">Edit</a>
+                                      <?php } ?>
+                                      <?php if(config('global.demosite')=="yes"){?>
+									  <a href="#" class="btn btn-danger btndisable">Delete</a>  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span>
+                                      <?php } else { ?>
+
+									  @if($sta!=1)<a href="<?php echo $url;?>/admin/users/{{ $user->id }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</a> @endif
+
+                                      <?php } ?>
+								  </td>
+							  </tr>
+                              <?php $i++; } ?>
+
+							  </tbody>
+						  </table>
+
+					  </div>
+>>>>>>> parent of a193c80... Added News Letters Functionality from HomePage and Admin Panel List
 
                   <div class="content table-responsive table-full-width">
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsLetters extends Migration
+class AddCompletionStatusColumnInJobApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,8 @@ class CreateNewsLetters extends Migration
     public function up()
     {
         //
-        Schema::create('news_letters', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('user_id',50);
-			$table->string('email',300);
-            $table->timestamps();
+        Schema::table('job_applications', function (Blueprint $table) {
+            $table->integer('completion_status')->default(0);
         });
     }
 
@@ -30,6 +27,8 @@ class CreateNewsLetters extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('news_letters');
+        Schema::table('job_applications', function (Blueprint $table) {
+            $table->dropColumn('completion_status');
+        });
     }
 }
