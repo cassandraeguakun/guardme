@@ -1,370 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    
-
    @include('style')
-	
-
-<script type="text/javascript">
-
-function withdraw_check(str)
-{	
-	if(str=="paypal")
-	{	
-		document.getElementById("bank_info").style.display="none";
-		document.getElementById("paypal").style.display="block";
-	}
-	else if(str=="bank")
-	{
-		document.getElementById("paypal").style.display="none";
-		document.getElementById("bank_info").style.display="block";
-	}
-}
-</script>
-
-
+	<style src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></style>
+	<style src="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"></style>
+	<style src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css"></style>
+	<style type="text/css">
+		button {
+			background: #00a651;
+			color: white;
+			padding-top: 10px;
+			margin: 0;
+			border: none;
+			border-radius: 5px;
+			padding-left: 20px;
+			padding-right: 20px;
+			height: 40px;
+		}
+	</style>
 </head>
 <body>
 
     
 
     <!-- fixed navigation bar -->
-    @include('header')
+   
+    	@include('header')
 
     <!-- slider -->
     
 
-	
-    
-	
-	
-	
-	
-	
-	
-	
-	<div class="clearfix"></div>
-	
-	
-	
-	
-	
-	<div class="video">
-	<div class="clearfix"></div>
-	<div class="headerbg">
-	 <div class="col-md-12" align="center"><h1>Wallet</h1></div>
-	 </div>
-	
+<section class=" job-bg ad-details-page">
 	<div class="container">
-	
-	 
-	 
-	 
-	 <div class="height30"></div>
-	 
-	 <?php if($shop_count!=0){?>
-	 
-	 
-	 
-	 
-	 <?php if(!empty($check_count)){?>
-		 
-	 <div class="row">
-	
-	
-	
-	
-	
-	<form class="form-large" action="{{ route('wallet') }}" accept-charset="UTF-8" id="formID" method="post">
-{{ csrf_field() }}
-<div class="container">
+		<div class="breadcrumb-section">
+			<ol class="breadcrumb">
+				<li><a href="{{URL::to('/')}}">Home</a></li>
+				<li>Wallet</li>
+			</ol>						
+			<h2 class="title">Wallet</h2>
+		</div>
+		    <div class="banner-form banner-form-full job-list-form">
+                <form method="get" action="{{ url('/wallet/jobs/find') }}" id="formID">
+                    <input type="text" class="form-control" placeholder="Job search" name="keyword" value="{{old('keyword')}}">
 
-	<div class="text-center withdraw_amt">		
-		<span class="lnr lnr-tag"></span> <label>&nbsp;Minimum Withdraw Amt </label><span>&nbsp;<?php echo $setting[0]->withdraw_amt;?> <?php echo $setting[0]->site_currency;?>	</span>			
-	</div>
-     <br/>
-	<div class="col-md-12">
-	<input type="hidden" id="shop_id" name="shop_id" value="<?php echo $shop_id; ?>">
-	<input type="hidden" name="min_with_amt" value="<?php echo $setting[0]->withdraw_amt;?>">
-				
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<div class="form-group">
-				<label>Shop Balance</label> [ <?php echo $setting[0]->site_currency;?> ]
-				<?php 
-				
-								
-				
-				?>
-				<?php if($with_count!=0) {
-					$amt = $shop_balance;
-				
-				}
-				if($with_count==0)
-				{
-					$amt = $bal;
-				}
-				?>
-				<input type="text" class="form-control" id="shop_balance" name="shop_balance" readonly value="<?php echo $amt; ?>">
-				
-			</div>
-		</div>
-		
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<div class="form-group">
-				<label>Withdraw Amount</label>
-				<input type="text" class="form-control validate[required] text-input" id="withdraw_amt" name="withdraw_amt">	
-			</div>
-		</div>
-		
-		<div class="col-lg-4 col-md-4 col-sm-4">
-			<div class="form-group">
-				<label>Withdraw Option</label>
-					<select id="withdraw_mode" name="withdraw_mode" class="form-control validate[required]" onchange="javascript:withdraw_check(this.value);">
-						<?php 
-						
-						foreach($setting as $row)
-						{
-							$catid=$row->withdraw_option;
-							$sel= explode(",",$catid); 
-							$lev= count($sel);
-							for($i=0;$i<$lev;$i++)
-							{
-								 $ad_cat= $sel[$i];
+                    <button type="submit" class="btn btn-primary" value="Search">Search</button>
+                </form>
+            </div>
+	
+
+
+		<div class="adpost-details post-resume">
+			
+
+			<div class="row">
+				<div class="col-md-8">
+					<div class="section postdetails">
+						<div class="description-info">
+							<h2>Wallet</h2>
 							
-						?>
-						<option value="<?php echo $ad_cat; ?>" ><?php echo $ad_cat; ?></option>
-						<?php 
-						} }
-						?> 
-					</select>
-					
+							<div class="row">
+								<form method="get" action="{{ url('/wallet/jobs/find') }}" id="filters">
+							        <div class="col-sm-12">
+							        	<label class="col-sm-2">Transaction Date:</label>
+							            <div class="col-sm-3">
+							                <input type="text" class="start_date date-picker form-control" name="start_date" placeholder="Start Date" required="true"  value="{{old('start_date')}}">
+							                <span class="text-danger error-span"></span>
+							            </div>
+							            <div class="col-sm-3">
+							                <input type="text" class="end_date date-picker form-control" name="end_date" placeholder="End Date" required="true"  value="{{old('end_date')}}">
+							                <span class="text-danger error-span"></span>
+							            </div>
+							            <div class="col-sm-1">
+							            	<button type="submit" value="GO" class="btn btn-primary">GO</button>
+							            </div>
+							        </div>
+								</form>
+							</div>
+							<table class="display nowrap table" id="table">
+							    <thead>
+							        <tr>
+							            <th>Reference Number</th>
+							            <th>Job Title</th>
+							            <th>Amount</th>
+							            <th>Transaction Date</th>
+							        </tr>
+							    </thead>
+							    <tbody>
+							    	@foreach($jobs as $job)
+							        <tr>
+							            <td>{{$job->id}}</td>
+							            <td><a href="{{url('wallet/invoice/'.$job->id)}}">{{$job->title}}</a></td>
+							            <td>{{$job->amount}}</td>
+							            <td>{{date('d/m/Y',strtotime($job->created_at))}}</td>
+							        </tr>
+							        @endforeach
+							    </tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="section job-short-info center balance">
+						<h5>Escrow Balance</h5>
+						<ul>
+							<li>
+								<p class="font-35">£
+									@if($wallet_data['escrow_balance']==0)
+										0.00
+									@else
+										{{ $wallet_data['escrow_balance'] }}
+									@endif
+								</p>
+							</li>
+						</ul>
+					</div>
+
+					<div class="section quick-rules job-postdetails">
+						<h4>Heading1</h4>
+						<ul>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							
+						</ul>
+					</div>
+
+
+					<div class="section quick-rules job-postdetails">
+						<h4>Heading2</h4>
+						<ul>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							<li>
+								lorem ipsum dolor sit amet, consectetur adipiscing elit
+							</li>
+							
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
-		<?php if($setting[0]->withdraw_option=="paypal" or $setting[0]->withdraw_option=="paypal,bank"){?>
-		<div class="col-lg-4 col-md-4 col-sm-4" id="paypal" >
-			<div class="form-group">
-				<label>Enter Paypal ID</label>
-				
-					<input type="text" class="form-control validate[required] text-input" id="paypal_id" name="paypal_id">	
-					
-			</div>
-		</div>
-		<?php } ?>
-		<?php if($setting[0]->withdraw_option=="bank" or $setting[0]->withdraw_option=="paypal,bank"){?>
-		<div class="col-lg-4 col-md-4 col-sm-4" id="bank_info" <?php if($setting[0]->withdraw_option=="bank"){ } else {?>style="display:none;"<?php } ?>>
-			<div class="form-group">
-				<label>Bank Account No</label>
-					<input type="text" class="form-control validate[required] text-input" id="bank_acc_no" name="bank_acc_no">
-					<br/>				
-					
-					<label>Bank Name and Address</label>
-					<input type="text" class="form-control validate[required] text-input" id="bank_name" name="bank_name">
-									<br/>
-					
-					<label>IFSC Code</label>
-					<input type="text" class="form-control validate[required] text-input" id="ifsc_code" name="ifsc_code">	
-										
-
-			</div>
-		</div>
-		<?php } ?>
-
 	</div>
-	<div class="row clearfix" style="">
-	<div class="" align="center">
-	<?php if(config('global.demosite')=="yes"){?><button type="button" class="form-control services-btn radiusoff btndisable">Save</button> 
-								<span class="disabletxt">( <?php echo config('global.demotxt');?> )</span><?php } else { ?>
-	
-	
-			<input type="submit" class="form-control services-btn radiusoff" name="save" value="Save">
-								<?php } ?>
-	</div>
-	</div>
+</section>
 
-
-</div>
-</form>
-	
-	
-
-	
-	</div>
-	
-	 <?php } ?>
-	
-	
-	
-	<?php if(!empty($with_count)) {?>
-	<div class="clearfix"></div>
-	
-	<div class="container">
-			<div id="page-inner"> 
-                  <div class="row">
-                <div class="col-md-12">
-                    <!-- Advanced Tables -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                           Pending Withdrawal
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>SNo</th>
-											<th>Withdraw Amount</th>
-											<th>Withdraw Mode</th>
-											<th>Paypal Id</th>
-											<th>Bank Account No</th>
-											<th>Bank Info</th>
-											<th>IFSC Code</th>
-											<th>Status</th>
-                                        </tr>
-                                    </thead>
-									<tbody>
-									<?php
-										$sno=0;
-										
-										foreach($withdraws as $row)
-										{
-											$sno++;
-											
-											
-											
-									?>  									
-										<tr>
-											<td><?php echo $sno; ?></td>
-											<td><?php echo $row->withdraw_amt;?>&nbsp;<?php echo $setting[0]->site_currency; ?></td>
-											<td><?php echo $row->withdraw_mode;?></td>	
-											<td><?php echo $row->paypal_id;?></td>	
-											<td><?php echo $row->bank_acc_no;?></td>		
-											<td><?php echo $row->bank_info;?></td>
-											<td><?php echo $row->ifsc_code;?></td>	
-											<td><?php echo $row->withdraw_status;?></td>											
-											
-										</tr>
-										<?php } ?>		
-									</tbody>
-															
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End Advanced Tables -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
-            </div>
-		</div>
-		
-		
-		
-		
-		
-		<div class="clearfix"></div>
-		
-		
-		
-		
-		
-		<div class="container">
-			<div id="page-inner"> 
-                  <div class="row">
-                <div class="col-md-12">
-                    <!-- Advanced Tables -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Completed Withdrawal
-                        </div>
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-										    <th>SNo</th>
-                                            <th>Withdraw Amount</th>
-											<th>Withdraw Mode</th>
-											<th>Paypal Id</th>
-											
-											<th>Bank Account No</th>
-											<th>Bank Info</th>
-											<th>IFSC Code</th>
-											<th>Status</th>
-                                        </tr>
-                                    </thead>
-									<tbody>
-											<?php
-										$sno=0;
-										
-										foreach($withdraws_cc as $row)
-										{
-											$sno++;
-											
-											
-											
-									?>  									
-										<tr>
-											<td><?php echo $sno; ?></td>
-											<td><?php echo $row->withdraw_amt;?>&nbsp;<?php echo $setting[0]->site_currency; ?></td>
-											<td><?php echo $row->withdraw_mode;?></td>	
-											<td><?php echo $row->paypal_id;?></td>	
-											<td><?php echo $row->bank_acc_no;?></td>		
-											<td><?php echo $row->bank_info;?></td>
-											<td><?php echo $row->ifsc_code;?></td>	
-											<td><?php echo $row->withdraw_status;?></td>											
-											
-										</tr>
-										<?php } ?>		
-									</tbody>
-															
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End Advanced Tables -->
-                </div>
-            </div>
-                <!-- /. ROW  -->
-            </div>
-		</div>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	<?php } ?>
-		
-		
-	 <?php } ?>
-	 
-	 <?php if($with_count==0){?>
-	 <div class="err-msg" align="center">Your balance is : <?php echo $check_count;?> <?php echo $setting[0]->site_currency;?></div>
-	
-	 <?php } ?>
-	
-	
-	</div>
-	</div>
-	
-	
-	
-
-      <div class="clearfix"></div>
-	   <div class="clearfix"></div>
 
       @include('footer')
-	  <?php if(session()->has('message')){?>
-    <script type="text/javascript">
-        alert("<?php echo session()->get('message');?>");
-		</script>
-    </div>
-	 <?php } ?>
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var table = $('#table').DataTable( {
+        dom: 'Bfrtip',
+        searching: false,
+        sorting: true,
+        buttons: [
+            'csv', 'excel', 'pdf',
+        ],
+        page_length: 50,
+    } );
+
+    $('#table_paginate').css('display', 'none');
+
+    $('#table tbody').on( 'click', 'tr', function () {
+    	var data = table.row(this).data();
+    	window.location = "{{url('/wallet/invoice/')}}"+'/'+data[0];
+        
+    } );
+
+	var date = new Date();
+	
+	$('.date-picker').datepicker({
+	    format: 'mm/dd/yyyy',
+	    autoclose: true,
+	});
+
+
+
+
+} );
+</script>
 </body>
 </html>

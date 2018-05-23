@@ -5,7 +5,7 @@ namespace Responsive\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-
+use Responsive\User;
 class SearchController extends Controller
 {
     /**
@@ -24,7 +24,6 @@ class SearchController extends Controller
 	public function sangvish_view()
 
 	{
-		
 		$viewservices= DB::table('subservices')->orderBy('subname','asc')->get();
       
 		$shopview=DB::table('shop')
@@ -33,18 +32,151 @@ class SearchController extends Controller
 		->where('shop.status', 'approved')->orderBy('shop.id','desc')
 		->groupBy('shop.id')
 		->get();
-		
-		
-		
-		
-		
-		
-		
-		
+				
 		$data = array('viewservices' => $viewservices,'shopview' => $shopview);
 		return view('search')->with($data);
 	}
+        
+	function getpersonnelsearch($user_id = null)
+	{
+	    $data = \request()->all();
+
+
+		$query = User::where('admin','2');
+
+		if(count($data)){
+
+		    // todo: filter by category
+            $search_category = isset($data['cat_val']) ? trim($data['cat_val']) : null;
+            if($search_category && $search_category != 'all'){
+                $query = $query->whereHas('sec_work_category', function ($q) use ($search_category){
+                    $q->where('name', $search_category);
+                });
+            }
+
+            // todo: filter by gender
+            $search_gender = isset($data['gender']) ? trim($data['gender']) : null;
+            if($search_gender && $search_gender != 'all'){
+                $query = $query->where('gender', $search_gender);
+            }
+
+            // todo: search filter, location
+            $location_search_filter = isset($data['location_filter']) ? trim($data['location_filter']) : null;
+
+            if($location_search_filter){
+                $location_search_query_array = explode(' ', trim($location_search_filter));
+
+                if(count($location_search_query_array)){
+                    foreach ($location_search_query_array as $search_location){
+                        $query = $query
+                            ->whereHas('address', function ($q) use ($search_location){
+                                $q->where('citytown', $search_location);
+                            });
+                    }
+                }
+            }
+
+		    // todo: filter location
+            /*$search_location = trim($data['loc_val']);
+
+            if($search_location){
+                $query = $query
+                    ->whereHas('address', function ($q) use ($search_location){
+                        $q->where('citytown', $search_location);
+                    });
+            }*/
+
+            // todo: filter user
+		    $personnel_query = isset($data['sec_personnel']) ? $data['sec_personnel'] : null;
+
+		    if($personnel_query){
+                $search_query_array = explode(' ', trim($personnel_query));
+
+                if(count($search_query_array)){
+                    foreach ($search_query_array as $search_key){
+                        $query = $query
+                            ->where('name', 'LIKE', "%$search_key%")
+                            ->orWhere('email', 'LIKE', "%$search_key%")
+                            ->orWhere('firstname', 'LIKE', "%$search_key%")
+                            ->orWhere('lastname', 'LIKE', "%$search_key%")
+                        ;
+                    }
+                }
+            }
+        }
+
+		$cats= DB::table('security_categories')->orderBy('name','asc')->get();
+
+        $locs= DB::table('address')->distinct()->get();
+
+        $sec_personnels = $query->with('person_address')->paginate(10);
+
+        if(\request()->expectsJson())
+            return response()->json($sec_personnels);
+
+		return view('search',compact('cats','locs','sec_personnels'));
+	}
 	
+	public function postpersonnelsearch(Request $request)
+	{
+		$cat = $request->cat_id;
+		$loc = $request->loc_id;
+		$personnel = $request->sec_personnel;
+
+
+		$cats= DB::table('security_categories')->orderBy('name','asc')->get();
+
+		$locs= DB::table('address')->get();
+
+		if($cat !='' || $loc !='' || $personnel !='')
+		{
+			$persons = User::where('admin','2');
+			if($personnel !='')
+			{
+				$persons->where('name', 'like', "$personnel%");
+				
+			}
+
+			if($cat !='')
+			{
+				$persons->where('work_category', "$cat");
+				
+			}
+
+			if($loc !='')
+			{
+				$persons->with('person_address')->whereHas('person_address',function($query) use ($loc){
+					//dd($query);
+					$query->where('id',$loc);
+
+				});
+
+				
+			}
+			$sec_personnels = $persons->paginate(10);
+		}
+		else{
+
+			$sec_personnels = User::where('admin','2')->paginate(10);
+
+		}
+		//dd($sec_personnels);
+		$request->flash();
+		return view('search',compact('sec_personnels','cats','locs'));
+	}
+
+	public function personnelprofile($id)
+	{
+
+		$person = User::with(['person_address','sec_work_category'])->find($id);
+		//dd($person->work_category);
+
+        if(\request()->expectsJson())
+            return response()->json($person);
+
+		return view('profile',compact('person'));
+
+	}
 	
 	public function sangvish_homeindex($id)
 	{

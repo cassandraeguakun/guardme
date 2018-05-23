@@ -24,42 +24,14 @@
     @include('header')
 
     <!-- slider -->
-    
-
+ 
 	
-    
+	<section class=" job-bg page  ad-profile-page">
+		<div class="container">
 	
-	
-	
-	
-	
-	
-	
-	<div class="clearfix"></div>
-	
-	
-	
-	
-	
-	<div class="video">
-	<div class="clearfix"></div>
-	<div class="headerbg">
-	 <div class="col-md-12" align="center"><h1>Tickets</h1></div>
-	 </div>
-	<div class="container">
-		 
-	 
-	<div class="container">
-        @yield('content')
-	
-	</div>
-	
-	
-	
-
-      <div class="clearfix"></div>
-	   <div class="clearfix"></div>
-
+        	@yield('content')
+		</div>
+	</section>
 	  @include('footer')
 	  
 

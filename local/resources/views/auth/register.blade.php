@@ -81,11 +81,11 @@
 
 
                         <div class="checkbox">
-                            <label class="pull-left checked" > <input type="checkbox" name="securityagree" class="validate[required]" value="securityagree" required /> I agree to the security personnel <a href='https://guarddme.com/terms-and-condition' target='_blank'>terms and conditions.</a> </label>
+                            <label class="pull-left" > <input type="checkbox" name="securityagree" class="validate[required]" value="securityagree" required /> I agree to the security personnel <a href='https://guarddme.com/terms-and-condition' target='_blank'>terms and conditions.</a> </label>
                         </div>
                        
                         <div class="checkbox">
-                                <label class="pull-left checked">
+                                <label class="pull-left">
                                         <input type="checkbox" name="employeragree" class="validate[required]" value="employeragree" required /> I agree to the employer <a href='https://guarddme.com/terms-and-condition' target='_blank'>terms and conditions.</a>
                                 </label>
                         </div>

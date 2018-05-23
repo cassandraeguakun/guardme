@@ -55,7 +55,7 @@
 
                         <div class="user-option">
                             <div class="checkbox pull-left">
-                                 <label for="logged"><input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me </label>
+                                 <label><input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me </label>
                             </div>
                         </div>
 
@@ -64,6 +64,19 @@
                                 </button>
                       
                     </form>
+                        <hr>
+                        <div class="social-login">
+                            <a href="/account/login/facebook" class="btn btn-small btn-block"
+                               style="background: #3b5998">
+                                <span class="mif-facebook icon"></span>
+                                <span class="caption uk-text-center">Continue with Facebook</span>
+                            </a>
+
+                            <a class="btn btn-small btn-block btn-secondary" href="/account/login/google">
+                                <span class="mif-google icon"></span>
+                                <span class="caption uk-text-center">Continue with Google</span>
+                            </a>
+                        </div>
                         <div class="user-option">
                             <div class="pull-right forgot-password">
                                 <a href="{{ route('password.request') }}">
@@ -71,6 +84,7 @@
                                 </a>
                             </div>
                         </div>
+                        
                         
                     </div>
                     <a href="{{URL::route('register')}}" class="btn-primary">Create a New Account</a>

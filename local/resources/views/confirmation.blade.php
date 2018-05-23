@@ -3,27 +3,27 @@
 @section('content')
 @include('style')
 @include('header')
-<div class="headerbg">
-  <div class="row">
-    <div class="col-md-12" align="center">
-      <h1>{!! session('confirmation_title') !!}</h1>
-    </div>
-  </div>
-</div>
-<div class="height30"></div>
-<div class="container">
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div class="text-center" style="margin-top: 40px; margin-bottom: 40px;">
+
+<section class="clearfix job-bg delete-page">
+  <div class="container">
+      <div class="breadcrumb-section">
+          <!-- breadcrumb -->
+          <ol class="breadcrumb">
+              <li><a href="{{URL::to('/')}}">Home</a></li>
+              <li><a href="{{URL::to('account')}}">Account</a></li>
+              <li>Confirmation</li>
+          </ol><!-- breadcrumb -->                        
+          <h2 class="title">{!! session('confirmation_title') !!}</h2>
+      </div><!-- banner -->
+
+      <div class="close-account text-center">
+          <div class="delete-account section">
             {!! session('confirmation_message') !!}
           </div>
-        </div>
       </div>
-    </div>
   </div>
-</div>
+</section>
+
 @include('footer')
 
 @endsection

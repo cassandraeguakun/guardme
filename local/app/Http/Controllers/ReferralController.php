@@ -57,7 +57,7 @@ class ReferralController extends Controller
      */
     public function redeem(Request $request)
     {
-
+        
         return view(
             'redeem',
             [

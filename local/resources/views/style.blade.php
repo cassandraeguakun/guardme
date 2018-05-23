@@ -43,7 +43,8 @@ $currentPaths= Route::getFacadeRoot()->current()->uri();
     <link rel="stylesheet" href="<?php echo $url;?>/css/bootstrap.min.css" >
     <link rel="stylesheet" href="<?php echo $url;?>/css/font-awesome.min.css">
 	<link rel="stylesheet" href="<?php echo $url;?>/css/icofont.css"> 
-    <link rel="stylesheet" href="<?php echo $url;?>/css/slidr.css">     
+    <link rel="stylesheet" href="<?php echo $url;?>/css/slidr.css">
+	<link href="<?php echo $url;?>/css/star-rating.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="<?php echo $url;?>/css/main.css">  
 	<link id="preset" rel="stylesheet" href="<?php echo $url;?>/css/presets/preset1.css">	
     <link rel="stylesheet" href="<?php echo $url;?>/css/responsive.css">
@@ -55,9 +56,11 @@ $currentPaths= Route::getFacadeRoot()->current()->uri();
 		<link href="<?php echo $url;?>/css/jquery.multiselect.css" rel="stylesheet" type="text/css">
 		<link href="<?php echo $url;?>/css/lightbox.min.css" rel="stylesheet" type="text/css">
 		<link href="<?php echo $url;?>/css/jquery-ui.css" rel="stylesheet" type="text/css">
+		<link href="<?php echo $url;?>/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
 
 
 		<link href="<?php echo $url;?>/css/custom.css" rel="stylesheet" type="text/css">
+                <link href="<?php echo $url;?>/css/nouislider.css" rel="stylesheet" type="text/css">
 	<!--old required css -->
 	
 	<!-- font -->
@@ -72,6 +75,8 @@ $currentPaths= Route::getFacadeRoot()->current()->uri();
     <script src="<?php echo $url;?>/js/price-range.js"></script>   
     <script src="<?php echo $url;?>/js/main.js"></script>
 	<script src="<?php echo $url;?>/js/switcher.js"></script>
+        <!-- Create job lat-long range -->
+        <script src="<?php echo $url;?>/js/nouislider.js"></script>
 	
 	
 	
@@ -95,6 +100,6 @@ $currentPaths= Route::getFacadeRoot()->current()->uri();
 	
 	
 	
-
+	
 	
 	

@@ -21,7 +21,17 @@ use Responsive\Http\Repositories\UsersRepository;
 Route::get('/', 'CommonController@home');*/
 
 
+//social login
+Route::group(['prefix' => 'account', 'namespace' => 'Auth'], function(){
+    Route::get('login/{provider}', 'SocialAuthController@socialLogin')
+        ->where('provider', 'google|facebook');
 
+    Route::get('login/{provider}/callback', 'SocialAuthController@handleProviderCallback')
+        ->where('provider', 'google|facebook');
+
+    Route::post('login/{provider}/callback', 'SocialAuthController@completeSocialAuth')
+        ->where('provider', 'google|facebook');
+});
 
 
 Route::get('/', 'IndexController@sangvish_index');
@@ -37,14 +47,21 @@ Route::get('dateavailable/{val}',array('as'=>'dateavailable','uses'=>'BookingCon
 
 
 Route::get('/logout', 'DashboardController@sangvish_logout');
+Route::get('/delete_account', 'DashboardController@sangvish_delaccount');
 Route::get('/delete-account', 'DashboardController@sangvish_deleteaccount');
 Route::post('/dashboard', ['as'=>'dashboard','uses'=>'DashboardController@sangvish_edituserdata']);
 
 Route::get('/account', 'ShopController@sangvish_viewshop');
 
+Route::get('/verification','ShopController@sangvish_verification');
+Route::get('/account-old', 'ShopController@sangvish_viewshop_old');
+
 Route::get('/addcompany', 'ShopController@sangvish_addshop');
 
 Route::get('/editshop/{id}', 'ShopController@sangvish_editshop');
+
+Route::get('/company', 'ShopController@editcompany');
+Route::post('/updatecompany', ['as'=>'update-company','uses'=>'ShopController@updatecompany']);
 
 Route::post('/editshop', ['as'=>'editshop','uses'=>'ShopController@sangvish_savedata']);
 
@@ -85,7 +102,11 @@ Route::get('/my_bookings', 'MybookingsController@sangvish_showpage');
 Route::post('/my_bookings', ['as'=>'my_bookings','uses'=>'MybookingsController@sangvish_savedata']);
 
 
-Route::get('/wallet', 'WalletController@sangvish_showpage');
+Route::get('/wallet', 'WalletController@show');
+Route::get('/wallet/jobs/find', 'WalletController@searchJobs');
+Route::get('/wallet/invoice/{id}', 'WalletController@invoice');
+Route::get('/wallet-dashboard', 'WalletController@view');
+Route::get('/invoice', 'WalletController@freelancerInvoice');
 
 Route::post('/wallet', ['as'=>'wallet','uses'=>'WalletController@sangvish_savedata']);
 
@@ -150,14 +171,21 @@ Route::get('/gallery/{id}','GalleryController@sangvish_editdata');
 Route::get('/gallery/{did}/delete','GalleryController@sangvish_destroy');
 
 
-Route::get('/search','SearchController@sangvish_view');
-
 Route::get('/search/{id}','SearchController@sangvish_homeindex');
 
-Route::post('/search', ['as'=>'search','uses'=>'SearchController@sangvish_index']);
+//Route::post('/search', ['as'=>'search','uses'=>'SearchController@sangvish_index']);
 Route::get('/shopsearch','SearchController@sangvish_view');
 Route::post('/shopsearch', ['as'=>'shopsearch','uses'=>'SearchController@sangvish_search']);
 
+/****************** new search functionality(added by Adnan)****/
+Route::get('/search','SearchController@getpersonnelsearch');
+
+Route::post('/search', ['as'=>'post-personnel-search','uses'=>'SearchController@postpersonnelsearch']);
+
+
+Route::get('/personnel-profile/{id}',['as'=>'person-profile','uses'=>'SearchController@personnelprofile']);
+
+/************************* End Adnan code**************/
 
 
 Route::get('/subservices','SubservicesController@sangvish_index');
@@ -199,7 +227,7 @@ Route::group(['middleware' => 'admin'], function() {
 
 	/* sub services */
 
-	Route::get('/admin/subservices','Admin\SubservicesController@index'); 
+	Route::get('/admin/subservices','Admin\SubservicesController@index');
 	Route::get('/admin/addsubservice','Admin\AddsubserviceController@formview');
 	Route::get('/admin/addsubservice','Admin\AddsubserviceController@getservice');
 	Route::post('/admin/addsubservice', ['as'=>'admin.addsubservice','uses'=>'Admin\AddsubserviceController@addsubservicedata']);
@@ -316,14 +344,36 @@ Route::group(['prefix' => '/jobs', 'middleware' => 'auth'], function () {
 	Route::get('/payment-status', 'PaypalPaymentController@getPaymentStatus')->name('payment.status');
 
 	Route::get('/job-confirmation', 'JobsController@confirmation')->name('job.confirmation');
+	Route::get('/my', 'JobsController@myJobs')->name('my.jobs');
+	Route::get('/saved', 'JobsController@savedJobs')->name('saved.jobs');
+	Route::get('/my/applications/{id}', 'JobsController@myJobApplications')->name('my.job.applications');
+	Route::get('/application/{id}/{u_id}', 'JobsController@viewApplication')->name('view.application');
+	Route::get('/apply/{id}', 'JobsController@applyJob')->name('apply.job');
+	Route::get('/proposals', 'JobsController@myProposals')->name('my.proposals');
+	Route::get('/view/application/{app_id}/{job_id}', 'JobsController@myApplicationView')->name('my.application.view');
+	Route::get('/save/{id}', 'JobsController@saveJobsToProfile');
+    Route::get('/remove/{id}', 'JobsController@removeJobsFromProfile');
+	Route::get('/leave/feedback/{application_id}', 'JobsController@leaveFeedback')->name('leave.feedback');
 });
 
+// Guest route for find job
+Route::get('/jobs/posted/view', 'JobsController@myJobPostView')->name('posted.jobs.view');
+Route::get('/jobs/find', 'JobsController@findJobs')->name('find.jobs');
+Route::post('/jobs/find', 'JobsController@postfindJobs')->name('post.find.jobs');
+Route::get('/job/{id}', 'JobsController@viewJob')->name('view.job');
 
 Route::get('/phone', 'VerificationController@phone')->middleware('auth');
 
-Route::group(['middleware' => 'partners'], function() {
-	Route::get('/partners','Partners\DashboardController@index');
-});
+Route::get('/jobs/favourites/{id}', 'JobsController@getFavouriteJobs')->name('favourites.jobs');
+Route::post('/jobs/favourites/{id}', 'JobsController@postFavouriteJobs')->name('post.favorites.jobs');
+Route::get('/jobs/{id}', 'JobsController@getJobs')->name('get.jobs');
+Route::post('/jobs/{id}', 'JobsController@postJobs')->name('post.jobs');
 
 
+Route::get('/test', 'test@getTransactionsOfJobs');
+Route::get('/test2/{id}', 'test@getJobTransactionDetails');
+
+
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+ 
 

@@ -3210,5 +3210,11 @@ input, select, a, .transition,
 .style-chooser-inner ul li.preset4 a {
   background: #662d91;
 }
-
-
+.rating-container .row label{
+	position: relative;
+	top: 20px;
+}
+.stars i.fa {
+	font-size: 25px;
+	color: #fde16d;
+}

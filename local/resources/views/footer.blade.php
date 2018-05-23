@@ -12,6 +12,27 @@ $setid=1;
 	<!-- footer-top -->
 	<section class="footer-top clearfix">
 		<div class="container">
+		
+						<div class="row text-center">
+		 
+@if ($message = Session::get('success'))
+<div class="alert alert-success alert-block">
+	<button type="button" class="close" data-dismiss="alert">×</button>	
+        <strong>{{ $message }}</strong>
+</div>
+@endif
+
+
+@if ($message = Session::get('error'))
+<div class="alert alert-danger alert-block">
+	<button type="button" class="close" data-dismiss="alert">×</button>	
+        <strong>{{ $message }}</strong>
+</div>
+@endif
+ 
+		</div>
+		
+		
 			<div class="row">
 				<!-- footer-widget -->
 				<div class="col-sm-3">
@@ -62,18 +83,19 @@ $setid=1;
 							</ul>
 						</div>
 					</div>
-					<!-- footer-widget -->
+				<!-- footer-widget -->
 					<div class="col-sm-3">
 						<div class="footer-widget news-letter">
 							<h3>Newsletter</h3>
 							<p>Jobs is Worldest leading Portal platform that brings!</p>
 							<!-- form -->
-							<form action="#">
-								<input type="email" class="form-control" placeholder="Your email id">
+							{{ Form::open(array('url' => 'post_newsletters_subscription','method' => 'POST')) }}
+ 		                        <input type="email" class="form-control" name="email" placeholder="Your email id">
 								<button type="submit" class="btn btn-primary">Sign Up</button>
-							</form><!-- form -->			
+                           {{ Form::close() }}		
 						</div>
-					</div><!-- footer-widget -->
+					</div><!-- footer-widget ends-->
+					
 		</div>
 	</section>
 
@@ -160,36 +182,39 @@ $setid=1;
 </script>
 	
 	
-	<script type="text/javascript" src="js/jquery.flexisel.js"></script>
+	<script type="text/javascript" src="<?php echo $url;?>/js/jquery.flexisel.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://getaddress.io/js/jquery.getAddress-2.0.7.min.js"></script>
 	
 	
 	<script src="<?php echo $url;?>/js/jquery.multiselect.js"></script>
+	<script src="<?php echo $url;?>/js/date-time-picker/bootstrap-datetimepicker.min.js"></script>
+	<script src="<?php echo $url;?>/js/date-time-picker/bootstrap-datetimepicker.uk.js"></script>
+	<script src="<?php echo $url;?>/js/moment.js"></script>
+	<script src="<?php echo $url;?>/js/star-rating.min.js"></script>
 <script>
-    class Errors{
-        constructor() {
-            this.formErrors = {};
-        }
-        record(errors) {
-            this.formErrors = errors;
-        }
-        load() {
-            $(".error-span").addClass('hide');
-            $.each(this.formErrors, function(i, v) {
-                if (typeof $('.'+ i) != 'undefined') {
-                    $('.'+ i).siblings('.error-span').html(v);
-                    $('.'+ i).siblings('.error-span').removeClass('hide');
-                }
-            });
-            if (typeof $('.error-span:eq(0)').closest('.form-group') != 'undefined') {
+	class Errors{
+		constructor() {
+			this.formErrors = {};
+		}
+		record(errors) {
+			this.formErrors = errors;
+		}
+		load() {
+			$(".error-span").addClass('hide');
+			$.each(this.formErrors, function(i, v) {
+				if (typeof $('.'+ i) != 'undefined') {
+					$('.'+ i).siblings('.error-span').html(v);
+					$('.'+ i).siblings('.error-span').removeClass('hide');
+				}
+			});
+			if (typeof $('.error-span:eq(0)').closest('.form-group') != 'undefined') {
 				if (typeof $('.error-span:visible:eq(0)').closest('.form-group').offset() != 'undefined')
-				var scrollPosition = $('.error-span:visible:eq(0)').closest('.form-group').offset().top - 70;
-
-                $("html, body").animate({ scrollTop: scrollPosition }, 1000);
-            }
-        }
-    }
+					var scrollPosition = $('.error-span:visible:eq(0)').closest('.form-group').offset().top - 70;
+				$("html, body").animate({ scrollTop: scrollPosition }, 1000);
+			}
+		}
+	}
 $('#langOpt').multiselect({
     columns: 1,
     placeholder: 'Select Services'
@@ -220,7 +245,7 @@ $('#postcode_lookup').getAddress({
     input_id : 'address_id',
     input_name : 'address_id',
     input_class :'form-control validate[required]',
-    button_class : 'btn btn-primary',
+    button_class : 'btn',
     dropdown_class:'form-control',
     <!--  Or use your own endpoint - api_endpoint:https://your-web-site.com/getAddress, -->
     output_fields:{
@@ -256,6 +281,17 @@ $.ajaxSetup({
 	headers: {
 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	}
+});
+jQuery('.date-time-picker').datetimepicker({
+	//language:  'uk',
+	weekStart: 1,
+	todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	forceParse: 0,
+	showMeridian: 1,
+	minuteStep: 5
 });
 </script>
 

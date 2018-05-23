@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Registered' => [
             'Responsive\Listeners\Auth\SendVerificationMail',
         ],
+        'Responsive\Events\JobHiredApplicationMarkedAsComplete' => [
+            'Responsive\Listeners\ReleaseJobApplicationFundsToApplicant',
+        ],
+        'Responsive\Events\AwardJob' => [
+            'Responsive\Listeners\AwardJobAndAdjustTransactions',
+        ],
     ];
 
     /**

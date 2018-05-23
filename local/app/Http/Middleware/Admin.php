@@ -45,25 +45,25 @@ class Admin
 	 */
    /* public function handle($request, Closure $next)
     {
-		
+
          if(auth()->check() && auth()->user()->id == 1)
 		 {
-            
+
 			}
 		 else
 		 {
 			  return redirect('index');
 		 }
-		
+
     }*/
-	
-	
+
+
 	public function handle($request, Closure $next)
     {
-		
-         if(auth()->check() && auth()->user()->id == 1)
+
+         if(auth()->check() && auth()->user()->id == 1 || auth()->check() && auth()->user()->admin == 3)
 		 {
-            
+
 			}
 		 else
 		 {
@@ -71,12 +71,12 @@ class Admin
 		 }
 		return $next($request);
     }
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 }

@@ -1,0 +1,11 @@
+URL: api/security-categories
+
+Type: get
+
+response: will be json of id and value.
+
+URL: api/business-categories
+
+Type: get
+
+response: will be json of id and value.

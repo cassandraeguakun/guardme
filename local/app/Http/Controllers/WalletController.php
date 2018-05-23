@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\DB;
 use Mail;
 use Auth;
 use Crypt;
+use Responsive\Transaction;
+use Responsive\User;
+use Responsive\Job;
+use Responsive\JobApplication;
 use URL;
+use Carbon\Carbon;
+use PDF;
 
 class WalletController extends Controller
 {
@@ -18,294 +24,143 @@ class WalletController extends Controller
      * @return void
      */
     
+	public function show() {
+		$wallet = new Transaction();
+		$wallet_data = $wallet->getAllTransactionsAndEscrowBalance();
+		// return view('wallet', compact('wallet_data'));
+		$user = auth()->user();
+		if($user->admin == 0){
+			$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, sum(transactions.amount) as amount, security_jobs.created_at from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.user_id = '.$user->id.' group by job_id');
+		}else if($user->admin == 2){
+			$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, sum(transactions.amount) as amount, security_jobs.number_of_freelancers, security_jobs.created_at from security_jobs, job_applications, transactions where job_applications.job_id = security_jobs.id and transactions.job_id = security_jobs.id and is_hired = 1 and applied_by = '.$user->id.' and transactions.type = "job_fee" group by security_jobs.id');
+		}else{
+            $jobs = array();
+        }
+		// dd($jobs);
+		return view('wallet', compact('jobs', 'wallet_data'));
+	}
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function __construct()
+	public function view() {
+		$wallet = new Transaction();
+		$wallet_data = $wallet->getAllTransactionsAndEscrowBalance();
+		$userid = auth()->user()->id;
+		$editprofile = User::where('id',$userid)->get();
+
+        $user = auth()->user();
+        if($user->admin == 0){
+            $jobs = DB::select('select distinct security_jobs.id, security_jobs.title, sum(transactions.amount) as amount, security_jobs.created_at from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.user_id = '.$user->id.' group by job_id');
+        }else if($user->admin == 2){
+            $jobs = DB::select('select distinct security_jobs.id, security_jobs.title, sum(transactions.amount) as amount, security_jobs.number_of_freelancers, security_jobs.created_at from security_jobs, job_applications, transactions where job_applications.job_id = security_jobs.id and transactions.job_id = security_jobs.id and is_hired = 1 and applied_by = '.$user->id.' and transactions.type = "job_fee" group by security_jobs.id');
+        }else{
+            $jobs = array();
+        }
+		return view('wallet-dashboard', compact('wallet_data', 'editprofile', 'jobs'));
+	}
+
+	public function searchJobs(Request $request) 
     {
-        $this->middleware('auth');
+    	$wallet = new Transaction();
+		$wallet_data = $wallet->getAllTransactionsAndEscrowBalance();
+    	$keyword = $request->keyword;
+    	$start_date = $request->start_date;
+    	$end_date = $request->end_date;
+    	$user = auth()->user();
+
+    	if($keyword != ''){
+			if($user->admin == 0){
+				$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, transactions.amount, transactions.created_at from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.user_id = '.$user->id.' and (security_jobs.id like "%'.$keyword.'%" or security_jobs.title like "%'.$keyword.'%") group by job_id');
+			}else if($user->admin == 2){
+				$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, transactions.amount, transactions.created_at from security_jobs, job_applications, transactions where job_applications.job_id = security_jobs.id and transactions.job_id = security_jobs.id and is_hired = 1 and applied_by = '.$user->id.' and (security_jobs.id like "%'.$keyword.'%" or security_jobs.title like "%'.$keyword.'%") group by security_jobs.id');
+			}
+    	}
+    	else if($start_date != null && $end_date != null && $start_date < $end_date){
+    		$format = "y_m_d";
+			$date1  = date("Y-m-d", strtotime($start_date));
+			$date2  = date("Y-m-d", strtotime($end_date));
+			// dd($date1." ".$date2);
+    		if($user->admin == 0){
+				$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, transactions.amount, transactions.created_at from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.user_id = '.$user->id.' and (transactions.created_at between "'.$date1.'" and "'.$date2.'" ) group by security_jobs.id');
+			}else if($user->admin == 2){
+				$jobs = DB::select('select distinct security_jobs.id, security_jobs.title, transactions.amount, transactions.created_at from security_jobs, job_applications, transactions where job_applications.job_id = security_jobs.id and transactions.job_id = security_jobs.id and is_hired = 1 and applied_by = '.$user->id.' and (transactions.created_at between "'.$date1.'" and "'.$date2.'" ) group by security_jobs.id');
+			}
+    	}else{
+    		$jobs = array();
+    	}
+    	return view('wallet', compact('jobs', 'wallet_data'));
     }
-	
-	
-	public function sangvish_showpage() {
-		
-		 $email = Auth::user()->email;
-		 
-		 
-		 $set_id=1;
-		$setting = DB::table('settings')->where('id', $set_id)->get();
-		
-		
+
+	public function invoice(Request $request, $id){
+		// return view('invoice-employer');
+		$user = auth()->user();
+		$user_id = auth()->user()->id;
+        $balance = '';
         
-				 
-		 $shop_count = DB::table('shop')
-		          
-				   ->where('status', '=', 'approved')
-				   ->where('seller_email', '=', $email)
-				 ->count();		 
-				 
-				 
-				 
-				 
-				 		   
-			
+        $from = array();        
+        $from = $user;
+	    $from->date = Carbon::now();
+        $all_transactions = array();
 
-		
-					 
-					 
-		if($shop_count!=0)
-		{
+        if(!empty($user_id)) {
+            if($user->admin == 2){
+                $all_transactions = DB::select('select security_jobs.title, transactions.id, transactions.amount, transactions.created_at, security_jobs.number_of_freelancers, transactions.credit_payment_status as status from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.type = "job_fee" and security_jobs.id = '.$id);
+            }else if($user->admin == 0){
+                $credit = Transaction::select(DB::raw('SUM(amount) as total'))
+                    ->groupBy('user_id')
+                    // ->where('user_id', $user_id)
+                    ->where('job_id', $id)
+                    ->where('status', 1)
+                    ->where(function($query){
+                        $query->orWhere('credit_payment_status', 'paid')
+                            ->orWhere('credit_payment_status', 'funded');
+                    })
+                    ->where('debit_credit_type', 'credit')
+                    ->get()->first();
+                $total_credit = !empty($credit->total) ? ($credit->total) : 0;
+                $balance = $total_credit;
 
+                $all_transactions = DB::select('select transactions.title, transactions.id, transactions.created_at, transactions.amount, security_jobs.number_of_freelancers, transactions.credit_payment_status as status from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and security_jobs.id = '.$id);
+                $applied_by = JobApplication::select('applied_by')->where('job_id', $id)->get();
+                // dd($applied_by);
+                foreach ($all_transactions as $key => $transactions) {
+                    if($transactions->title == 'Job Fee'){
+                        $transactions->user_id = $applied_by;
+                    }
+                }
+                // dd($all_transactions);
+            }
+        }
+        if (!empty($all_transactions)) {
+	        if($user->admin == 2){
+	            if($request->has('download')){
+		            $pdf = PDF::loadView('invoice-freelancer', compact('all_transactions', 'balance', 'from', 'id'));
+		            return $pdf->download('invoice.pdf');
+		        }
+	        	return view('invoice-freelancer', compact('all_transactions', 'balance', 'from', 'id'));
+	        }
+	        else if($user->admin == 0){
+	        	if($request->has('download')){
+		            $pdf = PDF::loadView('invoice-employer', compact('all_transactions', 'balance', 'from', 'id'));
+		            return $pdf->download('invoice.pdf');
+		        }
+	        	return view('invoice-employer', compact('all_transactions', 'balance', 'from', 'id'));
+	        }
+        }
 
+        return view('invoice-freelancer', compact('all_transactions', 'balance', 'from', 'id'));
+	}
 
-           $shop = DB::table('shop')
-		          
-				   ->where('status', '=', 'approved')
-				   ->where('seller_email', '=', $email)
-				 ->get();	
-				$shop_id = $shop[0]->id;
-				
-			$check_count = DB::table('booking')
-					->where('shop_id', '=', $shop_id)
-					->where('status', '=', 'paid')
-					 ->count();	
-				 
-		$with_count = DB::table('withdraw')
-					->where('withdraw_shop_id', '=', $shop_id)
-					 ->count(); 	
-				
-				
-				
-				
-				
-				
-		if(!empty($with_count))
-		{
-			
-			$withdraws = DB::table('withdraw')
-				              ->where('withdraw_shop_id', '=', $shop_id)
-							  ->where('withdraw_status', '=', 'pending')
-							  ->orderBy('wid','desc')
-							   ->get();
-							   
-							   
-				$withdraws_cc = DB::table('withdraw')
-				              ->where('withdraw_shop_id', '=', $shop_id)
-							  ->where('withdraw_status', '=', 'completed')
-							  ->orderBy('wid','desc')
-							   ->get();	
-			
-			$queryy=DB::table('withdraw')
-					        ->where('withdraw_shop_id', '=', $shop_id)
-							->orderBy('wid','desc')
-							->limit(1)->offset(0)
-							->get();
-					
-					
-					$shop_balance="";
-					foreach($queryy as $balances)
-					{	
-						
-						 $shop_balance +=$balances->total_balance - $balances->withdraw_amt;
-					}	
-			
-		$data=array('shop_id' => $shop_id, 'setting' => $setting, 'with_count' => $with_count,  'shop_balance' => $shop_balance, 'withdraws' => $withdraws,
-		'withdraws_cc' => $withdraws_cc, 'check_count' => $check_count,'shop_count' => $shop_count);
-		} 
-	    if(empty($with_count))
-		{
-			$nquery=DB::table('booking')
-							->where('shop_id', '=', $shop_id)
-							 ->get();
-					
-					$bal="";
-					foreach($nquery as $nbalance)
-					{
-						$bal +=$nbalance->total_amt;
-						$currency=$nbalance->currency;
-					}
-					
-					
-			
-			$data=array('shop_id' => $shop_id, 'setting' => $setting, 'with_count' => $with_count, 'bal' => $bal, 'check_count' => $check_count,'shop_count' => $shop_count);
-		}
-		}
-		if($shop_count==0)
-		{
-			$with_count=0;
-			$check_count=0;
-			$data=array('shop_count' => $shop_count,'with_count' => $with_count,'check_count' => $check_count,'setting' => $setting);
-		}
-		 
-		 return view('wallet')->with($data);
-		 
-		 
-		
-		
-		
-		
-		
-	 
-	  
-      
-   }
-   
-   
-   
-  public function sangvish_savedata(Request $request)
-   {
-	   $data = $request->all();
-	   
-	   
-	  $shop_balance =  $data['shop_balance'];
-	  $total_bal = $data['shop_balance'];
-	   
-	   $withdraw_amt = $data['withdraw_amt'];
-	   $withdraw_mode = $data['withdraw_mode'];
-	   
-	   if(!empty($data['paypal_id']))
-	   {
-	   $paypal_id = $data['paypal_id'];
-	   }
-	   else
-	   {
-		   $paypal_id="";
-	   }
-	   
-	   if(!empty($data['bank_acc_no']))
-	   {
-	   $bank_acc_no = $data['bank_acc_no'];
-	   }
-	   else
-	   {
-		   $bank_acc_no ="";
-	   }
-	   
-	   if(!empty($data['bank_name']))
-	   {
-		   
-	   $bank_name = $data['bank_name'];
-	   }
-	   else
-	   {
-		   $bank_name ="";
-	   }
-	   if(!empty($data['ifsc_code']))
-	   {
-	   $ifsc_code = $data['ifsc_code'];
-	   }
-	   else
-	   {
-		   $ifsc_code="";
-	   }
-	   $shop_id = $data['shop_id'];
-	   $min_with_amt = $data['min_with_amt'];
-	   
-	   $with_status = 'pending';
-	   
-	   $shop = DB::table('shop')
-			   ->where('id', '=', $shop_id)
-			   ->get();
-		
-	   $shop_name = $shop[0]->shop_name;
-	   
-	   
-	   $setid=1;
-		$setts = DB::table('settings')
-		->where('id', '=', $setid)
-		->get();
-		
-		$url = URL::to("/");
-		
-		$site_logo=$url.'/local/images/settings/'.$setts[0]->site_logo;
-		
-		$site_name = $setts[0]->site_name;
-		
-		$currency = $setts[0]->site_currency;
-		
-		$user_email = Auth::user()->email;
-		$username = Auth::user()->name;
-		
-		$aid=1;
-		$admindetails = DB::table('users')
-		 ->where('id', '=', $aid)
-		 ->first();
-		
-		$admin_email = $admindetails->email;
-	   
-	   
-	   if($min_with_amt<=$withdraw_amt && $shop_balance>=$withdraw_amt)
-		{
-			DB::insert('insert into withdraw (shop_balance,withdraw_amt,total_balance,withdraw_mode,paypal_id,bank_acc_no,bank_info,ifsc_code,withdraw_shop_id,withdraw_status
-			) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [$shop_balance,$withdraw_amt,$total_bal,$withdraw_mode,$paypal_id,$bank_acc_no,$bank_name,$ifsc_code,$shop_id,$with_status]);
-			
-			
-			
-			$withdraw = DB::table('withdraw')
-					        ->where('withdraw_shop_id', '=', $shop_id)
-							->orderBy('wid','desc')
-							->limit(1)->offset(0)
-							->first();
-							
-	   $w_withdraw_amt = $withdraw->withdraw_amt;
-	   $w_withdraw_mode = $withdraw->withdraw_mode; 
-	   $w_paypal_id = $withdraw->paypal_id; 
-	   $w_bank_acc_no = $withdraw->bank_acc_no;
-	   $w_bank_info = $withdraw->bank_info;
-	   $w_ifsc_code = $withdraw->ifsc_code;
-			
-			
-		$datas = [
-            'w_withdraw_amt' => $w_withdraw_amt, 'w_withdraw_mode' => $w_withdraw_mode, 'w_paypal_id' => $w_paypal_id, 'w_bank_acc_no' => $w_bank_acc_no,
-			'w_bank_info' => $w_bank_info, 'w_ifsc_code' => $w_ifsc_code, 'shop_name' => $shop_name, 'currency' => $currency, 'site_logo' => $site_logo, 'site_name' => $site_name
-        ];
-		
-		
-		
-		
-		Mail::send('withdrawemail', $datas , function ($message) use ($admin_email,$user_email,$username)
-        {
-            $message->subject('Withdrawal Request');
-			
-            /*$message->from($user_email, $username);
+    public function freelancerInvoice(Request $request){
+        $user_id = $request->user_id;
+        $id = $request->id;
+        $all_transactions = DB::select('select security_jobs.title, transactions.id, transactions.amount, transactions.created_at, security_jobs.number_of_freelancers, transactions.credit_payment_status as status from security_jobs, transactions where transactions.job_id = security_jobs.id and transactions.status = 1 and transactions.type = "job_fee" and security_jobs.id = '.$id);
 
-            $message->to($admin_email);*/
-			
-			 $message->from($admin_email,'Admin');
+        $from = User::find($user_id);
+        $from->date = Carbon::now();
 
-            $message->to($admin_email);
-			
-
-        }); 
-		
-			
-			
-			return redirect()->back()->with('message', 'Updated Successfully');
-			
-			
-			
-		}
-		else
-		{
-			return redirect()->back()->with('message', 'Please Check Minimum Withdraw Amount and Shop Balance');
-		}
-	   
-	   
-	   
-	   
-	   
-   }   
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+        if($request->has('download')){
+                    $pdf = PDF::loadView('invoice-freelancer', compact('all_transactions', 'balance', 'from', 'id'));
+                    return $pdf->download('invoice.pdf');
+                }
+                return view('invoice-freelancer', compact('all_transactions', 'balance', 'from', 'id'));
+    }
 }

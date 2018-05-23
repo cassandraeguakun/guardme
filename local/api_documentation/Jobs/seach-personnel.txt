@@ -1,0 +1,27 @@
+=========================================
+Get Personnel List
+=========================================
+
+URL:
+
+api/search
+
+Type: post
+
+sample Request:
+
+page_id: 1,2,3 ....
+user_id: 
+post_code: LS12 2UA
+cat_val: Club
+gender: male, female
+location_filter: text
+sec_personnel: text
+distance: 0-10=>1, 11-20=>2, 21-50=>3, 50+=>4 
+
+Response:
+
+1) 200
+
+array of objects of personnel
+

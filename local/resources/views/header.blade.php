@@ -17,7 +17,7 @@ if(isset(Auth::user()->verification)){
  <header id="header" class="clearfix">
 
 @if($isVerified = (Auth::check() && ! Auth::user()->verified && ! session('need_email_confirmation')))
-<div class="alert alert-warning" role="alert" style="position: fixed;top: 0px;left: 0px;width: 100%;z-index:9999;border-radius:0px;padding:5px;">
+<div class="alert alert-danger" role="alert" style="position: fixed;top: 0px;left: 0px;width: 100%;z-index:9999;border-radius:0px;padding:5px;">
 	<div class="container">
 		<div class="pull-left" style="margin-top: 8px">
 			A confirmation email was sent to <strong>{{ $changedEmail = $new_email ?: Auth::user()->email }}</strong>.
@@ -61,9 +61,9 @@ if(isset(Auth::user()->verification)){
             <?php if (Auth::guest()) {?>
 				<!-- Added by Ninja 20180331 start here-->
 				<li class="@if(Route::current()->uri()=='/') {{ 'active' }} @endif"><a href="<?php echo $url;?>/">Home</a></li>
-				<li class="@if(Route::current()->uri()=='search') {{ 'active' }} @endif"><a href="<?php echo $url;?>/search">Security Personnel</a></li>
-				<li><a href="<?php echo $url;?>/#">Find Jobs</a></li>
-				<li class="@if(Route::current()->uri()=='how-it-works') {{ 'active' }} @endif"><a href="<?php echo $url;?>/how-it-works">How It Works</a></li>
+				<li class="@if(Route::current()->uri()=='search') {{ 'active' }} @endif"><a href="<?php echo $url;?>/search">Hire Security</a></li>
+				<li><a href="{{ route('find.jobs') }}">Find Jobs</a></li>
+				
 				<!-- Added by Ninja 20180331 end here-->
            		
             <?php } else { ?>
@@ -75,18 +75,19 @@ if(isset(Auth::user()->verification)){
             ?>
 			<!-- Added by Ninja 20180331 start here-->
 				<li class="@if(Route::current()->uri()=='/') {{ 'active' }} @endif"><a href="<?php echo $url;?>/">Home</a></li>
-                <li class="@if(Route::current()->uri()=='addcompany') {{ 'active' }} @endif"><a href="<?php if($shcount > 0){?><?php echo $url;?>/addcompany<?php } else { ?><?php echo $url;?>/account<?php } ?>">Dashboard</a></li>
-				<li><a href="<?php echo $url;?>/search">Security Personnel</a></li>
-				<li><a href="<?php echo $url;?>/#">Find Jobs</a></li>
-				<li><a href="<?php echo $url;?>/how-it-works">How It Works</a></li>
-			  		{{--<li><a href="{{ url('referral') }}">Loyalty</a></li>--}}
+                <li class="@if(Route::current()->uri()=='addcompany') {{ 'active' }} @endif"><a href="<?php if($shcount == 0 && Auth::user()->admin == 0){?><?php echo $url;?>/addcompany<?php } else { ?><?php echo $url;?>/account<?php } ?>">Dashboard</a></li>
+				<li><a href="<?php echo $url;?>/search">Hire Security</a></li>
+				<li><a href="{{ route('find.jobs') }}">Find Jobs</a></li>
 				
+							
 			<!-- Added by Ninja 20180331 end here-->
 			
 			<?php } ?>
           </ul>
         </div> <!-- /.nav-collapse -->
         </div>
+		
+
         <div class="nav-right">				
 			<ul class="sign-in">
 				<?php if (Auth::guest()) {?>
@@ -96,7 +97,7 @@ if(isset(Auth::user()->verification)){
             	
             	<?php }else{?>
 			
-			<li><a  href="<?php echo $url;?>/#"><i class="fa fa-heart-o"></i></a></li>
+			<li><a href="{{url('jobs/saved')}}"><i class="fa fa-heart-o"></i></a></li>
 			<li><a href="<?php echo $url;?>/#"><i class="fa fa-envelope-o"></i></a></li>
 			<li><a href="<?php echo $url;?>/#"><i class="fa fa-bell-o"></i></a></li>
 			<li class="dropdown li-last">
@@ -110,8 +111,9 @@ if(isset(Auth::user()->verification)){
 
 						<?php if(Auth::user()->admin==0) {?>
 						<!-- <li><a href="<?php echo $url;?>/dashboard">My Dashboard</a></li> -->
-						<li><a href="<?php echo $url;?>/dashboard">Freelancer Profile</a></li>
-						<li><a href="<?php echo $url;?>/my_bookings">My Bookings</a></li>
+						<li><a href="{{url('/wallet')}}">Wallet</a></li>
+						<!-- <li><a href="<?php echo $url;?>/dashboard">Freelancer Profile</a></li>
+						<li><a href="<?php echo $url;?>/my_bookings">My Bookings</a></li> -->
 						<?php } ?>
 
 
@@ -136,7 +138,7 @@ if(isset(Auth::user()->verification)){
 						<li <?php if(empty($shcount)){?>class="disabled"<?php } ?>><a href="<?php echo $url;?>/services" <?php if(empty($shcount)){?>class="disabled"<?php } ?>>My Services</a></li>
 						<li <?php if(empty($shcount)){?>class="disabled"<?php } ?>><a href="<?php echo $url;?>/gallery" <?php if(empty($shcount)){?>class="disabled"<?php } ?>>Shop Gallery</a></li>
 						-->
-						<li <?php if(empty($shcount)){?>class="disabled"<?php } ?>><a href="<?php echo $url;?>/wallet" <?php if(empty($shcount)){?>class="disabled"<?php } ?>>Wallet</a></li>
+						<li><a href="{{url('/wallet')}}">Wallet</a></li>
 
 								<?php } ?>
 						<li><a href="<?php echo $url;?>/support/tickets">Support</a></li>
@@ -150,9 +152,9 @@ if(isset(Auth::user()->verification)){
             
             	<?php } ?>
 			</ul><!-- sign-in -->					
-			<?php if (Auth::guest()) {?>
-				<a href="javascript:void(0);" class="btn hidden-sm hidden-xs">Hire Security Personnel</a>
-			<?php } ?>
+			@if(Auth::guest() || Auth::user()->admin==0)
+				<a href="{{URL::route('job.create')}}" class="btn nav-btn">Post a Job</a>
+			@endif
 			
 		</div>
        

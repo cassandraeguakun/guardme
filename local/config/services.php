@@ -41,4 +41,16 @@ return [
         'account' => env('TWILIO_ACCOUNT'),
     ],
 
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID','217187885509588'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET','fb90db16e4ceceae760b8c2affdd2765'),
+        'redirect' => env('FACEBOOK_REDIRECT','https://guarddme.com/account/login/facebook/callback'),
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID','62137224865-kh7adl3qg0775kbio5d00bl190d2sim2.apps.googleusercontent.com'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET','wNlLtWJvUV7l1DIhDBWQItzx'),
+        'redirect' => env('GOOGLE_REDIRECT','https://guarddme.com/account/login/google/callback'),
+    ],
+
 ];

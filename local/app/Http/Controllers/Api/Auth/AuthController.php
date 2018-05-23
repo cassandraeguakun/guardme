@@ -13,6 +13,7 @@ use Responsive\User;
 use Responsive\Address;
 use Responsive\Country;
 use Illuminate\Support\Facades\Input;
+use Responsive\Notifications\Auth\UserVerification as UserVerificationNotification;
 
 class AuthController extends Controller
 {
@@ -114,24 +115,32 @@ class AuthController extends Controller
     public function profile()
     {
         $user = Auth::user();
+        $id = Auth::user()->id;
+        $address = Address::where('user_id', $id )->first();
         return response()->json([
+            'id' => $user->id,
             'username' => $user->name,
             'first_name' => $user->firstname,
             'last_name' => $user->lastname,
             'email' => $user->email,
+            'admin' => $user->admin,
             'address_line1' => $user->address ? $user->address->line1 : null,
             'address_line2' => $user->address ? $user->address->line2 : null,
             'address_line3' => $user->address ? $user->address->line3 : null,
             'address_country' => $user->address ? $user->address->country : null,
             'address_postcode' => $user->address ? $user->address->postcode : null,
             'address_town' => $user->address ? $user->address->citytown : null,
+
+            'latitude' => $user->address ? $user->address->latitude : null,
+            'longitude' => $user->address ? $user->address->longitude : null,
+
             'phone' => $user->phone,
             'gender' => $user->gender,
             'dob' => $user->dob,
             'avatar' => $user->photo ? url("/local/images/userphoto/".$user->photo) : null,
             'nationality' => $user->nationality ? $user->nationality->name : null,
             'visa_number' => $user->visa_no,
-            'sia_number' => $user->sia_license,
+			'sia_number' => $user->sia_licence,
             'sia_expiry_date' => $user->sia_expirydate,
             'work_category' => User::getWorkCategories()[$user->work_category],
             'passport_photo' => $user->passphoto ? url("/local/images/userdoc/".$user->passphoto) : null,
@@ -139,43 +148,44 @@ class AuthController extends Controller
             'visa_page' => $user->visa_page ? url("/local/images/userdoc/".$user->visa_page) : null,
             'sia_license' => $user->sia_doc ? url("/local/images/userdoc/".$user->sia_doc) : null,
             'address_proof' => $user->address_proof ? url("/local/images/userdoc/".$user->address_proof) : null,
+
         ]);
     }
 
     public function updateProfile(Request $request) {
 
-		$data = $request->all();
+        $data = $request->all();
         $id = Auth::user()->id;
 
-		$rules = array(
-			'email'=>'required|email|unique:users,email,'.$id,
-			'name' => 'required|regex:/^[\w-]*$/|max:255|unique:users,name,'.$id,
+        $rules = array(
+            'email'=>'required|email|unique:users,email,'.$id,
+            'name' => 'required|regex:/^[\w-]*$/|max:255|unique:users,name,'.$id,
         );
 
-		$messages = array(
+        $messages = array(
             'email.unique' => 'The :attribute field is already exists',
             'name.regex' => 'The :attribute field must only be letters and numbers (no spaces)'
-		);
+        );
 
-		$validator = Validator::make(Input::all(), $rules, $messages);
+        $validator = Validator::make(Input::all(), $rules, $messages);
 
-		if ($validator->fails()) {
+        if ($validator->fails()) {
 
-			return response()->json(['errors' => $validator->errors()], 422);
-		} else {
-			$name=$data['name'];
-			$email=$data['email'];
-			$password=!empty($data['password'])?bcrypt($data['password']):'';
-			$phone=isset($data['phone']) ? $data['phone'] : '';
-			$currentphoto= Auth::user()->photo;
+            return response()->json(['errors' => $validator->errors()], 422);
+        } else {
+            $name=$data['name'];
+            $email=$data['email'];
+            $password=!empty($data['password'])?bcrypt($data['password']):'';
+            $phone=isset($data['phone']) ? $data['phone'] : '';
+            $currentphoto= Auth::user()->photo;
             $firstname = isset($data['firstname']) ? $data['firstname'] : '';
             $lastname = isset($data['lastname']) ? $data['lastname'] :'';
 
-			$image = Input::get('photo');
-			if (!empty($image)) {
-				$userphoto="/userphoto/";
-				$delpath = base_path('images'.$userphoto.$currentphoto);
-				\File::delete($delpath);
+            $image = Input::get('photo');
+            if (!empty($image)) {
+                $userphoto="/userphoto/";
+                $delpath = base_path('images'.$userphoto.$currentphoto);
+                \File::delete($delpath);
 
                 $pos  = strpos($image, ';');
                 $type = explode(':', substr($image, 0, $pos))[1];
@@ -184,18 +194,18 @@ class AuthController extends Controller
                 $filename  = time() . '.' . $ext;
                 $path = base_path('images'.$userphoto.$filename);
                 \Image::make(file_get_contents($image))->resize(200, 200)->save($path);
-				$savefname=$filename;
-			} else {
-				$savefname=$currentphoto;
-			}
+                $savefname=$filename;
+            } else {
+                $savefname=$currentphoto;
+            }
 
             $currentpassphoto=Auth::user()->passphoto;
             $passphoto = Input::get('passphoto');
             $userdoc="/userdoc/";
             if(!empty($passphoto))
-            {                    
+            {
                 $delpath = base_path('images'.$userdoc.$currentpassphoto);
-                \File::delete($delpath);	
+                \File::delete($delpath);
 
                 $pos  = strpos($passphoto, ';');
                 $type = explode(':', substr($passphoto, 0, $pos))[1];
@@ -207,13 +217,13 @@ class AuthController extends Controller
                 $passphotoname=$passphotofilename;
             } else {
                 $passphotoname=$currentpassphoto;
-            }			
+            }
             $currentsiadoc=Auth::user()->sia_doc;
             $siadoc = Input::get('sia_doc');
             if(!empty($siadoc))
-            {                    
+            {
                 $delpath = base_path('images'.$userdoc.$currentsiadoc);
-                \File::delete($delpath);	
+                \File::delete($delpath);
 
                 $pos  = strpos($siadoc, ';');
                 $type = explode(':', substr($siadoc, 0, $pos))[1];
@@ -225,13 +235,13 @@ class AuthController extends Controller
                 $siadocname=$siadocfilename;
             } else {
                 $siadocname=$currentsiadoc;
-            }			
+            }
             $currentaddressproof=Auth::user()->address_proof;
             $addproof = Input::get('address_proof');
             if(!empty($addproof))
-            {                    
+            {
                 $delpath = base_path('images'.$userdoc.$currentaddressproof);
-                \File::delete($delpath);	
+                \File::delete($delpath);
 
                 $pos  = strpos($addproof, ';');
                 $type = explode(':', substr($addproof, 0, $pos))[1];
@@ -243,12 +253,12 @@ class AuthController extends Controller
                 $addrproofname=$addprooffilename;
             } else {
                 $addrproofname=$currentaddressproof;
-            }			
+            }
 
             $currentvisapage=Auth::user()->visa_page;
             $visapage = Input::get('visa_page');
             if(!empty($visapage))
-            {                    
+            {
                 $delpath = base_path('images'.$userdoc.$currentvisapage);
                 \File::delete($delpath);
 
@@ -262,13 +272,13 @@ class AuthController extends Controller
                 $visapagename=$visapagefilename;
             } else {
                 $visapagename=$currentvisapage;
-            }			
+            }
             $currentpasspage=Auth::user()->pass_page;
             $passpage = Input::get('pass_page');
             if(!empty($passpage))
-            {                    
+            {
                 $delpath = base_path('images'.$userdoc.$currentpasspage);
-                \File::delete($delpath);	
+                \File::delete($delpath);
                 $pos  = strpos($passpage, ';');
                 $type = explode(':', substr($passpage, 0, $pos))[1];
                 $ext = explode('/', $type)[1];
@@ -279,13 +289,13 @@ class AuthController extends Controller
                 $passpagename=$passpagefilename;
             } else {
                 $passpagename=$currentpasspage;
-            }			
-                        
-			if(!empty($data['password'])) {
-				$passtxt=$password;
-			} else {
-				$passtxt=Auth::user()->password;
-			}
+            }
+
+            if(!empty($data['password'])) {
+                $passtxt=$password;
+            } else {
+                $passtxt=Auth::user()->password;
+            }
 
             //Address save                
             $address = Address::where('user_id', Auth::user()->id)->first();
@@ -314,45 +324,46 @@ class AuthController extends Controller
             $address->citytown = $citytown;
             $address->country = $country;
             $address->save();
-                        
-			$user = User::find(Auth::user()->id);
-			$user->name = $name;
-			$user->password = $passtxt;
-			$user->phone = $phone;
-			$user->photo = $savefname;
+
+            $user = User::find(Auth::user()->id);
+            $user->name = $name;
+            $user->password = $passtxt;
+            $user->phone = $phone;
+            $user->photo = $savefname;
             $user->visa_page = $visapagename;
             $user->pass_page = $passpagename;
             $user->address_proof = $addrproofname;
             $user->sia_doc = $siadocname;
             $user->passphoto = $passphotoname;
-            $user->sia_expirydate = isset($data['sia_expirydate']) ? $data['sia_expirydate'] : '';
-            $user->sia_licence = isset($data['sia_licence']) ? $data['sia_licence'] : '';
-            $user->work_category = isset($data['work_category']) ?  $data['work_category'] : 0;
-            $user->visa_no = isset($data['visa_no']) ? $data['visa_no'] : '';
-            $user->niutr_no = isset($data['niutr_no']) ? $data['niutr_no'] : '';
+            isset($data['sia_expirydate']) ? $user->sia_expirydate = $data['sia_expirydate'] : '';
+            isset($data['sia_licence']) ? $user->sia_licence = $data['sia_licence'] : '';
+            isset($data['work_category']) ? $user->work_category = $data['work_category'] : 0;
+            isset($data['visa_no']) ? $user->visa_no = $data['visa_no'] : '';
+            isset($data['niutr_no']) ? $user->niutr_no = $data['niutr_no'] : '';
             $country = isset($data['nationality']) ? Country::where('name', $data['nationality'])->first() : null;
-            $user->nation_id = $country ? $country->id : 0;
+            $country ? $user->nation_id = $country->id : 0;
             $user->firstname = $firstname;
             $user->lastname = $lastname;
-            $user->dob = isset($data['dob']) ? $data['dob'] : '';
-                                    
-			// don't save email directly if the user change their email
-			// we will save it to verify_users table with new_email column
-			// user needs to confirm the verification email
-			// to change their email
-			if ($user->email != $email) {
-				$user->setAsUnverified();
+            isset($data['dob']) ? $user->dob = $data['dob'] : '';
+            isset($data['gender']) ? $user->gender = $data['gender'] : '';
 
-				$token = $user->generateToken();
+            // don't save email directly if the user change their email
+            // we will save it to verify_users table with new_email column
+            // user needs to confirm the verification email
+            // to change their email
+            if ($user->email != $email) {
+                $user->setAsUnverified();
 
-				$user->changeEmail($email);
+                $token = $user->generateToken();
 
-				$user->notify(new UserVerificationNotification($token, $email));
-			}
+                $user->changeEmail($email);
 
-			$user->save();
+                $user->notify(new UserVerificationNotification($token, $email));
+            }
 
-			return response()->json(['success' => true]);
+            $user->save();
+
+            return response()->json(['success' => true]);
         }
 
     }

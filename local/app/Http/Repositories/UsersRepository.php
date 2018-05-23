@@ -61,5 +61,10 @@ use Responsive\User;
         return $this->user->where('username', $username)->first();
     }
 
+
+        public function getUserByEmail($email)
+        {
+            return $this->user->where('email', $email)->first();
+        }
     
 }

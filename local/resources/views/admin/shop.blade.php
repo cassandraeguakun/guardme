@@ -1,115 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-   
+
    @include('admin.title')
-    
+
     @include('admin.style')
-    
+
   </head>
 
-  <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
+  <body>
+    <div class="wrapper">
+      <!-- <div class="main_container"> -->
+      <div class="sidebar" data-background-color="white" data-active-color="danger">
+        <div class="sidebar-wrapper">
             @include('admin.sitename');
 
-            <div class="clearfix"></div>
+            <!-- <div class="clearfix"></div> -->
 
             <!-- menu profile quick info -->
             @include('admin.welcomeuser')
             <!-- /menu profile quick info -->
 
-            <br />
+            <!-- <br /> -->
 
             <!-- sidebar menu -->
             @include('admin.menu')
-			
-			
-			
-			
+
+
+
+
             <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
-            
+
             <!-- /menu footer buttons -->
           </div>
         </div>
 
+
+        <div class="main-panel">
         <!-- top navigation -->
        @include('admin.top')
-		
+
 		<?php $url = URL::to("/"); ?>
-		
-		
+
+
         <!-- /top navigation -->
 
         <!-- page content -->
-        <div class="right_col" role="main">
+        <div class="content">
           <!-- top tiles -->
 
-		 
-		 
-		 
-		 
-		 
-		 <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
+          <style>
+          div.dataTables_wrapper div.dataTables_filter input{
+            border: 1px solid #000;
+          }
+          </style>
+
+
+
+
+		 <div class="container-fluid">
+                <div class="row">
+                  <div class="card" style="padding:15px;">
+                  <!-- <div class="x_title">
                     <h2>Shop</h2>
                     <ul class="nav navbar-right panel_toolbox">
-                     
+
                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
-					
+
+                  </div> -->
+                  <div class="header">
+                      <h4 class="title">Companies</h4>
+                      <!-- <p class="category">Here is a subtitle for this table</p> -->
                   </div>
-				 
-                  <div class="x_content">
-                   
-					
+
+                  <div class="content table-responsive table-full-width">
+
+
                     <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                       <thead>
                         <tr>
                           <th>Sno</th>
 						  <th>Shop Name</th>
-                          <th>Address</th>
-                          <th>Shop Phone No</th>
+
 						  <th>Featured</th>
 						  <th>Status</th>
 						  <th>Total Balance</th>
                           <th>Action</th>
-                          
+
                         </tr>
                       </thead>
                       <tbody>
-					  <?php 
+					  <?php
 					  $i=1;
 					  foreach ($shop as $viewshop) { ?>
-    
-						
+
+
                         <tr>
 						 <td><?php echo $i;?></td>
-						 
+
                           <td><?php echo $viewshop->shop_name;?></td>
-                          
-						  <td><?php echo substr($viewshop->address,0,150).'...';?></td>
-						  
-						   <td><?php echo $viewshop->shop_phone_no;?></td>
-						   
+
+						 
+
 						   <td><?php echo $viewshop->featured;?></td>
-						   
+
 						   <td><?php echo $viewshop->status;?></td>
-						   
+
 						   <td> - </td>
-						  
+
 						  <td>
-						  
+
 			<?php if(config('global.demosite')=="yes"){?>
 						  <a href="#" class="btn btn-success btndisable">Edit</a>  <span class="disabletxt">( <?php echo config('global.demotxt');?> )</span>
-				  <?php } else { ?>			  
+				  <?php } else { ?>
 						  <a href="<?php echo $url;?>/admin/edit-shop/{{ $viewshop->id }}" class="btn btn-success">Edit</a>
 						  <?php } ?>
 				   <?php if(config('global.demosite')=="yes"){?>
@@ -120,21 +128,21 @@
 						  </td>
                         </tr>
                         <?php $i++;} ?>
-                       
+
                       </tbody>
                     </table>
-					
-					
+
+
                   </div>
                 </div>
               </div>
-			  
-			  
-			  
-		 
-		  
-		  
-		  
+            </div>
+
+
+
+
+
+
         </div>
         <!-- /page content -->
 
@@ -142,7 +150,7 @@
       </div>
     </div>
 
-    
-	
+
+
   </body>
 </html>

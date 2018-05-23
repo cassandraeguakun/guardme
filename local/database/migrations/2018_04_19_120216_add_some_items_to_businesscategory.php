@@ -1,10 +1,8 @@
 <?php
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-
 class AddSomeItemsToBusinesscategory extends Migration
 {
     /**
@@ -22,9 +20,7 @@ class AddSomeItemsToBusinesscategory extends Migration
                 ['name' => 'Shop']
             ]
         );
-
     }
-
     /**
      * Reverse the migrations.
      *

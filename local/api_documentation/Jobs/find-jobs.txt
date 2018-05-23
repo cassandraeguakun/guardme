@@ -1,0 +1,64 @@
+=========================================
+Get Jobs List
+=========================================
+
+URL:
+
+api/find-jobs
+
+Type: post
+
+sample Request:
+
+page_id: 1,2,3 ....
+user_id: 
+post_code: LS12 2UA
+cat_id: 1
+loc_val: Leeds
+keyword: aaa ( text )
+distance: 0-10=>1, 11-20=>2, 21-50=>3, 50+=>4 
+
+Response:
+
+1) 200
+
+array of objects of job
+
+=========================================
+Get Job Location Details
+=========================================
+
+URL:
+api/job-details
+
+Type: post
+
+Response:
+
+Array of objects for job location and user details.
+
+=========================================
+Get Security Category List
+=========================================
+
+URL:
+api/security-categories
+
+Type: get
+
+Response:
+
+Array of objects for security categories
+
+=========================================
+Get Business Category List
+=========================================
+
+URL:
+api/business-categories
+
+Type: get
+
+Response:
+
+Array of objects for business categories
