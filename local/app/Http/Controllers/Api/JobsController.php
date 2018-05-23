@@ -620,7 +620,7 @@ class JobsController extends Controller
             ->join('job_applications', 'security_jobs.id', '=', 'job_applications.job_id')
             ->join('users', 'users.id', '=', 'job_applications.applied_by')
             ->select('users.*')
-            ->where('security_jobs.created_by' , 31)
+            ->where('security_jobs.created_by' , $id )
             ->get();
 
         return response()
