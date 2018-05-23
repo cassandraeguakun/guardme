@@ -541,6 +541,7 @@ class JobsController extends Controller
             ->json($businessCategories, 200);
 
     }
+<<<<<<< HEAD
 
     /**
      * @param $application_id
@@ -715,6 +716,8 @@ class JobsController extends Controller
                    
  }
 	
+=======
+>>>>>>> parent of a3ee4ae... Signed-off-by: deepak.gemini <deepakgemini.27@gmail.com>
     
     
 }
