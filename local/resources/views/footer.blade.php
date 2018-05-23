@@ -13,6 +13,7 @@ $setid=1;
 	<section class="footer-top clearfix">
 		<div class="container">
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 						<div class="row text-center">
 		 
@@ -36,6 +37,8 @@ $setid=1;
 		
 =======
 >>>>>>> parent of a193c80... Added News Letters Functionality from HomePage and Admin Panel List
+=======
+>>>>>>> parent of c08e264... News Letter View Updated
 			<div class="row">
 				<!-- footer-widget -->
 				<div class="col-sm-3">
@@ -86,7 +89,7 @@ $setid=1;
 							</ul>
 						</div>
 					</div>
-				<!-- footer-widget -->
+					<!-- footer-widget -->
 					<div class="col-sm-3">
 						<div class="footer-widget news-letter">
 							<h3>Newsletter</h3>
