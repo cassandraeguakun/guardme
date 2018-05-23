@@ -57,8 +57,10 @@ Route::group(['prefix' => 'jobs', 'namespace' => 'Api', 'middleware' => 'auth:ap
     Route::post('activate-job/{id}','JobsController@activateJob')->name('api.activate.job');
     Route::post('apply/{id}','JobsController@applyJob')->name('api.apply.job');
     Route::post('mark/hired/{id}','JobsController@markHired')->name('api.mark.hired');
-    
-    
+
+
+    Route::get('my','JobsController@myJobs')->name('api.my.jobs');
+
     Route::get('/my-jobs', 'JobsController@getEmployerJobs');
     Route::get('/freelancer-jobs', 'JobsController@getFreelancerAppliedJobs');
     Route::get('/saved-jobs', 'JobsController@getSavedJobs');
@@ -67,7 +69,8 @@ Route::group(['prefix' => 'jobs', 'namespace' => 'Api', 'middleware' => 'auth:ap
     Route::get('/applicants', 'JobsController@getApplicants');
 
     Route::get('proposals','JobsController@myProposals')->name('api.my.proposals');
-
+    Route::post('mark-application-as-complete/{id}', 'JobsController@markApplicationAsComplete')->name('api.mark.application.complete');
+    Route::post('leave/feedback/{application_id}', 'JobsController@leaveFeedback')->name('api.leave.feedback');
 });
 
 
