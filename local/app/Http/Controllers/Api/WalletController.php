@@ -1,16 +1,9 @@
 <?php
-
 namespace Responsive\Http\Controllers\Api;
-
-use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\Request;
 use Responsive\Http\Controllers\Controller;
 use Responsive\Transaction;
 use Responsive\Job;
-use Responsive\Feedback;
-use Responsive\Job;
-use Responsive\Transaction;
-
 class WalletController extends Controller
 {
     //
@@ -20,65 +13,20 @@ class WalletController extends Controller
         return response()
             ->json($wallet_data, 200);
     }
-
-
-    public function JobsList(){
-
-        $jobDetails = Job::getMyJobs();
-        $data = array() ;
-
-        //  $calc = array() ;
-
-        foreach($jobDetails as $list){
-            $calc = Job::calculateJobAmount($list->id);
-            $data[] = [
-                    'id'=>$list->id ,
-                    'title'=>$list->title ,
-                    'payment_date' => $list->getJobTransactions['created_at'] ,
-//                     'vat' => $calc['vat_fee'] ,
-                     'amount' => $calc['grand_total']
-
-            ];
-
-
-
-            return response()
-                ->json($data, 200);
-        }
-
-
-
-
-    }
-
-    public function getJobTransactionDetails($id){
-        $amount = Job::calculateJobAmount($id) ;
-        $job = Transaction::with(['getTransactionJob'])
-            ->where('job_id' , $id)
-            ->get();
-
-//        $job= Transaction::where('job_id' , $id )->get();
-        $data = array();
-        foreach($job as $list){
-            $data[] = [
-                 'id'=>$list->id ,
-                'title'=> $list->title ,
-                'date_of_payment' =>$list->created_at ,
-                'paypal_ref'=> $list->paypal_id ,
-                'vat'=>  $amount['vat_fee'] ,
-                'commission'=>  $amount['admin_fee']   ,
-                'job_fee'=> $amount['basic_total'] ,
-                'grand_total'=> $amount['grand_total']
-
-            ];
-        }
-
-
-
+    public function getTransactionsOfJobs(){
+        $user_id = \Auth::user()->id;
+        //echo $user_id ;
+        $my_jobs = Job::select('id' ,'title')->with('getJobTransactions')->get();
+       // $user_transactions = Transaction::with(['getTransactionJob'])->where('user_id' , $user_id)->get();
+        //echo json_encode($user_transactions);
         return response()
-            ->json($data, 200);
-
+            ->json($my_jobs , 200);
     }
-
-
+    public function getJobTransactionDetails($id){
+        $wallet_data = Transaction::where('job_id' , $id )->first();
+     //  $data = ['name'=> 'maysoon' , 'age'=> 26] ;
+       //echo json_encode($data);
+        return response()
+            ->json($wallet_data, 200);
+    }
 }

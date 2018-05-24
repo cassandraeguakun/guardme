@@ -23,8 +23,36 @@ class UsersController extends Controller
      * @return Response
      */
     public function index()
-    {
-        $users = DB::table('users')->orderBy('id','desc')->where('is_phone_verfifed',0)->where('is_email_verfifed',0)->get();
+    {   
+        $users = DB::table( 'users' )
+                   ->leftJoin( 'address', 'users.id', '=', 'address.user_id' )
+                   ->orderBy( 'users.id', 'desc' )
+                    ->select(
+                        'users.id',
+                        'users.name',
+                        'users.email',
+                        'users.verified',
+                        'users.admin',
+                        'users.gender',
+                        'users.phone',
+                        'users.photo',
+                        'users.created_at',
+                        'users.firstname',
+                        'users.lastname',
+                        'users.dob',
+                        'users.phone_verified',
+                        'address.postcode',
+                        'address.houseno',
+                        'address.line1',
+                        'address.line2',
+                        'address.line3',
+                        'address.line4',
+                        'address.locality',
+                        'address.citytown',
+                        'address.country'
+                    )
+                   ->get();
+
 
         $emailUnverfiedUsers = DB::table('users')->orderBy('id','desc')->where('is_phone_verfifed',1)->get();
 

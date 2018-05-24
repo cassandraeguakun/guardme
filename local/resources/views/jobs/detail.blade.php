@@ -66,18 +66,13 @@
         }
         map.setCenter(latlngbounds.getCenter());
         map.fitBounds(latlngbounds);
-
         //***********ROUTING****************//
-
         //Intialize the Path Array
         var path = new google.maps.MVCArray();
-
         //Intialize the Direction Service
         var service = new google.maps.DirectionsService();
-
         //Set the Path Stroke Color
         var poly = new google.maps.Polyline({ map: map, strokeColor: '#4986E7' });
-
         //Loop and Draw Path Route between the Points on MAP
         for (var i = 0; i < lat_lng.length; i++) {
             if ((i + 1) < lat_lng.length) {
@@ -100,12 +95,15 @@
         }
     }    
 </script>
-
 </head>
 <body>
-
 <!-- fixed navigation bar -->
 @include('header')
+@if(session()->has('doc_not_v'))
+    <div class="container-fluid" style="background-color: #e91e63">
+        <h5 class="text-center" style="color: #ffffff">{{session()->has('doc_not_v')}}</h5>
+    </div>
+@endif
     <section class="job-bg page job-details-page">
         <div class="container">
             <div class="breadcrumb-section">
@@ -116,7 +114,6 @@
                 </ol><!-- breadcrumb -->                        
                 <h2 class="title">{{$job->title}}</h2>
             </div>
-
             
             <div class="job-details">
                 <div class="section job-ad-item">
@@ -126,7 +123,6 @@
                                 <img src="{{URL::to('/')}}/images/img-placeholder.png" alt="{{$job->title}}" class="img-responsive">
                             </div><!-- item-image -->
                         </div>
-
                         <div class="ad-info">
                             <span><span><a href="#" class="title">{{$job->title}}</a></span> @ <a href="#"> {{$job->poster->company->shop_name}}</a></span>
                             <div class="ad-meta">
@@ -137,7 +133,7 @@
                                     <li><a href="#"><i class="fa fa-tags" aria-hidden="true"></i>{{$job->industory->name}}</a></li>
                                     <li><i class="fa fa-hourglass-start" aria-hidden="true"></i>{{date('M d, Y',strtotime($job->created_at))}}</li>
                                 </ul>
-                            </div><!-- ad-meta -->                                  
+                            </div><!-- ad-meta -->
                         </div><!-- ad-info -->
                     </div><!-- item-info -->
                     <div class="social-media">
@@ -153,7 +149,6 @@
                         </div>
                     </div>                  
                 </div>
-
                 <div class="job-details-info">
                     <div class="row">
                         <div class="col-sm-8">
@@ -176,7 +171,6 @@
                             </div>
                             @endif
                         </div>
-
                         <div class="col-sm-4">
                             <div class="section job-short-info">
                                 <h1>Short Info</h1>
@@ -191,13 +185,13 @@
                             <div class="section company-info">
                                 <h1>Company Info</h1>
                                 <ul>
-                                    <ul>
-                                    <li>Compnay Name: <a href="#">{{$job->poster->company->shop_name}}</a></li>
+                                    <li>Compnay Name:<a href="#">{{$job->poster->company->shop_name}}</a></li>
                                     <li>Address1: {{ $job_gtsaw->address_line1 }}</li>
                                     <li>Address2: {{ $job_gtsaw->address_line2 }}</li>
                                     <li>Address3: {{ $job_gtsaw->address_line3 }}</li>
                                     <li><span class="icon"><i class="fa fa-industry" aria-hidden="true"></i></span>Industry: <a href="#">{{$job->industory->name}}</a></li>
-                                </ul>
+                                </ul>                               
+                            </div> 
                             <div class="section company-info">
                                 <h1>Job Info</h1>
                                 <ul>
@@ -219,14 +213,13 @@
                                     <li>End Date On: {{ $s->end->toDateTimeString() }}</li>
                                     @endforeach
                                 </ul>                            
-                            </div>                            
+                            </div>                               
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
 @include('footer')
 <script type="text/javascript">
     var job = {!! json_encode($job) !!};
