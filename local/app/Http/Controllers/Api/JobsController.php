@@ -742,24 +742,84 @@ class JobsController extends Controller
             ->json($data, 200);
     }
 
+    /*
+        * get freelancer awarded jobs
+        * */
+        public function getFreelancerAwardedJobsData(){
+        $freelance_awarded_job = DB::table('job_applications')
+            ->join('transaction', 'transaction.job_id', '=', 'job_applications.job_id')
+            ->select('transaction.id' , 'job_applications.created_at' ,  'job_applications.updated_at')
+            ->where('security_jobs.id'  )
+            ->get();
+        }
 
     /*
      * to get jobs freelancer applied to
      *  */
-    public function getFreelancerAppliedJobs(){
-        // $freelance_jobs = DB::table('jobs')->where('name', 'John')->first();
-        $id =auth()->user()->id ;
-        $freelance_jobs = DB::table('users')
-            ->join('job_applications', 'users.id', '=', 'job_applications.applied_by')
-            ->join('security_jobs', 'security_jobs.id', '=', 'job_applications.job_id')
-            ->select('security_jobs.*')
-            ->where('users.id' , $id)
-            ->get();
 
-        return response()
-            ->json($freelance_jobs, 200);
+        public function getFreelancerAppliedJobs(){
+            // $freelance_jobs = DB::table('jobs')->where('name', 'John')->first();
+            $id =auth()->user()->id ;
+            $freelance_jobs = DB::table('users')
+                ->join('job_applications', 'users.id', '=', 'job_applications.applied_by')
+                ->join('security_jobs', 'security_jobs.id', '=', 'job_applications.job_id')
+                ->select('security_jobs.id' , 'security_jobs.title')
+                ->where('users.id' , $id)
+                ->get();
 
-    }
+            $result = array();
+
+            foreach($freelance_jobs as $list){
+                $amount =   Job::calculateJobAmount($list->id) ;
+                $result[] = [
+                    'id'=> $list->id ,
+                    'title'=>$list->title ,
+                    'amount'=> $amount['grand_total']
+                ] ;
+            }
+
+            return response()
+                ->json($result, 200);
+
+        }
+
+            /*
+         * to get details of jobs the freelancer applied to
+         *  */
+            public function getFreelancerAppliedJobsDetails($job_id){
+            // $freelance_jobs = DB::table('jobs')->where('name', 'John')->first();
+            $id =auth()->user()->id ;
+            $freelance_job_details = DB::table('job_applications')
+                ->join('security_jobs', 'security_jobs.id', '=', 'job_applications.job_id')
+                ->select('job_applications.id' , 'job_applications.created_at' , 'job_applications.application_description'
+                    ,'job_applications.is_hired' ,'job_applications.updated_at')
+                ->where('security_jobs.id' ,$job_id )
+                ->get();
+
+            $result = array();
+
+            foreach($freelance_job_details as $list){
+                $amount =   Job::calculateJobAmount($list->id) ;
+                if($list->created_at != null){
+                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $list->updated_at)->format('Y-m-d') ;
+                    $time = \Carbon\Carbon::parse($list->updated_at)->format('H:i:s') ;
+                }else{
+                    $date = '' ;
+                    $time = '' ;
+                }
+                $result[] = [
+                    'id'=> $list->id ,
+                    'title'=>$list->application_description ,
+                    'status'=> $list->is_hired ,
+                    'date'=> $date ,
+                    'time'=> $time ,
+                ] ;
+            }
+
+            return response()
+                ->json($result, 200);
+
+        }
 
     /*
      * get freelancer saved jobs
