@@ -64,7 +64,6 @@ Route::group(['prefix' => 'jobs', 'namespace' => 'Api', 'middleware' => 'auth:ap
     Route::get('/my-jobs', 'JobsController@getEmployerJobs');
     Route::get('/freelancer-jobs', 'JobsController@getFreelancerAppliedJobs');
     Route::get('/freelancer-jobs-details/{id}', 'JobsController@getFreelancerAppliedJobsDetails');
-    Route::get('/freelancer-awarded-jobs/{id}', 'JobsController@getFreelancerAppliedJobsDetails');//not complete
     Route::get('/saved-jobs', 'JobsController@getSavedJobs');
     Route::post('/save-job', 'JobsController@saveJob');
 

@@ -799,6 +799,8 @@ class JobsController extends Controller
             $result = array();
 
             foreach($freelance_job_details as $list){
+                
+            }
                 $amount =   Job::calculateJobAmount($list->id) ;
                 if($list->created_at != null){
                     $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $list->updated_at)->format('Y-m-d') ;
