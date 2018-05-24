@@ -106,6 +106,7 @@ Route::get('/wallet', 'WalletController@show');
 Route::get('/wallet/jobs/find', 'WalletController@searchJobs');
 Route::get('/wallet/invoice/{id}', 'WalletController@invoice');
 Route::get('/wallet-dashboard', 'WalletController@view');
+Route::get('/invoice', 'WalletController@freelancerInvoice');
 
 Route::post('/wallet', ['as'=>'wallet','uses'=>'WalletController@sangvish_savedata']);
 
@@ -372,4 +373,10 @@ Route::post('/jobs/{id}', 'JobsController@postJobs')->name('post.jobs');
 Route::get('/test', 'test@getTransactionsOfJobs');
 Route::get('/test2/{id}', 'test@getJobTransactionDetails');
 
+
+Route::post('/post_newsletters_subscription', 'NewsLettersController@post_newsletters_subscription')->name('post_newsletters_subscription');
+ 
+Route::get('/support', 'TicketController@reda_support');
+
+Route::post('/sendBulk', 'BulkController@sendNotify');
 

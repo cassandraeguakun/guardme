@@ -135,7 +135,7 @@
                                     <!-- <li><a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i>Full Time</a></li> -->
                                     <li><i class="fa fa-money" aria-hidden="true"></i>&pound;{{$job->per_hour_rate}}</li>
                                     <li><a href="#"><i class="fa fa-tags" aria-hidden="true"></i>{{$job->industory->name}}</a></li>
-                                    <li><i class="fa fa-hourglass-start" aria-hidden="true"></i>Posted on : {{date('M d, Y',strtotime($job->created_at))}}</li>
+                                    <li><i class="fa fa-hourglass-start" aria-hidden="true"></i>{{date('M d, Y',strtotime($job->created_at))}}</li>
                                 </ul>
                             </div><!-- ad-meta -->                                  
                         </div><!-- ad-info -->
@@ -150,17 +150,7 @@
                                 <span id="saved">Save For Later</span>
                                 @endif
                             </a>
-                            <a href="#" class="btn btn-primary bookmark"><i class="fa fa-bookmark-o" aria-hidden="true"></i>Bookmark</a>
                         </div>
-                        <ul class="share-social">
-                            <li>Share this ad</li>
-                            <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-tumblr-square" aria-hidden="true"></i></a></li>
-                        </ul>
                     </div>                  
                 </div>
 
@@ -201,23 +191,39 @@
                             <div class="section company-info">
                                 <h1>Company Info</h1>
                                 <ul>
+                                    <ul>
                                     <li>Compnay Name: <a href="#">{{$job->poster->company->shop_name}}</a></li>
-                                    <li>Address: @if($job->poster->company->city){{$job->poster->company->city}}@endif
-                                        @if($job->poster->company->state){{', '.$job->poster->company->state}}@endif
-                                        @if($job->poster->company->country){{', '.$job->poster->company->country}}@endif</li>
+                                    <li>Address1: {{ $job_gtsaw->address_line1 }}</li>
+                                    <li>Address2: {{ $job_gtsaw->address_line2 }}</li>
+                                    <li>Address3: {{ $job_gtsaw->address_line3 }}</li>
+                                    <li><span class="icon"><i class="fa fa-industry" aria-hidden="true"></i></span>Industry: <a href="#">{{$job->industory->name}}</a></li>
                                 </ul>
-                                <ul class="share-social">
-                                    <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-                                </ul>                               
+                            <div class="section company-info">
+                                <h1>Job Info</h1>
+                                <ul>
+                                    <li>Posted On: <a href="#">{{$job_gtsaw->created_at->toDateTimeString()}}</a></li>
+                                    <li># freelancer: {{ $job_gtsaw->number_of_freelancers }}</li>
+                                    <li># days: {{ $job_gtsaw->monthly_working_days }}</li>
+                                    <li># hours: {{ $job_gtsaw->daily_working_hours }}</li>
+                                    <li> pay per hour: {{ $job_gtsaw->per_hour_rate }}</li>
+                                </ul>                            
+                            </div>
+                            @php
+                             $schedule = Responsive\SecurityJobsSchedule::where('job_id', $job_gtsaw->id)->get();   
+                            @endphp
+                            <div class="section company-info">
+                                <h1>Schedule</h1>
+                                <ul>
+                                    @foreach($schedule as $s)
+                                    <li>Start Date On: {{ $s->start->toDateTimeString() }} </li>
+                                    <li>End Date On: {{ $s->end->toDateTimeString() }}</li>
+                                    @endforeach
+                                </ul>                            
                             </div>                            
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 

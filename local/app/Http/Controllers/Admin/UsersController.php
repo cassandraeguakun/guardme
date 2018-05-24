@@ -24,11 +24,13 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')
-		         ->orderBy('id','desc')
-				 ->get();
+        $users = DB::table('users')->orderBy('id','desc')->where('is_phone_verfifed',0)->where('is_email_verfifed',0)->get();
 
-        return view('admin.users', ['users' => $users]);
+        $emailUnverfiedUsers = DB::table('users')->orderBy('id','desc')->where('is_phone_verfifed',1)->get();
+
+        $phoneUnverfiedUsers = DB::table('users')->orderBy('id','desc')->where('is_email_verfifed',1)->get();
+
+        return view('admin.users', ['users' => $users,'emailUnverfiedUsers' => $emailUnverfiedUsers,'phoneUnverfiedUsers'=>$phoneUnverfiedUsers ]);
     }
 	
 	
@@ -58,5 +60,17 @@ class UsersController extends Controller
       return back();
       
    }
+   	public function verifiedemail($id)
+    {
+        DB::table('users')->where('id', $id)->limit(1)->update(array('is_email_verfifed' => '1'));
+        return redirect()->back()->with('message','success to unverififed this user');
+
+    }
+    public function verifiedphone($id)
+    {
+        DB::table('users')->where('id', $id)->limit(1)->update(array('is_phone_verfifed' => '1'));
+        return redirect()->back()->with('message','success to unverififed this user');
+
+    }
 	
 }

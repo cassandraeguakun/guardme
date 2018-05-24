@@ -4,6 +4,7 @@
    @include('style')
 	<style src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></style>
 	<style src="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"></style>
+	<style src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css"></style>
 	<style type="text/css">
 		button {
 			background: #00a651;
@@ -62,11 +63,11 @@
 							        <div class="col-sm-12">
 							        	<label class="col-sm-2">Transaction Date:</label>
 							            <div class="col-sm-3">
-							                <input type="text" class="start_date date-time-picker form-control" name="start_date" placeholder="Start Date" required="true"  value="{{old('start_date')}}">
+							                <input type="text" class="start_date date-picker form-control" name="start_date" placeholder="Start Date" required="true"  value="{{old('start_date')}}">
 							                <span class="text-danger error-span"></span>
 							            </div>
 							            <div class="col-sm-3">
-							                <input type="text" class="end_date date-time-picker form-control" name="end_date" placeholder="End Date" data-date-end-date="0d" required="true"  value="{{old('end_date')}}">
+							                <input type="text" class="end_date date-picker form-control" name="end_date" placeholder="End Date" required="true"  value="{{old('end_date')}}">
 							                <span class="text-danger error-span"></span>
 							            </div>
 							            <div class="col-sm-1">
@@ -176,6 +177,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 
 <script type="text/javascript">
 
@@ -200,10 +202,12 @@ $(document).ready(function() {
 
 	var date = new Date();
 	
-	$('.date-time-picker').datetimepicker({
-        //language:  'uk',
-        maxDate: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-    });
+	$('.date-picker').datepicker({
+	    format: 'mm/dd/yyyy',
+	    autoclose: true,
+	});
+
+
 
 
 } );

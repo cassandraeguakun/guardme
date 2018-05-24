@@ -163,12 +163,41 @@ if(isset(Auth::user()->verification)){
 
 @if($isVerified)
 	<style type="text/css">
-		body {
+	body {
 			padding-top:46px;
 		}
 		#banner > #overlays {
 			top:46px;
 		}
 	</style>
+@endif
+<style type="text/css">
+	.ul{
+		list-style: none;
+		margin: 20px;
+	};
+	.ul li{
+		display: inline;
+
+	}
+	.ul li a
+	{
+		float: left;
+		color: #FFF;
+		padding: 10px 15px;
+		background: #00a651;
+		border: solid 3px #000;
+		margin-left: 10px;
+
+	}
+</style>
+@if(Auth::check())
+<ul class="ul">
+	<li><a href="{{ $url }}/wallet-dashboard">Wallet</a></li>
+	<li><a href="{{ $url }}/referral">Loyality</a></li>
+	<li><a href="{{ $url }}/support">Support</a></li>
+	<li><a href="{{ $url }}/search">See Nearby personnel</a></li>
+	<li><a href="{{ $url }}/jobs/find">See Near By Open Jobs</a></li>
+</ul>
 @endif
 </header>

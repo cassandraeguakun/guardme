@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Responsive\User;
+use Responsive\Feedback;
+use Responsive\Job;
+use Responsive\Transaction;
+
 class SearchController extends Controller
 {
     /**
@@ -114,7 +118,17 @@ class SearchController extends Controller
         if(\request()->expectsJson())
             return response()->json($sec_personnels);
 
-		return view('search',compact('cats','locs','sec_personnels'));
+        if(\request()->expectsJson())
+            return response()->json($sec_personnels);
+        if(Feedback::where('user_id' , Auth::user()->id)->count() ==0)
+        {
+            $feedback = 0;
+        }
+        else
+        {
+            $feedback = (float)Feedback::where('user_id' , Auth::user()->id)->sum('rating') / (float)Feedback::where('user_id' , Auth::user()->id)->count();
+        }
+		return view('search',compact(['cats','locs','sec_personnels','feedback']));
 	}
 	
 	public function postpersonnelsearch(Request $request)
@@ -421,7 +435,26 @@ class SearchController extends Controller
             return view('shopsearch')->with($data);
 	}
 	
-	
+		public function openjob()
+    {
+        $jobs = Job::where('status' , '0')->where('created_by',Auth::user()->id)->get();
+        return view('new',compact(['jobs']));
+
+    }
+    public function feedback()
+    {
+
+        if(Feedback::where('user_id' , Auth::user()->id)->count() ==0)
+        {
+            $feedback = 0;
+        }
+        else
+        {
+            $feedback = (float)Feedback::where('user_id' , Auth::user()->id)->sum('rating') / (float)Feedback::where('user_id' , Auth::user()->id)->count();
+        }
+        $feedbacks = Feedback::where('user_id' , Auth::user()->id)->get();
+        return view('new',compact(['feedbacks','feedback']));
+    }
 	
 	
 	
