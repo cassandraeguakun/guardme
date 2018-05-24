@@ -22,6 +22,8 @@ class CreateFeedbackTable extends Migration
             $table->integer('punctuality')->default(1);
             $table->integer('customer_focused')->default(1);
             $table->integer('security_conscious')->default(1);
+            $table->integer('user_id');
+            $table->integer('rating');
             $table->text('message')->nullable()->default(null);
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
