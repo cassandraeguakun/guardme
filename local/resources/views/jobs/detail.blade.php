@@ -139,7 +139,27 @@
 
                     <div class="ad-info">
                         <span><span><a href="#" class="title">{{$job->title}}</a></span> @ <a
-                                    href="#"> {{$job->poster->company->shop_name}}</a></span>
+                                    href="#">
+				     @php
+                                    if($job->myApplications && count($job->myApplications)>0){
+                                        echo $job->poster->company->shop_name;                                       
+                                    }else{
+					$arr = explode(' ',$job->poster->company->shop_name);
+                                        foreach($arr as $key=>$row){
+                                            if($key == 0){
+                                                echo $row;
+                                            }else{
+                                                $count = strlen($row);
+                                                echo " ";
+                                                for($c=0;$c< $count;$c++){
+                                                    echo '*';
+                                                }
+                                            }
+                                            }
+                                             }
+                                    @endphp
+				    
+				    </a></span>
                         <div class="ad-meta">
                             <ul>
                                 <li><a href="#"><i class="fa fa-map-marker"
@@ -226,7 +246,30 @@
                         <div class="section company-info">
                             <h1>Company Info</h1>
                             <ul>
-                                <li>Compnay Name: <a href="#">{{$job->poster->company->shop_name}}</a></li>
+                                <li>Compnay Name: <a href="#">
+				{{--$job->poster->company->shop_name--}}
+                                        @php
+                                    if($job->myApplications && count($job->myApplications)>0){
+                                        echo $job->poster->company->shop_name;                                       
+                                    }else{
+
+
+                                     $arr = explode(' ',$job->poster->company->shop_name);
+                                        //echo count($arr)
+                                        foreach($arr as $key=>$row){
+                                            if($key == 0){
+                                                echo $row;
+                                            }else{
+                                                $count = strlen($row);
+                                                echo " ";
+                                                for($c=0;$c< $count;$c++){
+                                                    echo '*';
+                                                }
+                                            }
+                                            }
+                                             }
+                                    @endphp
+				</a></li>
                                 <li>Address: @if($job->poster->company->city){{$job->poster->company->city}}@endif
                                     @if($job->poster->company->state){{', '.$job->poster->company->state}}@endif
                                     @if($job->poster->company->country){{', '.$job->poster->company->country}}@endif</li>
