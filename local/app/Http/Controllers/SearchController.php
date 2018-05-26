@@ -115,7 +115,7 @@ class SearchController extends Controller {
 
         $locs= DB::table('address')->distinct()->get();
 
-        $sec_personnels = $query->with('person_address')->paginate(10);
+        $sec_personnels = $query->with('person_address')->with('applications')->paginate(10);
 
         if(\request()->expectsJson())
             return response()->json($sec_personnels);
@@ -177,7 +177,8 @@ class SearchController extends Controller {
 			Session::flash( 'login_first', ' Please login to view the freelancer details.' );
 			return redirect()->back();
 		}
-		$person = User::with(['person_address','sec_work_category'])->find($id);
+		$person = User::with(['person_address','sec_work_category','applications'])->find($id);
+		//$person = User::with(['person_address','sec_work_category'])->find($id);
 		//dd($person->work_category);
 
         if(\request()->expectsJson())
