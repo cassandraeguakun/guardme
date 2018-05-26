@@ -281,6 +281,10 @@ class Job extends Model
         return $this->belongsTo(User::class,'created_by');
     }
 
+    public function myApplications() {
+       
+       return $this->hasMany(JobApplication::class,'job_id')->where('applied_by',auth()->user()->id)->where('is_hired','1');
+    }
     public function applications()
     {
         return $this->hasMany(JobApplication::class,'job_id');
