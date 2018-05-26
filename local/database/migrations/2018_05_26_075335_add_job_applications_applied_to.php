@@ -14,7 +14,7 @@ class AddJobApplicationsAppliedTo extends Migration
     public function up()
     {
         Schema::table('job_applications', function (Blueprint $table) {
-            $table->integer('applied_to')=>nullable()->comment('when user apply job to insert poster job id');
+            $table->integer('applied_to')->nullable()->comment('when user apply job to insert poster job id');
         });
 
     }
