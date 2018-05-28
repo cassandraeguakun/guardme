@@ -185,15 +185,6 @@ class JobsController extends Controller {
     }
 ///////////////////////////
 
-	
-	
-    public function savedJobs() {
-        $userid = Auth::user()->id;
-        $editprofile = User::where('id',$userid)->get();
-        $my_jobs =  DB::select('select security_jobs.* from security_jobs, saved_jobs where saved_jobs.job_id = security_jobs.id and saved_jobs.user_id = '.$userid);
-        return view('jobs.saved', compact('my_jobs','editprofile'));
-    }
-
     /**
      * @return mixed
      */
