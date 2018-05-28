@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddDeleteAtSecurityJobs extends Migration
 {
-    /**
+   /**
      * Run the migrations.
      *
      * @return void
@@ -14,10 +14,9 @@ class AddDeleteAtSecurityJobs extends Migration
     public function up()
     {
         Schema::table('security_jobs', function (Blueprint $table) {
-             $table->dropSoftDeletes();
+            $table->softDeletes();
         });
     }
-
     /**
      * Reverse the migrations.
      *
@@ -26,7 +25,7 @@ class AddDeleteAtSecurityJobs extends Migration
     public function down()
     {
         Schema::table('security_jobs', function (Blueprint $table) {
-             $table->dropColumn('deleted_at');
+             $table->dropSoftDeletes();
         });
     }
 }
