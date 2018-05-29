@@ -24,7 +24,9 @@ class FreelancerJobsController extends Controller {
 		$jobs = DB::table( 'job_applications' )
 		          ->where( 'applied_by', '=', $user->id )
 		          ->leftJoin( 'security_jobs', 'job_applications.job_id', '=', 'security_jobs.id' )
-		          ->select( 'security_jobs.title', 'job_applications.created_at' )
+		          ->leftJoin( 'transactions', 'job_applications.job_id', '=', 'transactions.job_id' )
+		          ->where( 'credit_payment_status', '=', 'funded' )
+		          ->select( 'security_jobs.title', 'job_applications.created_at','transactions.amount' )
 		          ->get()
 		          ->toArray();
 
@@ -55,20 +57,23 @@ class FreelancerJobsController extends Controller {
 		return response()->json( $favouriteJobs, 200 );
 
 	}
-	
-	public function awardedJobs() {
-		if(auth()->user()->admin!=2){
-			return response()->json(403);
-		}
-		$ID            = auth()->user()->id;
-		$awardedJobs = DB::table( 'job_applications' )
-		                   ->where( 'applied_by', $ID )
-		                   ->where( 'is_hired', 1 )
-							->Join( 'security_jobs', 'job_applications.job_id', '=', 'security_jobs.id' )
-							->select('job_applications.job_id','security_jobs.title','job_applications.updated_at')
-							->get();
 
-		return response()->json($awardedJobs,200);
+	public function awardedJobs() {
+
+		if ( auth()->user()->admin != 2 ) {
+			return response()->json( 403 );
+		}
+		$ID          = auth()->user()->id;
+		$awardedJobs = DB::table( 'job_applications' )
+		                 ->where( 'applied_by', $ID )
+		                 ->where( 'is_hired', 1 )
+		                 ->Join( 'security_jobs', 'job_applications.job_id', '=', 'security_jobs.id' )
+		                 ->Join( 'transactions', 'job_applications.job_id', '=', 'transactions.job_id' )
+		                 ->where( 'transactions.credit_payment_status', '=', 'funded' )
+		                 ->select( 'job_applications.job_id', 'security_jobs.title', 'transactions.amount', 'job_applications.updated_at' )
+		                 ->get();
+
+		return response()->json( $awardedJobs, 200 );
 	}
 
 }
