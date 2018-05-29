@@ -55,14 +55,36 @@
                               
                                 <li><a href="#"><i class="fa fa-money" aria-hidden="true"></i>&pound;{{$job->per_hour_rate}}</a></li>
                                 <li><a href="#"><i class="fa fa-tags" aria-hidden="true"></i>{{$job->industory->name}}</a></li>
-                                <li><a href="#">Applications: <b style="color:#00a651">{{{$arr_count[$job->id]['appcount']}}}</b></a></li>
-                                <li><a href="#">Hires: <b style="color:#00a651">{{{$arr_count[$job->id]['hiredcount']}}}</b></a></li>
                             </ul>
                         </div><!-- ad-meta -->                                  
                     </div><!-- ad-info -->
+                    
                     <div class="close-icon">
-                        <i class="fa fa-window-close" aria-hidden="true"></i>
+                        
+                        <a  href="{{ URL('/jobs/delete/').'/'.$job->id }}"><i class="fa fa-window-close" aria-hidden="true" jid="{{$job->id}}"></i></a>
                     </div>
+                     <div class="close-icon1">
+                         <a  href="{{ URL('/jobs/editJob/').'/'.$job->id }}" title="Edit Job"> 
+                            <i class="fa fa-edit" aria-hidden="true"></i> Edit Job
+                        </a>
+                    </div>
+                    @if($job->status == '0')
+
+                      <div class="close-icon1">
+                        
+                         <a  href="{{ URL('/jobs/active/').'/'.$job->id }}" title="Inactive Job"> 
+                            <i class="fa fa-pause" aria-hidden="true"></i> Pause
+                        </a>
+                    </div>
+                    @else
+                        <div class="close-icon1">
+                            
+                         <a  href="{{ URL('/jobs/pause/').'/'.$job->id }}" title="Active Job"> 
+                            <i class="fa fa-play" aria-hidden="true"></i> Pause
+                        </a>
+                    </div>
+                    @endif
+
                 </div><!-- item-info -->
             </div>
             @endforeach
@@ -91,17 +113,25 @@
            
 @endsection
 
+@section('script')
+<script type="text/javascript">
+    
+
+$(document).ready(function(){
+
+$('.delete').click(function(){
+    var job_id = $(this).attr('jid');
+    var r = confirm('Are you sure to delete?');
+    if(r == true){
+            alert(job_id);
+    }else{
+
+    }
+    
+});
+
+})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+</script>
+@endsection

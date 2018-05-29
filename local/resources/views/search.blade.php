@@ -360,7 +360,9 @@
                                     {{ Session::get('flash_message') }}
                                 </div>        
                             </div>
-                            @endif          
+                            @endif 
+
+                                     
                         <?php if($sec_personnels->count()>0){?>
 
                         <?php foreach($sec_personnels as $person){ ?>
@@ -384,11 +386,31 @@
 								</div>
 
 								<div class="ad-info">
-					<span><a href="{{ route('person-profile',$person->id) }}" class="title">@if($person->firstname!='')
-								{{$person->firstname.' '.$person->lastname}}
-							@else
-								{{$person->name}}
-							@endif</a> </span>
+					<span><a href="{{ route('person-profile',$person->id) }}" class="title">
+
+					@php  $flag = false;  @endphp
+					@if(isset(auth()->user()->id))
+						@foreach($person->applications as $row)
+							@if(auth()->user()->id == $row->applied_to &&  $row->is_hired == '1' )
+								@php 
+									$flag = true; 
+									break;
+								@endphp
+								
+							@endif
+						@endforeach
+
+						@if($flag)
+							{{$person->firstname.' '.$person->lastname }}
+						@else
+							{{$person->firstname.' ********'}}
+						@endif
+													
+						
+					@else
+						{{$person->firstname.' ********' }}	
+					@endif
+						</a> </span>
 									<div class="ad-meta">
 										<ul>
 											<li><a href="{{ route('person-profile',$person->id) }}"><i class="fa fa-map-marker" aria-hidden="true"></i>@if($person->citytown){{$person->citytown}} @endif </a></li>

@@ -84,6 +84,7 @@ class JobsController extends Controller {
         $editprofile = User::where('id',$userid)->get();
         $jobApplications = new JobApplication();
         $my_jobs = Job::getMyJobs();
+        return view('jobs.my', compact('my_jobs','editprofile'));
         $arr_count = [];
         if (count($my_jobs) > 0) {
             foreach ($my_jobs as $job) {
@@ -102,6 +103,7 @@ class JobsController extends Controller {
         }
         return view('jobs.my', compact('my_jobs','editprofile', 'arr_count'));
     }
+////////////////////////
 
     public function savedJobs() {
         $userid = Auth::user()->id;
@@ -110,6 +112,94 @@ class JobsController extends Controller {
         return view('jobs.saved', compact('my_jobs','editprofile'));
     }
 
+    function editJob($id){
+        //User::findOrFail(1);
+        $job = Job::find($id);
+        if(empty($job)){
+             \Session::flash('message', 'Please select job');
+               return \Redirect::to('/jobs/my/'); 
+        }
+        $all_security_categories = SecurityCategory::get();
+        $all_business_categories = Businesscategory::get();
+        return view('jobs.editJobs', compact('job', 'all_security_categories', 'all_business_categories'));
+      
+    }
+    function editJobPost(Request $request){
+       $data = $request->all();
+
+       $job_id = $data['job_id'];
+
+                if($job_id != ''){
+                     \Session::flash('message', 'Invalid Jobs!!');
+                               return \Redirect::to('/jobs/editJob/'.$job_id); 
+                }
+
+
+
+            $datavalue = array(
+            'title'=>$data['title'],
+            'description'=>$data['description'],
+            'address_line1'=>$data['line1'],
+            'address_line2'=>$data['line2'],
+            'address_line3'=>$data['line3'],
+            'city_town'=>$data['town'],
+            'post_code'=>$data['postcode'],
+             'country'=>$data['country'],
+           'security_category_id'=>$data['security_category'],
+            'business_category_id'=>$data['business_category'],
+            'updated_at'=>Auth::user()
+            );
+
+         $check = Job::where('id',$job_id)->update($datavalue);
+            if($check>0)
+            {
+              \Session::flash('message', 'Job Successfully Updated...');
+               return \Redirect::to('/jobs/editJob/'.$job_id); 
+            }
+            else
+            {
+              
+              //return \Redirect::back()->with('message', 'Action Failed...Please Try Again!!!');
+              \Session::flash('message', 'Action Failed...Please Try Again!!!');
+               return \Redirect::to('/jobs/editJob/'.$job_id); 
+            }
+
+        // \Session::flash('message', 'Account Information Successfully Updated...');
+        //        return \Redirect::to('/jobs/editJob/'.$job_id);  
+       //      echo '<pre>';
+       // print_r($datavalue);
+    }
+
+    function deleteJob($id){
+         $id = Job::find( $id );
+         $flag = $id->delete();
+         if($flag){
+                     return redirect()->to('/jobs/my')->with('success', 'Job Deleted Successfully!');
+            }else{
+                    return Redirect()->to('/jobs/my')->with('error', 'Delete Failed');
+            }
+    }
+
+    function pauseJob($id){
+         $job = Job::find( $id );
+         $check = Job::where('id',$id)->update(array('status'=>'0'));
+         if($check){
+                     return redirect()->to('/jobs/my')->with('success', 'Job Pause Successfully!');
+            }else{
+                    return Redirect()->to('/jobs/my')->with('error', 'Pause Operation Failed');
+            }
+    }
+
+     function activeJob($id){
+         $job = Job::find( $id );
+         $check = Job::where('id',$id)->update(array('status'=>'1'));
+         if($check){
+                     return redirect()->to('/jobs/my')->with('success', 'Job Pause Successfully!');
+            }else{
+                    return Redirect()->to('/jobs/my')->with('error', 'Pause Operation Failed');
+            }
+    }
+///////////////////////////
     /**
      * @return mixed
      */
@@ -199,25 +289,7 @@ class JobsController extends Controller {
                 $joblist = Job::where('status','1')->paginate(10);
             }
         }
-        
-        // $ja = new JobApplication();
-        // $proposals = $ja->getMyProposals();
-        // $arr_templist = []; 
-        // if (count($proposals) > 0) {
-        //     foreach ($proposals as $proposal) {
-        //         $arr_templist[$proposal->job_id] = $proposal->is_hired;
-        //     }
-        // }
-        // foreach ($joblist as $key => $list) {
-        //     if (isset($arr_templist[$list->id])) {
-        //         $joblist[$key]->is_hired = $arr_templist[$list->id];
-        //     } else {
-        //         $joblist[$key]->is_hired = 0;
-        //     }
-            
-        // }
-
-      return view('jobs.find', compact('joblist','b_cats','locs'));
+        return view('jobs.find', compact('joblist','b_cats','locs'));
     }
 
     public function postfindJobs(Request $request) 
@@ -292,11 +364,11 @@ class JobsController extends Controller {
 		}
 		$b_cats = Businesscategory::all();
 		$locs   = Job::select( 'city_town' )->where( 'city_town', '!=', null )->distinct()->get();
-		//$job = Job::find($id);
+		
 
-        $job = Job::with(['poster','poster.company','industory'])->where('id',$id)->first();
-        // dd($saved_job);
-
+        $job = Job::with(['poster','poster.company','industory','myApplications'])->where('id',$id)->first();
+        //dd($job);
+//return response()->json($job);
         if (empty($job)) {
             return abort(404);
         }
@@ -354,15 +426,17 @@ class JobsController extends Controller {
         return view('jobs.application-detail', compact('application','person', 'work_history'));
     }
     public function myProposals() {
+        $fillter = isset($_REQUEST['filter'])?$_REQUEST['filter']:0;
         $user_id = auth()->user()->id;
-        $wallet      = new Transaction();
-        $wallet_data = $wallet->getAllTransactionsAndEscrowBalance();
+
          $editprofile = User::where('id',$user_id)->get();
        
         $ja = new JobApplication();
-        $proposals = $ja->getMyProposals();
+        $proposals = $ja->getMyProposals($fillter);
 
-        return view('jobs.proposals', compact('proposals','editprofile', 'wallet_data'));
+        //return response()->json($proposals);
+
+        return view('jobs.proposals', compact('proposals','editprofile'));
         
     }
 
@@ -430,30 +504,5 @@ class JobsController extends Controller {
 
     public function leaveFeedback($application_id) {
         return view('jobs.feedback', ['application_id' => $application_id]);
-    }
-
-    /**
-     * @param $application_id
-     * @return mixed
-     */
-    public function giveTip($application_id) {
-        $wallet = new Transaction();
-        $available_balance = $wallet->getWalletAvailableBalance();
-        return view('jobs.tip', ['application_id' => $application_id, 'available_balance' => $available_balance]);
-    }
-    public function tipDetails($transaction_id) {
-        $tip_transaction = Transaction::find($transaction_id);
-        $application_id = $tip_transaction->application_id;
-        $application_with_job = JobApplication::with('job')->where('id', $application_id)->get()->first();
-        $wallet = new Transaction();
-        $freelancer_details = User::find($application_with_job->applied_by);
-        $available_balance = $wallet->getWalletAvailableBalance();
-        return view('jobs.tip-details', [
-            'transaction_details' => $tip_transaction,
-            'transaction_id' => $transaction_id,
-            'available_balance' => $available_balance,
-            'application_with_job' => $application_with_job,
-            'freelancer_details' => $freelancer_details
-        ]);
     }
 }

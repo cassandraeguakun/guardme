@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Responsive\User;
+use Responsive\Job;
 
 class SearchController extends Controller {
 	/**
@@ -43,15 +44,11 @@ class SearchController extends Controller {
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
 	 */
 	function getpersonnelsearch( $user_id = null ) {
+		
 		$data = \request()->all();
-
-
 		//		Users cannot show up on freelancer list unless profile is complete.
 		$query = User::where( 'admin', '=', '2' )->where( 'doc_verified', '=', true);
-
-
 		if(count($data)){
-
 		    // todo: filter by category
             $search_category = isset($data['cat_val']) ? trim($data['cat_val']) : null;
             if($search_category && $search_category != 'all'){
@@ -115,12 +112,9 @@ class SearchController extends Controller {
 
         $locs= DB::table('address')->distinct()->get();
 
-        $sec_personnels = $query->with('person_address')->paginate(10);
+        $sec_personnels = $query->with('person_address')->with('applications')->paginate(10);
 
-        if(\request()->expectsJson())
-            return response()->json($sec_personnels);
-
-		return view('search',compact('cats','locs','sec_personnels'));
+		return view('search',compact('cats','locs','sec_personnels', 'getPostJobs'));
 	}
 	
 	public function postpersonnelsearch(Request $request)
@@ -177,14 +171,11 @@ class SearchController extends Controller {
 			Session::flash( 'login_first', ' Please login to view the freelancer details.' );
 			return redirect()->back();
 		}
-		$person = User::with(['person_address','sec_work_category'])->find($id);
-		//dd($person->work_category);
-
+		$person = User::with(['person_address','sec_work_category','applications','myApplications'])->find($id);
         if(\request()->expectsJson())
             return response()->json($person);
 
 		return view('profile',compact('person'));
-
 	}
 	
 	public function sangvish_homeindex($id)

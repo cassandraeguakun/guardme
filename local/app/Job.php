@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Responsive\SecurityJobsSchedule;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Job extends Model
 {
@@ -15,7 +17,11 @@ class Job extends Model
      *
      * @var string
      */
+     use SoftDeletes;
+    
     protected $table = 'security_jobs';
+    protected $dates = ['deleted_at'];
+    
     public function schedules() {
         return $this->hasMany(SecurityJobsSchedule::class);
     }
@@ -292,6 +298,10 @@ class Job extends Model
         return $this->belongsTo(User::class,'created_by');
     }
 
+    public function myApplications() {
+       
+       return $this->hasMany(JobApplication::class,'job_id')->where('applied_by',auth()->user()->id)->where('is_hired','1');
+    }
     public function applications()
     {
         return $this->hasMany(JobApplication::class,'job_id');

@@ -16,7 +16,28 @@
 @section('content')
 
     <div class="section trending-ads latest-jobs-ads">
+    <div class="col-sm-6">
         <h4>My Jobs</h4>
+    </div>
+    <div class="col-sm-6">
+        <div class="featured-top">
+                                
+                                
+                                    <div class="dropdown category-dropdown pull-right">
+                                                               
+                                        <a data-toggle="dropdown" href="#"><span class="change-text">Fillter</span><i class="fa fa-caret-square-o-down"></i></a>
+                                        <ul class="dropdown-menu category-change">
+                                            <li>
+                                            <a href="{{ url('jobs/proposals').'?filter=1' }}">Open Jobs</a></li>
+                                            <li><a href="{{ url('jobs/proposals').'?filter=2' }}">Completed Jobs</a></li>
+                                        </ul>                               
+                                    </div><!-- category-change -->      
+                                                          
+                            </div>
+    </div>
+        
+
+
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -41,7 +62,7 @@
         @include('shared.message')
     
     @foreach($proposals as $application)
-                                   
+        @if($application->completion_status == '0')
         <div class="job-ad-item">
             <div class="item-info">
                 <div class="item-image-box">
@@ -57,6 +78,7 @@
                     
                 <div class="ad-info">
                     <span><a href="{{ route('my.application.view',['id'=>$application->id,'job_id'=>$application->job_id]) }}" class="title">
+
                                         {{$application->job_title}} @ {{$application->shop_name}}
                                     </a> </span>
                     <div class="ad-meta">
@@ -83,7 +105,7 @@
                 </div>
             </div><!-- item-info -->
         </div>
-
+        @endif
 
     @endforeach
     </div>

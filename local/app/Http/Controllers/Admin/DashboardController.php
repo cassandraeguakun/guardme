@@ -6,8 +6,10 @@ use App\ArticleCategory;
 use App\User;
 use App\Photo;
 use App\PhotoAlbum;*/
+
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
+use App\Job;
 
 class DashboardController extends AdminController {
 
@@ -129,5 +131,19 @@ $javas.="{ label: '$curr_date', y: $date1 },";
 		
 		
 		
+	}
+
+	public function userJobs(){
+
+		$page = isset($_REQUEST['page'])?$_REQUEST['page']:1;
+		$limit = 10;
+		$start = $limit*($page - 1);
+
+		$data['jobs'] = DB::table('security_jobs')
+		         ->orderBy('id','desc')
+				 ->limit($limit)->offset($start)
+				 ->get();
+				 
+		return view('admin.userJobs')->with($data);
 	}
 }
