@@ -201,7 +201,11 @@ Route::get('/subservices/{id}','SubservicesController@sangvish_servicefind');
 
 Route::group(['middleware' => 'admin'], function() {
 
-    Route::get('/admin','Admin\DashboardController@index');
+    Route::get('/admin/userJobs','Admin\DashboardController@userJobs');
+
+Route::get('/admin','Admin\DashboardController@index');
+
+
     Route::get('/admin/referral/items', 'Admin\ReferralController@index');
     Route::post('/admin/referral/item/create', ['as' => 'admin.itemcreate', 'uses' => 'Admin\ReferralController@create']);
     Route::post('/admin/users/balance/add', ['as' => 'admin.addbalance', 'uses' => 'Admin\ReferralController@balance']);
@@ -359,16 +363,14 @@ Route::group(['prefix' => '/jobs', 'middleware' => 'auth'], function () {
 	Route::get('/job-confirmation', 'JobsController@confirmation')->name('job.confirmation');
 	Route::get('/my', 'JobsController@myJobs')->name('my.jobs');
 	
-	
 	Route::get('/editJob/{id}', 'JobsController@editJob')->name('editJob.jobs');
 	Route::post( 'edit', 'JobsController@editJobPost' )->name( 'edit.jobs' );
 	Route::get('/delete/{id}', 'JobsController@deleteJob')->name('delete.jobs');
 	Route::get('/pause/{id}', 'JobsController@pauseJob')->name('pause.jobs');
 	Route::get('/active/{id}', 'JobsController@activeJob')->name('active.jobs');
-	
-	
-	
+
 	Route::get('/saved', 'JobsController@savedJobs')->name('saved.jobs');
+
 	Route::get('/my/applications/{id}', 'JobsController@myJobApplications')->name('my.job.applications');
 	Route::get('/application/{id}/{u_id}', 'JobsController@viewApplication')->name('view.application');
 	Route::get('/apply/{id}', 'JobsController@applyJob')->name('apply.job');
@@ -377,12 +379,7 @@ Route::group(['prefix' => '/jobs', 'middleware' => 'auth'], function () {
 	Route::get('/save/{id}', 'JobsController@saveJobsToProfile');
     Route::get('/remove/{id}', 'JobsController@removeJobsFromProfile');
 	Route::get('/leave/feedback/{application_id}', 'JobsController@leaveFeedback')->name('leave.feedback');
-	Route::get('/tip/{application_id}', 'JobsController@giveTip')->name('give.tip');
-	Route::get('/tip/details/{transaction_id}', 'JobsController@tipDetails')->name('tip.details');
 });
-
-Route::post('/add-balance-via-paypal', 'PaypalPaymentController@addMoneyPaypal')->name('add.money.paypal')->middleware('auth');
-Route::get('/get-paypal-payment-status', 'PaypalPaymentController@getPaypalPaymentStatus')->name('get.paypal.payment.status')->middleware('auth');
 
 // Guest route for find job
 Route::get('/jobs/posted/view', 'JobsController@myJobPostView')->name('posted.jobs.view');
