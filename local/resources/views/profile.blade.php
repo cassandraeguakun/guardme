@@ -8,6 +8,7 @@
    @include('style')
 	
 
+
 </head>
 <body>
 
@@ -42,7 +43,7 @@
 						@endforeach
 
 						@if($flag)
-							{{$person->firstname.' '.$person->lastname.auth()->user()->id }}
+							{{$person->firstname.' '.$person->lastname.auth()->user()->id.' a' }}
 						@else
 							{{$person->firstname.' ********'}}
 						@endif
@@ -50,8 +51,7 @@
 					    	@else
 					    		{{$person->name}}
 					    	@endif
-						Profile
-						</h2>
+					    Profile</h2>
 			</div>
 			<div class="resume-content">
 				<div class="profile section clearfix">
@@ -71,7 +71,7 @@
 						@php  $flag = false;  @endphp
 
 						@foreach($person->applications as $row)
-							@if(auth()->user()->id == $row->apply_to &&  $row->is_hired == '1')
+							@if(auth()->user()->id == $row->applied_to &&  $row->is_hired == '1')
 								@php 
 									$flag = true; 
 									break;
@@ -81,7 +81,7 @@
 						@endforeach
 
 						@if($flag)
-							{{$person->firstname.' '.$person->lastname.auth()->user()->id }}
+							{{$person->firstname.' '.$person->lastname }}
 						@else
 							{{$person->firstname.' ********'}}
 						@endif
@@ -89,6 +89,7 @@
 					    	@else
 					    		{{$person->name}}
 					    	@endif
+					    	Profile
 					    </h1>
 					    <address>
 					        <p>@if($person->person_address)
@@ -99,6 +100,31 @@
 								@endif
 							</p>
 					    </address>
+					    <div class="button">
+
+ 								
+ 								@php  $flag = false;  @endphp
+ 								
+						@foreach($person->applications as $row)
+							@if(auth()->user()->id == $row->applied_to)
+								@php 
+									$flag = true; 
+									break;
+								@endphp
+								
+							@endif
+						@endforeach
+
+						@if($flag)
+							 <span href="javascript:0" class="alert alert-danger">You already Hired this Employee</span>
+						@else
+							  <a href="" class="btn btn-primary"><i
+                                    class="fa fa-briefcase" aria-hidden="true"></i>&nbsp;Hire</a>
+						@endif
+                                                                             
+                                   
+                                  
+                        </div>
 					</div>					
 				</div>
 
