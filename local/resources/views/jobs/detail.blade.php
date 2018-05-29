@@ -1,453 +1,203 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @include('style')
-    <style type="text/css">
-        .job-ad-item .btn.btn-primary {
-            margin-right: 0px;
-        }
-    </style>
-<script type="text/javascript"
-src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyC2C2Tp8wIjckpXAeweMhL7nOGes0Dpv2w"></script>
-<script type="text/javascript">
 
+    
 
-   <?php if( $user_address ) { ?>
-    var markers = [
-    {
-        "title": '{{ $job->title }}',
-        "lat": '{{ $job->latitude }}',
-        "lng": '{{ $job->longitude }}',
-        "description": '{{ $job->title }}, {{ $job->address_line1 }}, {{ $job->address_line2 }}, {{ $job->city_town }}, {{ $job->country }}'
-    }
-    ,
-    {
-        "title": '{{ @$user_address->name }}',
-        "lat": '{{ @$user_address->address->latitude }}',
-        "lng": '{{ @$user_address->address->longitude }}',
-        "description": '{{ @$user_address->name }}, {{ @$user_address->address->line1 }}, {{ @$user_address->address->line2 }}, {{ @$user_address->address->line3 }}'
-    }
-    ];
-<?php } else { ?>
-    var markers = [
-    {
-        "title": '{{ $job->title }}',
-        "lat": '{{ $job->latitude }}',
-        "lng": '{{ $job->longitude }}',
-        "description": '{{ $job->title }}, {{ $job->address_line1 }}, {{ $job->address_line2 }}, {{ $job->city_town }}, {{ $job->country }}'
-    }
-    ];
-<?php } ?>
+   @include('style')
+	
 
-window.onload = function () {
-    var mapOptions = {
-        center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
-        zoom: 10,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-    };
-    var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-    var infoWindow = new google.maps.InfoWindow();
-    var lat_lng = new Array();
-    var latlngbounds = new google.maps.LatLngBounds();
-    for (i = 0; i < markers.length; i++) {
-        var data = markers[i]
-        var myLatlng = new google.maps.LatLng(data.lat, data.lng);
-        lat_lng.push(myLatlng);
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: data.title,
-            icon: "http://guarddme.com/images/map-icon.png",
-        });
-        latlngbounds.extend(marker.position);
-        (function (marker, data) {
-            google.maps.event.addListener(marker, "click", function (e) {
-                infoWindow.setContent(data.description);
-                infoWindow.open(map, marker);
-            });
-        })(marker, data);
-    }
-    map.setCenter(latlngbounds.getCenter());
-    map.fitBounds(latlngbounds);
-
-            //***********ROUTING****************//
-
-            //Intialize the Path Array
-            var path = new google.maps.MVCArray();
-
-            //Intialize the Direction Service
-            var service = new google.maps.DirectionsService();
-
-            //Set the Path Stroke Color
-            var poly = new google.maps.Polyline({map: map, strokeColor: '#4986E7'});
-
-            //Loop and Draw Path Route between the Points on MAP
-            for (var i = 0; i < lat_lng.length; i++) {
-                if ((i + 1) < lat_lng.length) {
-                    var src = lat_lng[i];
-                    var des = lat_lng[i + 1];
-                    path.push(src);
-                    poly.setPath(path);
-                    service.route({
-                        origin: src,
-                        destination: des,
-                        travelMode: google.maps.DirectionsTravelMode.DRIVING
-                    }, function (result, status) {
-                        if (status == google.maps.DirectionsStatus.OK) {
-                            for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
-                                path.push(result.routes[0].overview_path[i]);
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    </script>
 
 </head>
 <body>
 
+    <?php $url = URL::to("/"); ?>
+
     <!-- fixed navigation bar -->
     @include('header')
-    @if(session()->has('doc_not_v'))
-    <div class="container-fluid" style="background-color: #e91e63">
-        <h5 class="text-center" style="color: #ffffff">{{session()->has('doc_not_v')}}</h5>
-    </div>
-    @endif
-    <section class="job-bg page job-details-page">
-        <div class="container">
-            <div class="breadcrumb-section">
-                <ol class="breadcrumb">
-                    <li><a href="{{URL::to('/')}}">Home</a></li>
-                    <li><a href="{{URL::route('find.jobs')}}">Jobs</a></li>
-                    <li>{{$job->title}}</li>
-                </ol><!-- breadcrumb -->
-                <h2 class="title">{{$job->title}}</h2>
-            </div>
 
+    <section class="job-bg page ad-profile-page">
+		<div class="container">
+			<div class="breadcrumb-section">
+				<!-- breadcrumb -->
+				<ol class="breadcrumb">
+					<li><a href="{{URL::to('/')}}">Home</a></li>
+					<li><a href="{{URL::to('personnel-search')}}">Security Personnel</a></li>
+					<li>Profile</li>
+				</ol><!-- breadcrumb -->						
+				<h2 class="title">
+					@php $flag = false; @endphp
+					    	@if($person->firstname!='')
+					
+						@php  $flag = false;  @endphp
 
-            <div class="ad-info">
-                <span><span><a href="#" class="title">{{$job->title}}</a></span> @ <a href="#"> 
-                    @php
-                    if($job->myApplications && count($job->myApplications)>0){
-                    
-                     if($job->myApplications[0]->is_hired == '1'){
-                                            echo $job->poster->company->shop_name;
-                                        }else{
-                                            $arr = explode(' ',$job->poster->company->shop_name);
-                                        foreach($arr as $key=>$row){
-                                            if($key == 0){
-                                                echo $row;
-                                            }else{
-                                                $count = strlen($row);
-                                                echo " ";
-                                                for($c=0;$c< $count;$c++){
-                                                    echo '*';
-                                                }
-                                            }
-                                            }
-                                        }   
+						@foreach($person->applications as $row)
+							@if(auth()->user()->id == $row->apply_to &&  $row->is_hired == '1')
+								@php 
+									$flag = true; 
+									break;
+								@endphp
+								
+							@endif
+						@endforeach
 
-                }else{
+						@if($flag)
+							{{$person->firstname.' '.$person->lastname.auth()->user()->id.' a' }}
+						@else
+							{{$person->firstname.' ********'}}
+						@endif
+					   
+					    	@else
+					    		{{$person->name}}
+					    	@endif
+					    Profile</h2>
+			</div>
+			<div class="resume-content">
+				<div class="profile section clearfix">
+					<div class="profile-logo">
+						<?php $photo_path ='/local/images/userphoto/'.$person->photo;?>
+						@if($person->photo!="")
+					    	<img class="img-responsive" src="<?php echo $url.$photo_path;?>" alt="Image">
+					    @else
+							<img class="img-responsive" src="<?php echo $url.'/local/images/nophoto.jpg';?>" alt="Image">
+					    @endif
+					</div>
+					<div class="profile-info">
+					    <h1>
+					    	@php $flag = false; @endphp
+					    	@if($person->firstname!='')
+					
+						@php  $flag = false;  @endphp
 
+						@foreach($person->applications as $row)
+							@if(auth()->user()->id == $row->applied_to &&  $row->is_hired == '1')
+								@php 
+									$flag = true; 
+									break;
+								@endphp
+								
+							@endif
+						@endforeach
 
-                $arr = explode(' ',$job->poster->company->shop_name);
-                //echo count($arr)
-                foreach($arr as $key=>$row){
-                if($key == 0){
-                echo $row;
-            }else{
-            $count = strlen($row);
-            echo " ";
-            for($c=0;$c< $count;$c++){
-            echo '*';
-        }
-    }
-}
-}
-@endphp
+						@if($flag)
+							{{$person->firstname.' '.$person->lastname }}
+						@else
+							{{$person->firstname.' ********'}}
+						@endif
+					   
+					    	@else
+					    		{{$person->name}}
+					    	@endif
+					    	Profile
+					    </h1>
+					    <address>
+					        <p>@if($person->person_address)
+					        		City: {{$person->person_address->citytown}} <br>
+								@endif
+								@if($person->sec_work_category)
+									Category: {{$person->sec_work_category->name}} 
+								@endif
+							</p>
+					    </address>
+					    <div class="button">
 
-</a></span>
+ 								
+ 								@php  $flag = false;  @endphp
+ 								
+						@foreach($person->applications as $row)
+							@if(auth()->user()->id == $row->applied_to)
+								@php 
+									$flag = true; 
+									break;
+								@endphp
+								
+							@endif
+						@endforeach
 
-        <div class="job-details">
-            <div class="section job-ad-item">
-                <div class="item-info">
-                    <div class="item-image-box">
-                        <div class="item-image">
-                            <img src="{{URL::to('/')}}/images/img-placeholder.png" alt="{{$job->title}}"
-                            class="img-responsive">
-                        </div><!-- item-image -->
-                    </div>
-
-                    <div class="ad-info">
-                        <span><span><a href="#" class="title">{{$job->title}}</a></span> @ <a href="#">
-
-                         {{--$job->poster->company->shop_name--}}
-                        
-                                         @php
-                    if($job->myApplications && count($job->myApplications)>0){
-                    
-                     if($job->myApplications[0]->is_hired == '1'){
-                                            echo $job->poster->company->shop_name;
-                                        }else{
-                                            $arr = explode(' ',$job->poster->company->shop_name);
-                                        foreach($arr as $key=>$row){
-                                            if($key == 0){
-                                                echo $row;
-                                            }else{
-                                                $count = strlen($row);
-                                                echo " ";
-                                                for($c=0;$c< $count;$c++){
-                                                    echo '*';
-                                                }
-                                            }
-                                            }
-                                        }   
-
-                }else{
-
-
-                $arr = explode(' ',$job->poster->company->shop_name);
-                //echo count($arr)
-                foreach($arr as $key=>$row){
-                if($key == 0){
-                echo $row;
-            }else{
-            $count = strlen($row);
-            echo " ";
-            for($c=0;$c< $count;$c++){
-            echo '*';
-        }
-    }
-}
-}
-@endphp
-
-
-                        </a></span>
-
-                        <div class="ad-meta">
-                            <ul>
-                                <li><a href="#"><i class="fa fa-map-marker"
-                                   aria-hidden="true"></i>@if($job->city_town){{$job->city_town}}
-                                   ,@endif {{$job->country}}</a></li>
-                                   <li><i class="fa fa-money" aria-hidden="true"></i>&pound;{{$job->per_hour_rate}}</li>
-
-                                   <li><a href="#"><i class="fa fa-tags" aria-hidden="true"></i>{{$job->industory->name}}
-                                   </a></li>
-
-                                   <li><i class="fa fa-hourglass-start" aria-hidden="true"></i>Posted on
-                                    : {{date('M d, Y',strtotime($job->created_at))}}</li>
-                                </ul>
-                            </div><!-- ad-meta -->
-
-                        </div><!-- ad-info -->
-                    </div><!-- item-info -->
-                    <div class="social-media">
-                        <div class="button">
-
- @if($job->myApplications && count($job->myApplications)>0)
-                                <span class="btn alert alert-danger">You already have an overlapping booking</span>                                              
-                                    @else
-                                    <a href="{{URL::route('apply.job', $job->id)}}" class="btn btn-primary"><i
-                                    class="fa fa-briefcase" aria-hidden="true"></i>Apply For This Job11</a>
-                                <a href="#" class="btn btn-primary"><i class="fa fa-heart-o" aria-hidden="true"></i>
-                            @if($saved_job != null && $saved_job->job_id == $job->id)
-                                <span id="saved">Saved</span>
-                            @else
-                                <span id="saved">Save For Later</span>
-                                @endif
-                            </a>
-@endif
-
-                            
-
-
+						@if($flag)
+							 <span href="javascript:0" class="alert alert-danger">You already Hired this Employee</span>
+						@else
+							  <a href="" class="btn btn-primary"><i
+                                    class="fa fa-briefcase" aria-hidden="true"></i>&nbsp;Hire</a>
+						@endif
+                                                                             
+                                   
+                                  
                         </div>
-                        <ul class="share-social">
-                            <li>Share this ad</li>
-                            <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i class="fa fa-tumblr-square" aria-hidden="true"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <ul class="share-social">
-                    <li>Share this ad</li>
-                    <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-tumblr-square" aria-hidden="true"></i></a></li>
-                </ul>
+					</div>					
+				</div>
 
-            </div>
-        </div>
+				<div class="career-objective section">
+			        <div class="icons">
+			            <i class="fa fa-drivers-license-o" aria-hidden="true"></i>
+			        </div>   
+			        <div class="career-info profile-info">
+			        	<h3>Security Licence</h3>
 
-        <div class="job-details-info">
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="section job-description">
-                        <div class="description-info">
-                            <h1>Description</h1>
-                            <p>{{$job->description}}</p>
-                        </div>
-                    </div>
-                    @if(Auth::check())
-                    <div class="section job-description">
-                        <div class="description-info">
-                            <h1>Job Location</h1>
-                            <div id="dvMap" style="width:700px; height: 350px;"></div>
-                            <div style="padding-top: 20px;">
-                                <p>Reference: {{$job->id}}</p>
-                                <p>Bank or payment details should not be provided to any employer. GuardME is
-                                    not responsible for any external transactions. All applications and payments
-                                should be made via our website.</p>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
+			        	<address>
+					        <p>Licence Type: SIA <br> 
+					        	Valid: @if($person->sia_licence !='')
+								        	<i class="fa fa-check-circle-o ico-30 green"></i>
+								        @else
+					        				<i class="fa fa-times-circle-o ico-30 red"></i> 
+										@endif
+					        				<br> 
+					        	Expiry Date:@if($person->sia_expirydate !='')
+					        					{{$person->sia_expirydate}}
+					        				@else
+					        					{{'NA'}}
+					        				@endif
+					        </p>
+					    </address>
+			        </div>
+			    </div>
+				<div class="work-history section">
+			        <div class="icons">
+			            <i class="fa fa-briefcase" aria-hidden="true"></i>
+			        </div>   
+			        <div class="work-info">
+			        	<h3>Work History</h3>
+			        	<ul>
+			        		<li>
+				        		<h4>work1 @ xyz <span>2012 - Present</span></h4>
+				        		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			        		</li>
+			        		<li>
+				        		<h4>work2 @ XYZ <span>2011 - 2012</span></h4>
+				        		<p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			        		</li>
+			        		<li>
+				        		<h4>work3 @ xyz <span>2005 - 2011</span></h4>
+				        		<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+			        		</li>
+			        		<li>
+				        		<h4>wok4 @ xyz <span>2004 - 2005</span></h4>
+				        		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			        		</li>
+			        		<li>
+				        		<h4>work5 @ xyz <span>2002 - 2004</span></h4>
+				        		<p>Incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			        		</li>
+			        	</ul>
+			        </div>                                 
+				</div><!-- work-history -->
+				<div class="declaration section">
+			        <div class="icons">
+			            <i class="fa fa-comments-o" aria-hidden="true"></i>
+			        </div>   
+			        <div class="declaration-info">
+			        	<h3>Feedback</h3>
+			        	<p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p>
+			        	<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni। dolores eos qui ratione voluptatem sequi nesciunt.</p>
+			        </div>                                 
+				</div><!-- career-objective -->	
+			</div>
+		</div>
+		
+	</section>
+    
 
-                <div class="col-sm-4">
-                    <div class="section job-short-info">
-                        <h1>Short Info</h1>
-                        <ul>
-                            <li><span class="icon"><i class="fa fa-bolt" aria-hidden="true"></i></span>Posted: {{date('M d, Y',strtotime($job->created_at))}}</li>
-                            <li><span class="icon"><i class="fa fa-user-plus" aria-hidden="true"></i></span> Job poster: <a href="#">{{$job->poster->name}}</a></li>
-                            <li><span class="icon"><i class="fa fa-industry" aria-hidden="true"></i></span>Industry: <a href="#">{{$job->industory->name}}</a></li>
-                            <li><span class="icon"><i class="fa fa-line-chart" aria-hidden="true"></i></span>Experience: <a href="#">Entry level</a></li>
-
-                        </ul>
-                    </div>
-                    <div class="section company-info">
-                        <h1>Company Info</h1>
-                        <ul>
-                            <li>Compnay Name: <a href="#">
-                                {{--$job->poster->company->shop_name--}}
-
-                @php
-                    if($job->myApplications && count($job->myApplications)>0){
-                    
-                     if($job->myApplications[0]->is_hired == '1'){
-                                            echo $job->poster->company->shop_name;
-                                        }else{
-                                            $arr = explode(' ',$job->poster->company->shop_name);
-                                        foreach($arr as $key=>$row){
-                                            if($key == 0){
-                                                echo $row;
-                                            }else{
-                                                $count = strlen($row);
-                                                echo " ";
-                                                for($c=0;$c< $count;$c++){
-                                                    echo '*';
-                                                }
-                                            }
-                                            }
-                                        }   
-
-                }else{
-
-
-                $arr = explode(' ',$job->poster->company->shop_name);
-                //echo count($arr)
-                foreach($arr as $key=>$row){
-                if($key == 0){
-                echo $row;
-            }else{
-            $count = strlen($row);
-            echo " ";
-            for($c=0;$c< $count;$c++){
-            echo '*';
-        }
-    }
-}
-}
-@endphp
-
-
-                               </a></li>
-    <li>Address: @if($job->poster->company->city){{$job->poster->company->city}}@endif
-        @if($job->poster->company->state){{', '.$job->poster->company->state}}@endif
-        @if($job->poster->company->country){{', '.$job->poster->company->country}}@endif</li>
-    </ul>
-    <ul class="share-social">
-        <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-        <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-        <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-        <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-    </ul>                               
-</div>                            
-
-</div>
-<div class="col-sm-4">
-    <div class="section job-short-info">
-        <h1>Short Info</h1>
-        <ul>
-            <li><span class="icon"><i class="fa fa-bolt"
-              aria-hidden="true"></i></span>Posted: {{date('M d, Y',strtotime($job->created_at))}}
-          </li>
-          <li><span class="icon"><i class="fa fa-user-plus" aria-hidden="true"></i></span> Job
-            poster: <a href="#">{{$job->poster->name}}</a></li>
-            <li><span class="icon"><i class="fa fa-industry" aria-hidden="true"></i></span>Industry:
-                <a href="#">{{$job->industory->name}}</a></li>
-                <li><span class="icon"><i class="fa fa-line-chart" aria-hidden="true"></i></span>Experience:
-                    <a href="#">Entry level</a></li>
-
-                </ul>
-            </div>
-            <div class="section company-info">
-                <h1>Company Info</h1>
-                <ul>
-                    <li>Compnay Name: <a href="#">{{$job->poster->company->shop_name}}</a></li>
-                    <li>Address: @if($job->poster->company->city){{$job->poster->company->city}}@endif
-                        @if($job->poster->company->state){{', '.$job->poster->company->state}}@endif
-                        @if($job->poster->company->country){{', '.$job->poster->company->country}}@endif</li>
-                    </ul>
-                    <ul class="share-social">
-                        <li><a href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
-
-@include('footer')
-<script type="text/javascript">
-    var job = {!! json_encode($job) !!};
-    $('#saved').click(function (e) {
-        console.log(job.id);
-        if ($('#saved').text() == "Saved") {
-            $.ajax({
-                url: "{{url('/jobs/remove/')}}/" + job.id,
-                type: "GET",
-                success: function (data) {
-                    console.log("removed");
-                    $('#saved').text("Save For Later".trim());
-                }
-            });
-        }
-        else {
-            $.ajax({
-                url: "{{url('/jobs/save/')}}/" + job.id,
-                type: "GET",
-                success: function (data) {
-                    console.log("saved");
-                    $('#saved').text("Saved".trim());
-                }
-            });
-        }
-    });
-</script>
+      @include('footer')
 </body>
 </html>
