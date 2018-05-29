@@ -85,9 +85,7 @@ class JobsController extends Controller {
         $my_jobs = Job::getMyJobs();
         return view('jobs.my', compact('my_jobs','editprofile'));
     }
-
-	
-	////////////////////////
+////////////////////////
 
     public function savedJobs() {
         $userid = Auth::user()->id;
@@ -184,7 +182,6 @@ class JobsController extends Controller {
             }
     }
 ///////////////////////////
-
     /**
      * @return mixed
      */
@@ -349,12 +346,11 @@ class JobsController extends Controller {
 		}
 		$b_cats = Businesscategory::all();
 		$locs   = Job::select( 'city_town' )->where( 'city_town', '!=', null )->distinct()->get();
-		//$job = Job::find($id);
+		
 
-	$job = Job::with(['poster','poster.company','industory','myApplications'])->where('id',$id)->first();
-       // $job = Job::with(['poster','poster.company','industory'])->where('id',$id)->first();
-        // dd($saved_job);
-
+        $job = Job::with(['poster','poster.company','industory','myApplications'])->where('id',$id)->first();
+        //dd($job);
+//return response()->json($job);
         if (empty($job)) {
             return abort(404);
         }
@@ -412,12 +408,15 @@ class JobsController extends Controller {
         return view('jobs.application-detail', compact('application','person', 'work_history'));
     }
     public function myProposals() {
+        $fillter = isset($_REQUEST['filter'])?$_REQUEST['filter']:0;
         $user_id = auth()->user()->id;
 
          $editprofile = User::where('id',$user_id)->get();
        
         $ja = new JobApplication();
-        $proposals = $ja->getMyProposals();
+        $proposals = $ja->getMyProposals($fillter);
+
+        //return response()->json($proposals);
 
         return view('jobs.proposals', compact('proposals','editprofile'));
         
@@ -487,30 +486,5 @@ class JobsController extends Controller {
 
     public function leaveFeedback($application_id) {
         return view('jobs.feedback', ['application_id' => $application_id]);
-    }
-
-    /**
-     * @param $application_id
-     * @return mixed
-     */
-    public function giveTip($application_id) {
-        $wallet = new Transaction();
-        $available_balance = $wallet->getWalletAvailableBalance();
-        return view('jobs.tip', ['application_id' => $application_id, 'available_balance' => $available_balance]);
-    }
-    public function tipDetails($transaction_id) {
-        $tip_transaction = Transaction::find($transaction_id);
-        $application_id = $tip_transaction->application_id;
-        $application_with_job = JobApplication::with('job')->where('id', $application_id)->get()->first();
-        $wallet = new Transaction();
-        $freelancer_details = User::find($application_with_job->applied_by);
-        $available_balance = $wallet->getWalletAvailableBalance();
-        return view('jobs.tip-details', [
-            'transaction_details' => $tip_transaction,
-            'transaction_id' => $transaction_id,
-            'available_balance' => $available_balance,
-            'application_with_job' => $application_with_job,
-            'freelancer_details' => $freelancer_details
-        ]);
     }
 }
