@@ -59,8 +59,6 @@
                         </div><!-- ad-meta -->                                  
                     </div><!-- ad-info -->
                     
-                    
-                                        
                     <div class="close-icon">
                         
                         <a  href="{{ URL('/jobs/delete/').'/'.$job->id }}"><i class="fa fa-window-close" aria-hidden="true" jid="{{$job->id}}"></i></a>
@@ -115,7 +113,28 @@
            
 @endsection
 
+@section('script')
+<script type="text/javascript">
+    
 
+$(document).ready(function(){
+
+$('.delete').click(function(){
+    var job_id = $(this).attr('jid');
+    var r = confirm('Are you sure to delete?');
+    if(r == true){
+            alert(job_id);
+    }else{
+
+    }
+    
+});
+
+})
+
+
+</script>
+@endsection
 
 
 

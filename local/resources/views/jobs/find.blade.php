@@ -330,7 +330,25 @@
         </div>        
     </div>
     @endif
-    <?php if($joblist->count()>0){?>
+
+     <?php 
+$show = '0';
+ $flag = '0'; //show ?>
+@guest
+ <?php $flag = '0'; //show ?>
+@else
+
+@if(Auth::User()->admin=='2')
+    <?php $flag = '0'; //show ?>
+@else
+    <?php $flag = '1'; //hide ?>
+@endif
+@endguest
+
+    <?php 
+
+    if($show==$flag) { ?>
+    <?php //if($joblist->count()>0){?>
     
             <?php foreach($joblist as $job){ ?>
                 
