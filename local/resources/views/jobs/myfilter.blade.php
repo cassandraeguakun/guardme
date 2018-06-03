@@ -63,6 +63,7 @@
                 </div>
             </form>
         </div>
+        @if(count($new_jobs) > 0)
         @foreach($new_jobs as $job)
             <div class="job-ad-item">
                 <div class="item-info">
@@ -90,7 +91,8 @@
                     </div>
                 </div><!-- item-info -->
             </div>
-            @endforeach
+        @endforeach
+        @endif
     </div>
 
                 <?php /*<table class="table table-bordered table-responsive">
@@ -115,18 +117,18 @@
 
            
 @endsection
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 
+<script type="text/javascript">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+$(document).ready(function() {
+	var date = new Date();
+	
+	$('.date-picker').datepicker({
+	    format: 'mm/dd/yyyy',
+	    autoclose: true,
+	});
+} );
+</script>
+@endsection

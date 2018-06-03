@@ -64,6 +64,7 @@
                 </div>
             </form>
         </div>
+    @if(count($proposals) > 0)
     @foreach($proposals as $application)
                                    
         <div class="job-ad-item">
@@ -110,6 +111,21 @@
 
 
     @endforeach
+    @endif
     </div>
 @endsection
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 
+<script type="text/javascript">
+
+$(document).ready(function() {
+	var date = new Date();
+	
+	$('.date-picker').datepicker({
+	    format: 'mm/dd/yyyy',
+	    autoclose: true,
+	});
+} );
+</script>
+@endsection
