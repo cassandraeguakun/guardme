@@ -109,7 +109,6 @@
             </div><!-- item-info -->
         </div>
 
-
     @endforeach
     @endif
     </div>
