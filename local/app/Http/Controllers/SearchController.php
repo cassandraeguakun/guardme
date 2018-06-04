@@ -116,8 +116,15 @@ class SearchController extends Controller {
 
         $locs= DB::table('address')->distinct()->get();
 
-        $sec_personnels = $query->with('person_address')->paginate(10);
-
+				$sec_personnels = $query->with('person_address')->paginate(10);
+				$rating_array = array();
+				if (count($sec_personnels) > 0) {
+					foreach ($sec_personnels as $person) {
+						$ja = new JobApplication();
+						$work_history = $ja->getApplicantWorkHistory_appliedby($person->id);
+						$rating_array[$person->id] = $work_history['aggregate_rating'];
+					}
+				}
         if(\request()->expectsJson())
 						return response()->json($sec_personnels);
 		$new_personnels = [];
@@ -133,7 +140,7 @@ class SearchController extends Controller {
                 }
             }
         }
-		return view('search',compact('cats','locs','new_personnels'));
+		return view('search',compact('cats','locs','new_personnels', 'rating_array'));
 	}
 	
 	public function postpersonnelsearch(Request $request)
